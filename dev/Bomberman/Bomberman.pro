@@ -25,7 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        g_homescreen.cpp
+        g_homescreen.cpp \
+    bomb.cpp \
+    mapbloc.cpp \
+    map.cpp
 
 HEADERS += \
-        g_homescreen.h
+        g_homescreen.h \
+    bomb.h \
+    mapbloc.h \
+    map.h
