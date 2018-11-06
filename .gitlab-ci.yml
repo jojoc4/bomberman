@@ -1,0 +1,18 @@
+# Specify the docker image to use (only used if using docker runners)
+# See: http://doc.gitlab.com/ee/ci/docker/using_docker_images.html
+image: ubuntu:16.04
+
+# Define commands that run before each job's script
+before_script:
+  - apt-get update
+  - apt-get install -y build-essential
+  - apt-get install -y qtcreator qt5-default
+  - chmod +x qtmaketest.sh
+
+# Try to compile our sample hello world app
+compile:
+  script:
+  # Compile our app
+  - cd dev/Bomberman
+  - qmake Bomberman.pro
+  - make
