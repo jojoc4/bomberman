@@ -2,6 +2,10 @@
 # See: http://doc.gitlab.com/ee/ci/docker/using_docker_images.html
 image: jojoc4/gitlab-ci-qt
 
+services:
+    - docker:dind
+
+
 
 # Try to compile our sample hello world app
 compile:
