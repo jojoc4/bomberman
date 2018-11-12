@@ -5,8 +5,10 @@
 class MapBloc
 {
 public:
-    MapBloc(int, bool);
+    MapBloc(int);
     void setType(int);
+    int getType();
+    bool getTraversable();
 
 private:
     int type;

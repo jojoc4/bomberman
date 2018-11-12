@@ -5,6 +5,7 @@
 class MapBloc
 {
 public:
+    MapBloc();
     MapBloc(int);
     void setType(int);
     int getType();
@@ -12,7 +13,7 @@ public:
 
 private:
     int type;
-    bool traverable;
+    bool traversable;
 };
 
 #endif // MAPBLOC_H
