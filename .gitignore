@@ -44,3 +44,6 @@ CMakeLists.txt.user*
 
 #MS Project
 *.mpp
+
+#Balsamiq mockups
+*.bmpr
