@@ -29,11 +29,15 @@ SOURCES += \
     bomb.cpp \
     mapbloc.cpp \
     map.cpp \
-    g_game.cpp
+    g_game.cpp \
+    game.cpp \
+    player.cpp
 
 HEADERS += \
         g_homescreen.h \
     bomb.h \
     mapbloc.h \
     map.h \
-    g_game.h
+    g_game.h \
+    game.h \
+    player.h
