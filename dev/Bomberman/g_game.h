@@ -3,22 +3,31 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QGraphicsView>
+#include <QLayout>
+#include "player.h"
+#include "game.h"
 
 class G_Game : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit G_Game(QWidget *parent = nullptr);
+    explicit G_Game(QWidget *parent = nullptr, Game *theGame = nullptr);
 
 signals:
 
 public slots:
 
 private:
-    QLabel labelPlayer1;
-    QLabel labelPlayer2;
-    QLabel textPlayer1;
-    QLabel textPlayer2;
+    Game *game;
+    QLabel *labelPlayer1;
+    QLabel *labelPlayer2;
+    QLabel *textPlayer1;
+    QLabel *textPlayer2;
+    QGraphicsView *graphics;
+    QVBoxLayout *vLayout;
+    QHBoxLayout *hLayout;
+
 };
 
 #endif // G_GAME_H
