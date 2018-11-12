@@ -5,6 +5,8 @@
 
 #include <QPoint>
 
+#include "map.h"
+
 class Player;
 class Map;
 
@@ -15,6 +17,8 @@ public:
 
     void start();
     void keyoardThread();
+
+     const Player& getPlayer(const short nbPlayer)const;
 
 private:
     int type;
