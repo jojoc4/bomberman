@@ -25,7 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+		map.cpp \
+		mapbloc.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+		map.h \
+		mapbloc.h
