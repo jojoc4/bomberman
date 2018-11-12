@@ -1,6 +1,7 @@
 #ifndef MAPBLOC_H
 #define MAPBLOC_H
 
+#include <QString>
 
 class MapBloc
 {
@@ -12,7 +13,7 @@ public:
 
 private:
     int type;
-    bool traverable;
+    bool traversable;
 };
 
 #endif // MAPBLOC_H

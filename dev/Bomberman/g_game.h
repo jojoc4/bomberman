@@ -2,6 +2,7 @@
 #define G_GAME_H
 
 #include <QMainWindow>
+#include <QLabel>
 
 class G_Game : public QMainWindow
 {
@@ -12,6 +13,12 @@ public:
 signals:
 
 public slots:
+
+private:
+    QLabel labelPlayer1;
+    QLabel labelPlayer2;
+    QLabel textPlayer1;
+    QLabel textPlayer2;
 };
 
 #endif // G_GAME_H

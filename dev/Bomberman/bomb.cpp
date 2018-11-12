@@ -6,7 +6,7 @@ Bomb::Bomb(int t, int s)
     scope=s;
 }
 
-Bomb::bombThread()
+void Bomb::bombThread()
 {
     //attendre
 

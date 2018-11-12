@@ -3,11 +3,12 @@
 
 #include "mapbloc.h"
 
+
 class Map
 {
 public:
     Map();
-    void readFromFile(String);
+    void readFromFile(QString);
 
 private:
     MapBloc* t;
