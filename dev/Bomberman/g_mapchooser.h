@@ -18,7 +18,7 @@ public slots:
     void validerCarte();
 
 private :
-    QListWidget* list_maps;
+    QListWidget* listMaps;
     QDir* directory;
     QString filePath;
 };

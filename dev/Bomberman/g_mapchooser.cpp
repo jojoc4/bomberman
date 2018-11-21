@@ -8,9 +8,9 @@ G_MapChooser::G_MapChooser(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle("Choix des cartes");
     QVBoxLayout* vbox = new QVBoxLayout(this);
-    list_maps = new QListWidget();
-    list_maps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
-    vbox->addWidget(list_maps);
+    listMaps = new QListWidget();
+    listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
+    vbox->addWidget(listMaps);
     vbox->addStretch();
 
     QHBoxLayout *hbox_button = new QHBoxLayout();
@@ -42,7 +42,7 @@ void G_MapChooser::parcourirDossierCarte()
         mapsList = directory->entryList(QStringList() << "*.nma" << "*.nma",QDir::Files);
         for ( const auto& i : mapsList  )
         {
-            new QListWidgetItem(i, list_maps);
+            new QListWidgetItem(i, listMaps);
         }
     }
 }/**
@@ -51,9 +51,9 @@ void G_MapChooser::parcourirDossierCarte()
  */
 void G_MapChooser::validerCarte()
 {
-    if(!list_maps->selectedItems().isEmpty())
+    if(!listMaps->selectedItems().isEmpty())
     {
-        QString element = list_maps->selectedItems().first()->text();
+        QString element = listMaps->selectedItems().first()->text();
         filePath = directory->absolutePath() + element;
         qDebug() << filePath;
     } else {

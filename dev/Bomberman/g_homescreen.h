@@ -17,8 +17,6 @@ private :
     QRadioButton* radio_local;
     QRadioButton* radio_network;
 
-    bool gameMode;
-
 private slots:
     void validateChoice(void);
 };
