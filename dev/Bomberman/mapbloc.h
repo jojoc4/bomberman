@@ -6,7 +6,9 @@
 class MapBloc
 {
 public:
-    MapBloc(int);
+
+    MapBloc();
+    MapBloc(int t);
     void setType(int);
     int getType();
     bool getTraversable();

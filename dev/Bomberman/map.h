@@ -11,7 +11,7 @@ public:
     void readFromFile(QString);
 
 private:
-    MapBloc* t;
+    MapBloc*** t;
 };
 
 #endif // MAP_H
