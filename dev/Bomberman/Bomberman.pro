@@ -31,7 +31,8 @@ SOURCES += \
     map.cpp \
     g_game.cpp \
     game.cpp \
-    player.cpp
+    player.cpp \
+    g_mapchooser.cpp
 
 HEADERS += \
         g_homescreen.h \
@@ -40,4 +41,5 @@ HEADERS += \
     map.h \
     g_game.h \
     game.h \
-    player.h
+    player.h \
+    g_mapchooser.h
