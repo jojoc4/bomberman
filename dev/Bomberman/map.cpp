@@ -7,17 +7,24 @@ using namespace std;
 
 Map::Map()
 {
-    //t = new MapBloc[30][30];
+    // t pointe sur un tableau ** pointeur.
+    t = new MapBloc**[30];
+
+    for(int i = 0; i < 30; ++i){
+        t[i] = new MapBloc*[30];
+    }
+
+
 }
 
 void Map::readFromFile(QString p){
     //lecture depuis fichier
-    ifstream file(p, ios::in);
+    ifstream file(p.toStdString(), ios::in);
 
     if(file){
         //ok
         for(int i = 0; i<30; i++){
-            Qstring line;
+            string line;
             getline(file, line);
             for(int j = 0; j<30; j++){
                 t[i][j] = new MapBloc(line[j]);

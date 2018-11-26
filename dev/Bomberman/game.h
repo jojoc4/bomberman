@@ -20,6 +20,8 @@ public:
 
      const Player& getPlayer(const short nbPlayer)const;
 
+     const Player& getPlayer(const bool nbPlayer) const;
+
 private:
     int type;
     Player player1;

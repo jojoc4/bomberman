@@ -11,6 +11,14 @@ class G_HomeScreen : public QDialog
 public:
     G_HomeScreen(QWidget *parent = 0);
     ~G_HomeScreen();
+
+
+private :
+    QRadioButton* radio_local;
+    QRadioButton* radio_network;
+
+private slots:
+    void validateChoice(void);
 };
 
 #endif // G_HOMESCREEN_H

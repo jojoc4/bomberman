@@ -1,17 +1,16 @@
 #include "mapbloc.h"
 
-MapBloc::MapBloc(int)
-{
+MapBloc::MapBloc(){
 
 }
 
-MapBloc::MapBloc(int type){
+MapBloc::MapBloc(int t){
     type=t;
     //voir les types dans la documentation sur git
     if(type<=2){
-        traverable=false;
+        traversable=false;
     }else{
-        traverable=true;
+        traversable=true;
     }
 }
 
