@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QtWidgets>
 
-class G_HomeScreen : public QDialog
+class G_HomeScreen : public QWidget
 {
     Q_OBJECT
 

@@ -4,7 +4,7 @@
  * @brief Constructeur de la classe G_MapChooser
  * @param Herite de Qdialog
  */
-G_MapChooser::G_MapChooser(QWidget *parent) : QDialog(parent)
+G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Choix des cartes");
     QVBoxLayout* vbox = new QVBoxLayout(this);
