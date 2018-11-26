@@ -2,7 +2,11 @@
 
 Player::Player()
 {
-
+    position = QPoint(0,0);
+    angle = 0;
+    dead = false;
+    nbBombe = 1;
+    puissance = 1;
 }
 void Player::manualMove()
 {
