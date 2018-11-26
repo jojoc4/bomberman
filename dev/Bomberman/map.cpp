@@ -63,3 +63,21 @@ void Map::readFromFile(QString p){
         //error
     }
 }
+
+MapBloc Map::getMapBloc(int l, int c){
+    return t[l][c];
+}
+
+int Map::getJ1x(){
+    return j1x;
+}
+int Map::getJ1y(){
+    return j1y;
+}
+
+int Map::getJ2x(){
+    return j2x;
+}
+int Map::getJ2y(){
+    return j2y;
+}
