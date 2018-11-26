@@ -12,6 +12,12 @@ public:
 
     int j1x,j1y,j2x,j2y;
 
+    MapBloc getMapBloc(int l, int c);
+    int getJ1x();
+    int getJ1y();
+    int getJ2x();
+    int getJ2y();
+
 private:
     MapBloc** t;
 };

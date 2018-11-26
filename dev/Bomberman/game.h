@@ -18,9 +18,7 @@ public:
     void start();
     void keyoardThread();
 
-     const Player& getPlayer(const short nbPlayer)const;
-
-     const Player& getPlayer(const bool nbPlayer) const;
+    const Player& getPlayer(const bool nbPlayer) const;
 
 private:
     int type;

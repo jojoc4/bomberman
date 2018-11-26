@@ -8,7 +8,7 @@
 #include "player.h"
 #include "game.h"
 
-class G_Game : public QMainWindow
+class G_Game : public QWidget
 {
     Q_OBJECT
 public:
@@ -24,7 +24,8 @@ private:
     QLabel *labelPlayer2;
     QLabel *textPlayer1;
     QLabel *textPlayer2;
-    QGraphicsView *graphics;
+    QGraphicsView *container;
+    QGraphicsScene *scene;
     QVBoxLayout *vLayout;
     QHBoxLayout *hLayout;
 

@@ -12,17 +12,18 @@ public:
 
     void moveThread();
     void manualMove();
-    Qpoint getPosition();
+    QPoint getPosition();
     int getAngle();
     bool isDead();
     int getNbBomb();
+    int getPuissance();
 
 private :
     QPoint position;
     int angle;
     bool dead;
     int nbBombe;
-
+    int puissance;
 
 };
 
