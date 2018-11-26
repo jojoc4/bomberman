@@ -9,14 +9,14 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     G_HomeScreen w;
 
-    G_MapChooser b;
+    G_MapChooser b(nullptr);
 
     Game *game = new Game();
     G_Game g(game, nullptr);
 
-    //b.show();
+    b.show();
     //w.show();
-    g.show();
+    //g.show();
 
     return a.exec();
 }
