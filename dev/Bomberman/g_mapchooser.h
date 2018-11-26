@@ -1,7 +1,6 @@
 #ifndef G_MAPCHOOSER_H
 #define G_MAPCHOOSER_H
 
-#include <QDialog>
 #include <QtWidgets>
 
 class G_MapChooser : public QWidget
@@ -9,6 +8,9 @@ class G_MapChooser : public QWidget
     Q_OBJECT
 public:
     explicit G_MapChooser(QWidget *parent = nullptr);
+
+protected :
+
 
 signals:
 
@@ -21,6 +23,9 @@ private :
     QListWidget* listMaps;
     QDir* directory;
     QString filePath;
+
+    QGraphicsView* previewMap;
+
 };
 
 #endif // G_MAPCHOOSER_H
