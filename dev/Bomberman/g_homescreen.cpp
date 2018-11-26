@@ -1,7 +1,7 @@
 #include "g_homescreen.h"
 
 G_HomeScreen::G_HomeScreen(QWidget *parent)
-    : QDialog(parent)
+    : QWidget(parent)
 {
     setWindowTitle(tr("Accueil"));
 

@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QtWidgets>
 
-class G_MapChooser : public QDialog
+class G_MapChooser : public QWidget
 {
     Q_OBJECT
 public:

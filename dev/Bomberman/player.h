@@ -12,6 +12,10 @@ public:
 
     void moveThread();
     void manualMove();
+    Qpoint getPosition();
+    int getAngle();
+    bool isDead();
+    int getNbBomb();
 
 private :
     QPoint position;
