@@ -15,7 +15,7 @@ void Player::moveThread()
 }
 
 
-Qpoint Player::getPosition(){
+QPoint Player::getPosition(){
     return position;
 }
 

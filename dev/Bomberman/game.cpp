@@ -2,7 +2,8 @@
 
 Game::Game()
 {
-
+    player1 = new Player();
+    player2 = new Player();
 }
 
 void Game::keyoardThread()
@@ -15,10 +16,15 @@ void Game::start()
 
 }
 
-const Player& Game::getPlayer(const bool nbPlayer) const
+/**
+ * @brief Game::getPlayer
+ * @param nbPlayer (0 or false is player1 and 1 or true is player2)
+ * @return constant reference on the selected player
+ */
+Player* Game::getPlayer(bool nbPlayer) const
 {
     if(!nbPlayer)
-        return player1;
+        return this->player1;
     else
-        return player2;
+        return this->player2;
 }

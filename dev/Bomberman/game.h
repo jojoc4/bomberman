@@ -18,14 +18,12 @@ public:
     void start();
     void keyoardThread();
 
-     const Player& getPlayer(const short nbPlayer)const;
-
-     const Player& getPlayer(const bool nbPlayer) const;
+    Player* getPlayer(bool nbPlayer) const;
 
 private:
     int type;
-    Player player1;
-    Player player2;
+    Player *player1;
+    Player *player2;
     Map map;
 };
 
