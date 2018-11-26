@@ -12,7 +12,7 @@ class G_Game : public QWidget
 {
     Q_OBJECT
 public:
-    explicit G_Game(QWidget *parent = nullptr, Game *theGame = nullptr);
+    G_Game(Game *theGame, QWidget *parent = nullptr);
 
 signals:
 

@@ -1,6 +1,7 @@
 #include "g_homescreen.h"
 #include "g_mapchooser.h"
 #include "g_game.h"
+#include "game.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -10,7 +11,8 @@ int main(int argc, char *argv[])
 
     G_MapChooser b;
 
-    G_Game g;
+    Game *game = new Game();
+    G_Game g(game, nullptr);
 
     //b.show();
     //w.show();
