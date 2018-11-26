@@ -10,7 +10,7 @@ public:
 
 private:
     int type;
-    int scope;
+    int range;
 };
 
 #endif // BOMB_H

@@ -20,8 +20,6 @@ public slots:
 
 private:
     Game *game;
-    QLabel *labelPlayer1;
-    QLabel *labelPlayer2;
     QLabel *textPlayer1;
     QLabel *textPlayer2;
     QGraphicsView *container;

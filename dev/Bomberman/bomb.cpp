@@ -1,9 +1,9 @@
 #include "bomb.h"
 
-Bomb::Bomb(int t, int s)
+Bomb::Bomb(int t, int r)
 {
     type=t;
-    scope=s;
+    range=r;
 }
 
 void Bomb::bombThread()
