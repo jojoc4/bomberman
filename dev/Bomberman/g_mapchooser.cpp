@@ -2,16 +2,19 @@
 
 /**
  * @brief Constructeur de la classe G_MapChooser
- * @param Herite de Qdialog
+ * @param Herite de QWidget
  */
 G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Choix des cartes");
-    QVBoxLayout* vbox = new QVBoxLayout(this);
+    QHBoxLayout* hbox = new QHBoxLayout(this);
+    QVBoxLayout* vboxLeft = new QVBoxLayout();
+    QVBoxLayout* vboxRight = new QVBoxLayout();
+
     listMaps = new QListWidget();
     listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
-    vbox->addWidget(listMaps);
-    vbox->addStretch();
+    vboxLeft->addWidget(listMaps);
+    vboxLeft->addStretch();
 
     QHBoxLayout *hbox_button = new QHBoxLayout();
     QPushButton *button_valider = new QPushButton("Valider");
@@ -19,7 +22,18 @@ G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
 
     hbox_button->addWidget(button_valider);
     hbox_button->addWidget(button_parcourir);
-    vbox->addLayout(hbox_button);
+    vboxLeft->addLayout(hbox_button);
+
+    // QPainter
+    previewMap = new QGraphicsView();
+    QVBoxLayout* vBoxPainter = new QVBoxLayout();
+    previewMap->setLayout(vBoxPainter);
+    vboxRight->addWidget(previewMap);
+
+
+    hbox->addLayout(vboxLeft);
+    hbox->addLayout(vboxRight);
+
 
     connect(button_parcourir, &QPushButton::clicked, this, parcourirDossierCarte);
     connect(button_valider, &QPushButton::clicked, this, validerCarte);
