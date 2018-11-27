@@ -4,6 +4,7 @@ Game::Game()
 {
     player1 = new Player();
     player2 = new Player();
+    map = new Map();
 }
 
 void Game::keyoardThread()

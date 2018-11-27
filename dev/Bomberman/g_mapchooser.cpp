@@ -4,12 +4,14 @@
  * @brief Constructeur de la classe G_MapChooser
  * @param Herite de QWidget
  */
-G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
+G_MapChooser::G_MapChooser(Game* ptrGame,QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Choix des cartes");
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
     QVBoxLayout* vboxRight = new QVBoxLayout();
+
+    game = ptrGame;
 
     listMaps = new QListWidget();
     listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
@@ -29,6 +31,10 @@ G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
     QVBoxLayout* vBoxPainter = new QVBoxLayout();
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
+
+    Map* maCarte = new Map();
+    maCarte->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
+    delete(maCarte);
 
 
     hbox->addLayout(vboxLeft);

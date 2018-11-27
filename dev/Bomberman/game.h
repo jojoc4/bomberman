@@ -22,9 +22,9 @@ public:
 
 private:
     int type;
-    Player *player1;
-    Player *player2;
-    Map map;
+    Player* player1;
+    Player* player2;
+    Map* map;
 };
 
 #endif // GAME_H
