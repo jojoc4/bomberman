@@ -2,7 +2,6 @@
 #include <fstream>
 #include <iostream>
 #include <QString>
-#include <String>
 
 using namespace std;
 
