@@ -4,12 +4,14 @@
  * @brief Constructeur de la classe G_MapChooser
  * @param Herite de QWidget
  */
-G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
+G_MapChooser::G_MapChooser(Game* ptrGame,QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Choix des cartes");
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
     QVBoxLayout* vboxRight = new QVBoxLayout();
+
+    game = ptrGame;
 
     listMaps = new QListWidget();
     listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
@@ -30,13 +32,19 @@ G_MapChooser::G_MapChooser(QWidget *parent) : QWidget(parent)
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
 
+    maCarte = new Map();
+    maCarte->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
+    delete(maCarte);
+
+
+
 
     hbox->addLayout(vboxLeft);
     hbox->addLayout(vboxRight);
 
 
-    connect(button_parcourir, &QPushButton::clicked, this, parcourirDossierCarte);
-    connect(button_valider, &QPushButton::clicked, this, validerCarte);
+    connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::parcourirDossierCarte);
+    connect(button_valider, &QPushButton::clicked, this, &G_MapChooser::validerCarte);
 }
 /**
  * @brief G_MapChooser::parcourirDossierCarte : SLOT
@@ -73,5 +81,9 @@ void G_MapChooser::validerCarte()
     } else {
         QMessageBox::information(this, "Choix des cartes", tr("Aucune carte n'a été chargée"), QMessageBox::Ok);
     }
+
+}
+
+void G_MapChooser::displayThumbnailsMap(){
 
 }

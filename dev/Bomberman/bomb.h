@@ -5,12 +5,18 @@
 class Bomb
 {
 public:
-    Bomb(int, int);
+    Bomb(int, int, int, int);
     void bombThread();
+    int getType();
+    int getRange();
+    int getLine();
+    int getColumn();
 
 private:
     int type;
     int range;
+    int line;
+    int column;
 };
 
 #endif // BOMB_H

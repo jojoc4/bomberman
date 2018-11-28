@@ -2,12 +2,14 @@
 #define G_MAPCHOOSER_H
 
 #include <QtWidgets>
+#include "map.h"
+#include "game.h"
 
 class G_MapChooser : public QWidget
 {
     Q_OBJECT
 public:
-    explicit G_MapChooser(QWidget *parent = nullptr);
+    explicit G_MapChooser(Game* ptrGame, QWidget *parent = nullptr);
 
 protected :
 
@@ -20,11 +22,17 @@ public slots:
     void validerCarte();
 
 private :
+
+    void displayThumbnailsMap();
+
     QListWidget* listMaps;
     QDir* directory;
     QString filePath;
 
     QGraphicsView* previewMap;
+
+    Game* game;
+    Map* maCarte;
 
 };
 

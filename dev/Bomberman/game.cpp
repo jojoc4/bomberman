@@ -4,13 +4,19 @@ Game::Game()
 {
     player1 = new Player();
     player2 = new Player();
+    map = new Map();
 }
 
+/**
+ * @brief Game::keyoardThread method not implemented
+ */
 void Game::keyoardThread()
 {
 
 }
-
+/**
+ * @brief Game::start method not implemented
+ */
 void Game::start()
 {
 
@@ -19,7 +25,7 @@ void Game::start()
 /**
  * @brief Game::getPlayer
  * @param nbPlayer (0 or false is player1 and 1 or true is player2)
- * @return constant reference on the selected player
+ * @return pointer on the selected player
  */
 Player* Game::getPlayer(bool nbPlayer) const
 {
