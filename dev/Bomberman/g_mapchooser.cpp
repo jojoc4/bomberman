@@ -32,9 +32,11 @@ G_MapChooser::G_MapChooser(Game* ptrGame,QWidget *parent) : QWidget(parent)
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
 
-    Map* maCarte = new Map();
+    maCarte = new Map();
     maCarte->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
     delete(maCarte);
+
+
 
 
     hbox->addLayout(vboxLeft);
@@ -79,5 +81,9 @@ void G_MapChooser::validerCarte()
     } else {
         QMessageBox::information(this, "Choix des cartes", tr("Aucune carte n'a été chargée"), QMessageBox::Ok);
     }
+
+}
+
+void G_MapChooser::displayThumbnailsMap(){
 
 }

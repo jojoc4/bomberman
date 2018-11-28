@@ -22,6 +22,9 @@ public slots:
     void validerCarte();
 
 private :
+
+    void displayThumbnailsMap();
+
     QListWidget* listMaps;
     QDir* directory;
     QString filePath;
@@ -29,6 +32,7 @@ private :
     QGraphicsView* previewMap;
 
     Game* game;
+    Map* maCarte;
 
 };
 
