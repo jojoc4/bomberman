@@ -41,8 +41,8 @@ G_MapChooser::G_MapChooser(Game* ptrGame,QWidget *parent) : QWidget(parent)
     hbox->addLayout(vboxRight);
 
 
-    connect(button_parcourir, &QPushButton::clicked, this, parcourirDossierCarte);
-    connect(button_valider, &QPushButton::clicked, this, validerCarte);
+    connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::parcourirDossierCarte);
+    connect(button_valider, &QPushButton::clicked, this, &G_MapChooser::validerCarte);
 }
 /**
  * @brief G_MapChooser::parcourirDossierCarte : SLOT
