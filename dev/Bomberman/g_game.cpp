@@ -27,5 +27,5 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
     this->hLayout->addLayout(vLayout);
 
     this->setLayout(hLayout);
-
 }
+
