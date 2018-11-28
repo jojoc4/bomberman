@@ -3,6 +3,7 @@
 
 #include "mapbloc.h"
 #include <QString>
+#include <QPoint>
 
 class Map
 {
@@ -10,16 +11,14 @@ public:
     Map();
     void readFromFile(QString);
 
-    int j1x,j1y,j2x,j2y;
-
     MapBloc getMapBloc(int l, int c);
-    int getJ1x();
-    int getJ1y();
-    int getJ2x();
-    int getJ2y();
+    QPoint getJ1();
+    QPoint getJ2();
 
 private:
     MapBloc** t;
+    QPoint j1;
+    QPoint j2;
 };
 
 #endif // MAP_H

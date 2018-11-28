@@ -1,3 +1,6 @@
+/**
+ * @author Jonatan Baumgartner
+ */
 #include "map.h"
 #include <fstream>
 #include <iostream>
@@ -5,6 +8,10 @@
 
 using namespace std;
 
+
+/**
+ * @brief Map constructor
+ */
 Map::Map()
 {
     t = new MapBloc*[30];
@@ -13,12 +20,14 @@ Map::Map()
     }
 }
 
+/**
+ * @brief read the map form a file
+ * @param tpathe to the map
+ */
 void Map::readFromFile(QString p){
-    //lecture depuis fichier
     ifstream file(p.toStdString(), ios::in);
 
     if(file){
-        //ok
         for(int i = 0; i<30; i++){
             std::string line;
             getline(file, line);
@@ -33,21 +42,13 @@ void Map::readFromFile(QString p){
                     case 'F':
                         t[i][j] = MapBloc(3);
                     break;
-                    case 'A':
-                        t[i][j] = MapBloc(4);
-                    break;
-                    case 'B':
-                        t[i][j] = MapBloc(5);
-                    break;
                     case '1':
                         t[i][j] = MapBloc(3);
-                        j1x =j;
-                        j1y= i;
+                        j1 = QPoint(i,j);
                     break;
                     case '2':
                         t[i][j] = MapBloc(3);
-                        j2x =j;
-                        j2y= i;
+                        j2 = QPoint(i,j);
                     break;
                     default:
                         throw "Map read error";
@@ -59,26 +60,23 @@ void Map::readFromFile(QString p){
 
         file.close();
     }else{
-        //error
+        //TODO error
     }
 }
 
+/**
+ * @brief get a specifique mapbloc
+ * @param line and column
+ * @return specified Mapbloc
+ */
 MapBloc Map::getMapBloc(int l, int c){
     return t[l][c];
 }
 
-int Map::getJ1x(){
-    return j1x;
+QPoint Map::getJ1(){
+    return j1;
 }
 
-int Map::getJ1y(){
-    return j1y;
-}
-
-int Map::getJ2x(){
-    return j2x;
-}
-
-int Map::getJ2y(){
-    return j2y;
+QPoint Map::getJ2(){
+    return j2;
 }
