@@ -30,9 +30,10 @@ private :
     QString filePath;
 
     QGraphicsView* previewMap;
+    QGraphicsScene* previewMapScene;
 
     Game* game;
-    Map* maCarte;
+    Map* myMap;
 
 };
 

@@ -26,18 +26,21 @@ G_MapChooser::G_MapChooser(Game* ptrGame,QWidget *parent) : QWidget(parent)
     hbox_button->addWidget(button_parcourir);
     vboxLeft->addLayout(hbox_button);
 
-    // QPainter
+    // QGraphicsView
     previewMap = new QGraphicsView();
+    previewMapScene = new QGraphicsScene(previewMap);
+    previewMapScene->setSceneRect(previewMap->rect());
+    previewMap->setScene(previewMapScene);
+
+    // position QGrapicsView
     QVBoxLayout* vBoxPainter = new QVBoxLayout();
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
 
-    maCarte = new Map();
-    maCarte->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
-    delete(maCarte);
-
-
-
+    // Chargement de la carte
+    myMap = new Map();
+    myMap->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
+    displayThumbnailsMap();
 
     hbox->addLayout(vboxLeft);
     hbox->addLayout(vboxRight);
@@ -85,5 +88,26 @@ void G_MapChooser::validerCarte()
 }
 
 void G_MapChooser::displayThumbnailsMap(){
+    for(int i = 0; i < 30; i++){
+        for(int j = 0; j < 30; j++){
+            MapBloc monBloc = myMap->getMapBloc(i,j);
+            int type = monBloc.getType();
 
+            switch(type){
+            case 1:
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::blue));
+                break;
+            case 2:
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::yellow));
+                break;
+            case 3:
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::red));
+                break;
+            default :
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::black));
+            }
+
+        }
+    }
+    delete(myMap);
 }
