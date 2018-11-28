@@ -6,7 +6,7 @@ MapBloc::MapBloc(){
 
 MapBloc::MapBloc(int t){
     type=t;
-    //voir les types dans la documentation sur git
+    //see types number on git
     if(type<=2){
         traversable=false;
     }else{
@@ -16,7 +16,7 @@ MapBloc::MapBloc(int t){
 
 void MapBloc::setType(int t){
     type=t;
-    //voir les types dans la documentation sur git
+    //see type number on git
     if(type<=2){
         traversable=false;
     }else{
