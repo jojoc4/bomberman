@@ -5,7 +5,7 @@
 class Bomb
 {
 public:
-    Bomb(int, int);
+    Bomb(int, int, int, int);
     void bombThread();
     int getType();
     int getRange();
