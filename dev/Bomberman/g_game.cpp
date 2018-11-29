@@ -31,3 +31,27 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
 
 }
 
+G_Game::~G_Game()
+{
+
+}
+
+void G_Game::keyPressEvent(QKeyEvent *event)
+{
+
+}
+
+void G_Game::resizeEvent(QResizeEvent *event)
+{
+
+}
+
+void G_Game::displayMap() const
+{
+
+}
+
+void G_Game::displayPlayers() const
+{
+
+}

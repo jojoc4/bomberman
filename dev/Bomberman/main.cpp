@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
     G_Game g(game, nullptr);
 
     b.show();
-    //w.show();
-    //g.show();
+    w.show();
+    g.show();
 
     return a.exec();
 }
