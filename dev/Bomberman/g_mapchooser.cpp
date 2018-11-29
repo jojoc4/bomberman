@@ -91,8 +91,8 @@ void G_MapChooser::displayThumbnailsMap(){
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
             QPoint bloc(i,j);
-            MapBloc monBloc = myMap->getMapBloc(bloc);
-            int type = monBloc.getType();
+            MapBloc* monBloc = myMap->getMapBloc(bloc);
+            int type = monBloc->getType();
 
             switch(type){
             case 1:

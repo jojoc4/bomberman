@@ -13,9 +13,9 @@ using namespace std;
  */
 Map::Map()
 {
-    t = new MapBloc*[30];
+    t = new MapBloc**[30];
     for(int i = 0; i< 30; i++){
-        t[i] = new MapBloc[30];
+        t[i] = new MapBloc*[30];
     }
 }
 
@@ -33,20 +33,20 @@ void Map::readFromFile(QString path){
             for(int j = 0; j<30; j++){
                 switch(line[j]){
                     case 'I':
-                        t[i][j] = MapBloc(1);
+                        t[i][j] = new MapBloc(1);
                     break;
                     case 'D':
-                        t[i][j] = MapBloc(2);
+                        t[i][j] = new MapBloc(2);
                     break;
                     case 'F':
-                        t[i][j] = MapBloc(3);
+                        t[i][j] = new MapBloc(3);
                     break;
                     case '1':
-                        t[i][j] = MapBloc(3);
+                        t[i][j] = new MapBloc(3);
                         j1 = QPoint(i,j);
                     break;
                     case '2':
-                        t[i][j] = MapBloc(3);
+                        t[i][j] = new MapBloc(3);
                         j2 = QPoint(i,j);
                     break;
                     default:
@@ -68,7 +68,7 @@ void Map::readFromFile(QString path){
  * @param p (QPoint line column)
  * @return specified Mapbloc
  */
-MapBloc Map::getMapBloc(QPoint bloc){
+MapBloc* Map::getMapBloc(QPoint bloc){
     return t[bloc.x()][bloc.y()];
 }
 

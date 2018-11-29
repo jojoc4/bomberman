@@ -11,11 +11,11 @@ public:
     Map();
     void readFromFile(QString path);
 
-    MapBloc getMapBloc(QPoint bloc);
+    MapBloc* getMapBloc(QPoint bloc);
     QPoint getPlayerSpawn(bool nbPlayer) const;
 
 private:
-    MapBloc** t;
+    MapBloc*** t;
     QPoint j1;
     QPoint j2;
 };
