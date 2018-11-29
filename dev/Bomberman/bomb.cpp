@@ -7,12 +7,11 @@
  * @brief bomb constructor
  * @param type, range, line and column
  */
-Bomb::Bomb(int t, int r, int l, int c)
+Bomb::Bomb(int type, int range, QPoint position)
 {
-    type=t;
-    range=r;
-    line=l;
-    column=c;
+    this->type=type;
+    this->range=range;
+    this->position=position;
 }
 
 /**
@@ -34,10 +33,6 @@ int Bomb::getRange(){
     return range;
 }
 
-int Bomb::getLine(){
-    return line;
-}
-
-int Bomb::getColumn(){
-    return column;
+QPoint Bomb::getPosition(){
+    return position;
 }

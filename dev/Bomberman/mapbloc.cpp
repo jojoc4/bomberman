@@ -9,11 +9,10 @@ MapBloc::MapBloc(){
 
 /**
  * @brief MapBloc constructor
- * @param type
+ * @param type (type of bloc, see the wiki)
  */
-MapBloc::MapBloc(int t){
-    type=t;
-    //see types number on git
+MapBloc::MapBloc(int type){
+    type=type;
     if(type<=2){
         traversable=false;
     }else{
@@ -23,11 +22,10 @@ MapBloc::MapBloc(int t){
 
 /**
  * @brief change type
- * @param type
+ * @param type (type of bloc, see the wiki)
  */
-void MapBloc::setType(int t){
-    type=t;
-    //see type number on git
+void MapBloc::setType(int type){
+    type=type;
     if(type<=2){
         traversable=false;
     }else{

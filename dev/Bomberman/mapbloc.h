@@ -8,8 +8,8 @@ class MapBloc
 public:
 
     MapBloc();
-    MapBloc(int t);
-    void setType(int);
+    MapBloc(int type);
+    void setType(int type);
     int getType();
     bool getTraversable();
 

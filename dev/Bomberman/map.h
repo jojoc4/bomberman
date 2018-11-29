@@ -9,11 +9,10 @@ class Map
 {
 public:
     Map();
-    void readFromFile(QString);
+    void readFromFile(QString path);
 
-    MapBloc getMapBloc(int l, int c);
-    QPoint getJ1();
-    QPoint getJ2();
+    MapBloc getMapBloc(QPoint bloc);
+    QPoint getPlayerSpawn(bool nbPlayer) const;
 
 private:
     MapBloc** t;

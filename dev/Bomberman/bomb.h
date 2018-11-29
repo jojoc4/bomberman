@@ -1,22 +1,23 @@
 #ifndef BOMB_H
 #define BOMB_H
 
+#include <QPoint>
 
 class Bomb
 {
 public:
-    Bomb(int, int, int, int);
+    Bomb(int type, int range, QPoint position);
+
     void bombThread();
+
     int getType();
     int getRange();
-    int getLine();
-    int getColumn();
+    QPoint getPosition();
 
 private:
     int type;
     int range;
-    int line;
-    int column;
+    QPoint position;
 };
 
 #endif // BOMB_H
