@@ -4,7 +4,6 @@
 #include "map.h"
 #include <fstream>
 #include <iostream>
-#include <QString>
 
 using namespace std;
 
@@ -22,10 +21,10 @@ Map::Map()
 
 /**
  * @brief read the map form a file
- * @param tpathe to the map
+ * @param p (pathe to the map)
  */
-void Map::readFromFile(QString p){
-    ifstream file(p.toStdString(), ios::in);
+void Map::readFromFile(QString path){
+    ifstream file(path.toStdString(), ios::in);
 
     if(file){
         for(int i = 0; i<30; i++){
@@ -66,17 +65,22 @@ void Map::readFromFile(QString p){
 
 /**
  * @brief get a specifique mapbloc
- * @param line and column
+ * @param p (QPoint line column)
  * @return specified Mapbloc
  */
-MapBloc Map::getMapBloc(int l, int c){
-    return t[l][c];
+MapBloc Map::getMapBloc(QPoint bloc){
+    return t[bloc.x()][bloc.y()];
 }
 
-QPoint Map::getJ1(){
-    return j1;
-}
-
-QPoint Map::getJ2(){
-    return j2;
+/**
+ * @brief Map::getPlayerSpawn
+ * @param nbPlayer (0 or false is player1 and 1 or true is player2)
+ * @return Qpoint representing the spawn case
+ */
+QPoint Map::getPlayerSpawn(bool nbPlayer) const
+{
+    if(!nbPlayer)
+        return j1;
+    else
+        return j2;
 }

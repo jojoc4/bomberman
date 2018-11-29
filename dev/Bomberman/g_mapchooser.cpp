@@ -90,7 +90,8 @@ void G_MapChooser::validerCarte()
 void G_MapChooser::displayThumbnailsMap(){
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
-            MapBloc monBloc = myMap->getMapBloc(i,j);
+            QPoint bloc(i,j);
+            MapBloc monBloc = myMap->getMapBloc(bloc);
             int type = monBloc.getType();
 
             switch(type){
