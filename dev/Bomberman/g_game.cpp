@@ -1,5 +1,6 @@
 #include "g_game.h"
 #include "bomb.h"
+#include "map.h"
 
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
 {
@@ -29,11 +30,19 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
 
     this->setLayout(hLayout);
 
+    this->displayMap();
 }
 
 G_Game::~G_Game()
 {
+    delete game; //This one at least is really necessary
 
+    delete textPlayer1;
+    delete textPlayer2;
+    delete scene;
+    delete container;
+    delete vLayout;
+    delete hLayout;
 }
 
 void G_Game::keyPressEvent(QKeyEvent *event)
@@ -48,7 +57,7 @@ void G_Game::resizeEvent(QResizeEvent *event)
 
 void G_Game::displayMap() const
 {
-
+    Map theMap = game->getMap();
 }
 
 void G_Game::displayPlayers() const

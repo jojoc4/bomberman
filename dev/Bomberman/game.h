@@ -20,6 +20,7 @@ public:
     void keyoardThread();
 
     Player* getPlayer(bool nbPlayer) const;
+    Map* getMap() const;
 
 private:
     int type;

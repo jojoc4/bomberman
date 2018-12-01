@@ -41,3 +41,8 @@ Player* Game::getPlayer(bool nbPlayer) const
     else
         return this->player2;
 }
+
+Map* Game::getMap() const
+{
+    return this->map;
+}
