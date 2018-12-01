@@ -7,6 +7,13 @@ Game::Game()
     map = new Map();
 }
 
+Game::~Game()
+{
+    delete player1;
+    delete player2;
+    delete map;
+}
+
 /**
  * @brief Game::keyoardThread method not implemented
  */
