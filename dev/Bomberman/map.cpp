@@ -60,6 +60,7 @@ void Map::readFromFile(QString path){
         file.close();
     }else{
         //TODO error
+        throw exception();
     }
 }
 

@@ -38,8 +38,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     vboxRight->addWidget(previewMap);
 
     // Chargement de la carte
-    myMap = new Map();
-    myMap->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
+    game->getMap()->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
     displayThumbnailsMap();
 
     hbox->addLayout(vboxLeft);
@@ -91,7 +90,7 @@ void G_MapChooser::displayThumbnailsMap(){
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
             QPoint bloc(i,j);
-            MapBloc* monBloc = myMap->getMapBloc(bloc);
+            MapBloc* monBloc = game->getMap()->getMapBloc(bloc);
             int type = monBloc->getType();
 
             switch(type){
