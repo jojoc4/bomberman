@@ -43,3 +43,6 @@ HEADERS += \
     game.h \
     player.h \
     g_mapchooser.h
+
+RESOURCES += \
+    ressources.qrc
