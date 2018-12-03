@@ -1,3 +1,8 @@
+/**
+ * @author Teo Schaffner
+ */
+
+
 #include "g_game.h"
 #include "bomb.h"
 #include "map.h"
@@ -69,6 +74,22 @@ void G_Game::displayMap() const
     for(int i=0; i<900; ++i)
     {
         bloc = theMap->getMapBloc(QPoint(i/30, i%30));
+
+        int type = bloc->getType();
+
+        switch(type){
+        case 1:
+            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black), QBrush(Qt::blue));
+            break;
+        case 2:
+            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black),QBrush(Qt::yellow));
+            break;
+        case 3:
+            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            break;
+        default :
+            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
+        }
     }
 }
 
