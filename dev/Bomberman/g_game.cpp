@@ -45,19 +45,31 @@ G_Game::~G_Game()
     delete hLayout;
 }
 
-void G_Game::keyPressEvent(QKeyEvent *event)
+void G_Game::keyPressEvent(QKeyEvent* event)
 {
 
 }
 
-void G_Game::resizeEvent(QResizeEvent *event)
+void G_Game::resizeEvent(QResizeEvent* event)
 {
 
 }
 
 void G_Game::displayMap() const
 {
-    Map theMap = game->getMap();
+    int sizeX = this->scene->width()/30;
+    int sizeY = this->scene->height()/30;
+
+    Map* theMap = this->game->getMap();
+    MapBloc* bloc = nullptr;
+
+
+    this->scene->setBackgroundBrush(Qt::gray);
+
+    for(int i=0; i<900; ++i)
+    {
+        bloc = theMap->getMapBloc(QPoint(i/30, i%30));
+    }
 }
 
 void G_Game::displayPlayers() const

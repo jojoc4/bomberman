@@ -4,7 +4,7 @@
  * @brief Constructeur de la classe G_MapChooser
  * @param Herite de QWidget
  */
-G_MapChooser::G_MapChooser(Game* ptrGame,QWidget *parent) : QWidget(parent)
+G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Choix des cartes");
     QHBoxLayout* hbox = new QHBoxLayout(this);
