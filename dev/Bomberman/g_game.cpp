@@ -1,3 +1,8 @@
+/**
+ * @author Teo Schaffner
+ */
+
+
 #include "g_game.h"
 #include "bomb.h"
 #include "map.h"
@@ -52,7 +57,7 @@ void G_Game::keyPressEvent(QKeyEvent* event)
 
 void G_Game::resizeEvent(QResizeEvent* event)
 {
-
+    this->displayMap();
 }
 
 void G_Game::displayMap() const
@@ -69,10 +74,32 @@ void G_Game::displayMap() const
     for(int i=0; i<900; ++i)
     {
         bloc = theMap->getMapBloc(QPoint(i/30, i%30));
+
+        int type = bloc->getType();
+
+        switch(type){
+        case 1: //indestructible
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
+            break;
+        case 2: //destructible
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::blue));
+            break;
+        /*
+        case 3:
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            break;
+        default :
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
+            */
+        }
     }
 }
 
 void G_Game::displayPlayers() const
 {
+    QPoint p1Pos = game->getPlayer(false)->getPosition();
+    QPoint p2Pos = game->getPlayer(true)->getPosition();
+
+
 
 }

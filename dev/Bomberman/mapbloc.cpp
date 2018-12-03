@@ -13,11 +13,11 @@ MapBloc::MapBloc(){
  * @param type (type of bloc, see the wiki)
  */
 MapBloc::MapBloc(int type){
-    type=type;
-    if(type<=2){
-        traversable=false;
+    this->type=type;
+    if(this->type<=2){
+        this->traversable=false;
     }else{
-        traversable=true;
+        this->traversable=true;
     }
 }
 
@@ -26,11 +26,11 @@ MapBloc::MapBloc(int type){
  * @param type (type of bloc, see the wiki)
  */
 void MapBloc::setType(int type){
-    type=type;
+    this->type=type;
     if(type<=2){
-        traversable=false;
+        this->traversable=false;
     }else{
-        traversable=true;
+        this->traversable=true;
     }
 }
 
@@ -54,14 +54,12 @@ void MapBloc::explode(){
     }else{
         setType(3);
     }
-
-
 }
 
 int MapBloc::getType(){
-    return type;
+    return this->type;
 }
 
 bool MapBloc::getTraversable(){
-    return traversable;
+    return this->traversable;
 }
