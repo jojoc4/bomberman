@@ -67,7 +67,7 @@ bool Game::move(QPoint newPos, int newAngle, QPoint bloc, bool nbPlayer){
  * @param nbPlayer (0 or false is player1 and 1 or true is player2)
  * @return pointer on the selected player
  */
-Player* Game::getPlayer(bool nbPlayer) const
+Player* Game::getPlayer(bool nbPlayer)
 {
     if(!nbPlayer)
         return this->player1;
@@ -75,7 +75,7 @@ Player* Game::getPlayer(bool nbPlayer) const
         return this->player2;
 }
 
-Map* Game::getMap() const
+Map* Game::getMap()
 {
     return this->map;
 }
