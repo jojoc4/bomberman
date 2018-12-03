@@ -19,8 +19,10 @@ public:
     void start();
     void keyoardThread();
 
-    Player* getPlayer(bool nbPlayer) const;
-    Map* getMap() const;
+    Player* getPlayer(bool nbPlayer);
+    Map* getMap();
+
+    bool move(QPoint newPos, int newAngle, QPoint bloc, bool nbPlayer);
 
 private:
     int type;

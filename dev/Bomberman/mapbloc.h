@@ -13,6 +13,8 @@ public:
     int getType();
     bool getTraversable();
 
+    void explode();
+
 private:
     int type;
     bool traversable;

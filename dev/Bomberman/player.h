@@ -17,6 +17,10 @@ public:
     bool isDead();
     int getNbBomb();
     int getPuissance();
+    void setPuissance(int puissance);
+    void setNbBomb(int nbBombe);
+    void setPosition(QPoint np);
+    void setAngle(int angle);
 
 private :
     QPoint position;
