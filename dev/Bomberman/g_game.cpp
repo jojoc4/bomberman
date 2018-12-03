@@ -57,7 +57,7 @@ void G_Game::keyPressEvent(QKeyEvent* event)
 
 void G_Game::resizeEvent(QResizeEvent* event)
 {
-
+    this->displayMap();
 }
 
 void G_Game::displayMap() const
@@ -95,5 +95,9 @@ void G_Game::displayMap() const
 
 void G_Game::displayPlayers() const
 {
+    QPoint *p1Pos = game->getPlayer(false)->getPosition();
+    QPoint *p2Pos = game->getPlayer(true)->getPosition();
+
+
 
 }
