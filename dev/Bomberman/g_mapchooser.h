@@ -18,8 +18,8 @@ signals:
 
 public slots:
 
-    void parcourirDossierCarte();
-    void validerCarte();
+    void browseFolderMaps();
+    void validateMaps();
 
 private :
 
@@ -33,8 +33,6 @@ private :
     QGraphicsScene* previewMapScene;
 
     Game* game;
-    Map* myMap;
-
 };
 
 #endif // G_MAPCHOOSER_H

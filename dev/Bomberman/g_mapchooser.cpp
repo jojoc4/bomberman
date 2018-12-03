@@ -6,7 +6,7 @@
  */
 G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
-    setWindowTitle("Choix des cartes");
+    setWindowTitle(tr("Choix des cartes"));
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
     QVBoxLayout* vboxRight = new QVBoxLayout();
@@ -19,8 +19,8 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     vboxLeft->addStretch();
 
     QHBoxLayout *hbox_button = new QHBoxLayout();
-    QPushButton *button_valider = new QPushButton("Valider");
-    QPushButton *button_parcourir = new QPushButton("Parcourir");
+    QPushButton *button_valider = new QPushButton(tr("Valider"),this);
+    QPushButton *button_parcourir = new QPushButton(tr("Parcourir"),this);
 
     hbox_button->addWidget(button_valider);
     hbox_button->addWidget(button_parcourir);
@@ -38,22 +38,28 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     vboxRight->addWidget(previewMap);
 
     // Chargement de la carte
-    game->getMap()->readFromFile("C:/DEV/Qt/bomberman/mapTest.nmm");
+    QDir dossier(QCoreApplication::applicationDirPath());
+
+    dossier.cdUp();
+    dossier.cdUp();
+    dossier.cdUp();
+    qDebug() << dossier.absolutePath() + "/mapTest.nmm";
+    game->getMap()->readFromFile(dossier.absolutePath() + "/mapTest.nmm");
     displayThumbnailsMap();
 
     hbox->addLayout(vboxLeft);
     hbox->addLayout(vboxRight);
 
 
-    connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::parcourirDossierCarte);
-    connect(button_valider, &QPushButton::clicked, this, &G_MapChooser::validerCarte);
+    connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::browseFolderMaps);
+    connect(button_valider, &QPushButton::clicked, this, &G_MapChooser::validateMaps);
 }
 /**
  * @brief G_MapChooser::parcourirDossierCarte : SLOT
  * Permet de parcourir un dossier et d'y trouver toutes les cartes.
  *
  */
-void G_MapChooser::parcourirDossierCarte()
+void G_MapChooser::browseFolderMaps()
 {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
                                                     "/home",
@@ -73,7 +79,7 @@ void G_MapChooser::parcourirDossierCarte()
  * @brief G_MapChooser::validerCarte
  * Sélectionne la carte à affichier et quitte le programme.
  */
-void G_MapChooser::validerCarte()
+void G_MapChooser::validateMaps()
 {
     if(!listMaps->selectedItems().isEmpty())
     {
@@ -95,13 +101,13 @@ void G_MapChooser::displayThumbnailsMap(){
 
             switch(type){
             case 1:
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::blue));
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::blue),QBrush(Qt::blue));
                 break;
             case 2:
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::yellow));
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::yellow),QBrush(Qt::yellow));
                 break;
             case 3:
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::red));
+                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::red),QBrush(Qt::red));
                 break;
             default :
                 previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::black));
@@ -109,5 +115,4 @@ void G_MapChooser::displayThumbnailsMap(){
 
         }
     }
-    delete(myMap);
 }
