@@ -22,6 +22,8 @@ public:
     Player* getPlayer(bool nbPlayer) const;
     Map* getMap() const;
 
+    bool move(QPoint newPos, int newAngle, QPoint bloc, bool nbPlayer);
+
 private:
     int type;
     Player* player1;

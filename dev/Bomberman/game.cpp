@@ -1,3 +1,6 @@
+/**
+ * @author Julien Chappuis
+ */
 #include "game.h"
 
 Game::Game()
@@ -27,6 +30,36 @@ void Game::keyoardThread()
 void Game::start()
 {
 
+}
+
+/**
+* @brief Game::canMove make the changes in the player if it is a special bloc
+* @param bloc
+* @param nbPlayer
+* @return faslse if impossible move, else true
+*/
+bool Game::move(QPoint newPos, int newAngle, QPoint bloc, bool nbPlayer){
+    MapBloc* mb = map->getMapBloc(bloc);
+    if(mb->getTraversable()){
+        Player* p = getPlayer(nbPlayer);
+        p->setAngle(newAngle);
+        p->setPosition(newPos);
+        switch (mb->getType()) {
+        case 4:
+            p->setNbBomb(p->getNbBomb()+1);
+            break;
+        case 5:
+            //TODO bonus
+            break;
+        case 6:
+            p->setPuissance(p->getPuissance()+1);
+            break;
+        default:
+            break;
+        }
+        return true;
+    }
+    return false;
 }
 
 /**
