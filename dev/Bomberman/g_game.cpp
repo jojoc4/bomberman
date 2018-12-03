@@ -78,25 +78,27 @@ void G_Game::displayMap() const
         int type = bloc->getType();
 
         switch(type){
-        case 1:
-            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black), QBrush(Qt::blue));
+        case 1: //indestructible
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
             break;
-        case 2:
-            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black),QBrush(Qt::yellow));
+        case 2: //destructible
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::blue));
             break;
+        /*
         case 3:
-            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
             break;
         default :
-            this->scene->addRect((i%30), (i/30), sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
+            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
+            */
         }
     }
 }
 
 void G_Game::displayPlayers() const
 {
-    QPoint *p1Pos = game->getPlayer(false)->getPosition();
-    QPoint *p2Pos = game->getPlayer(true)->getPosition();
+    QPoint p1Pos = game->getPlayer(false)->getPosition();
+    QPoint p2Pos = game->getPlayer(true)->getPosition();
 
 
 
