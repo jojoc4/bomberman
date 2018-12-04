@@ -2,7 +2,6 @@
  * @author Jonatan Baumgartner
  */
 #include "mapbloc.h"
-#include <QRandomGenerator>
 
 MapBloc::MapBloc(){
 
