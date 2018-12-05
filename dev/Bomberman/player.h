@@ -24,7 +24,7 @@ public:
     void setAngle(int angle);
 
     QGraphicsItem* getPtrItemOnScene();
-    void setPtrItemOnScene();
+    void setPtrItemOnScene(QGraphicsItem *item);
 
 private :
     QPoint position;

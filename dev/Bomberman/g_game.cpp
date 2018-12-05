@@ -96,6 +96,8 @@ void G_Game::displayMap()
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
                 item->setPos((i%30)*sizeX, (i/30)*sizeY);
 
+                //bloc->setPtrItemOnScene(item);
+
                 //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
                 break;
             }

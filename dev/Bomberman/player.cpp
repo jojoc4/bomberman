@@ -64,7 +64,7 @@ QGraphicsItem* Player::getPtrItemOnScene()
     return nullptr;
 }
 
-void Player::setPtrItemOnScene()
+void Player::setPtrItemOnScene(QGraphicsItem *item)
 {
 
 }

@@ -15,7 +15,7 @@ public:
     int getRange();
     QPoint getPosition();
     QGraphicsItem* getPtrItemOnScene();
-    void setPtrItemOnScene();
+    void setPtrItemOnScene(QGraphicsItem *item);
 
 private:
     int type;

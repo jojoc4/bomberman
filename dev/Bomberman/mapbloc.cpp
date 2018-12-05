@@ -67,7 +67,7 @@ QGraphicsItem* MapBloc::getPtrItemOnScene()
     return nullptr;
 }
 
-void MapBloc::setPtrItemOnScene()
+void MapBloc::setPtrItemOnScene(QGraphicsItem *item)
 {
 
 }
