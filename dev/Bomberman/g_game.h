@@ -32,8 +32,8 @@ private:
     QVBoxLayout *vLayout;
     QHBoxLayout *hLayout;
 
-    void displayMap() const;
-    void displayPlayers() const;
+    void displayMap();
+    void displayPlayers();
 
 };
 

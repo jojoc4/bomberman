@@ -1,5 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file>mapTest.nmm</file>
+        <file>resources/img/Blocs.png</file>
+        <file>resources/img/Bombe.png</file>
+        <file>resources/img/Bombe2.png</file>
+        <file>resources/img/Bomberman.png</file>
+        <file>resources/img/Explosions.png</file>
+        <file>resources/img/Bombermanj2.png</file>
+        <file>resources/mapTest.nmm</file>
     </qresource>
 </RCC>

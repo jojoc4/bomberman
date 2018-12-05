@@ -71,7 +71,6 @@ void Map::readFromFile(QString path){
  * @return specified Mapbloc
  */
 MapBloc* Map::getMapBloc(QPoint bloc){
-    qDebug() << t[bloc.x()][bloc.y()]->getType();
     return t[bloc.x()][bloc.y()];
 }
 
