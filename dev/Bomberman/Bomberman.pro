@@ -4,10 +4,15 @@
 #
 #-------------------------------------------------
 
+
+CONFIG += precompile_header
+PRECOMPILED_HEADER = stable.h
+
 QT       += core gui
 QT       += core
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 
 TARGET = Bomberman
 TEMPLATE = app
@@ -33,7 +38,8 @@ SOURCES += \
     g_game.cpp \
     game.cpp \
     player.cpp \
-    g_mapchooser.cpp
+    g_mapchooser.cpp \
+    mainwidget.cpp
 
 HEADERS += \
         g_homescreen.h \
@@ -43,7 +49,9 @@ HEADERS += \
     g_game.h \
     game.h \
     player.h \
-    g_mapchooser.h
+    g_mapchooser.h \
+    mainwidget.h \
+    stable.h
 
 RESOURCES += \
     ressources.qrc

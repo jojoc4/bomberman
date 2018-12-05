@@ -22,6 +22,7 @@ void Player::moveThread()
 }
 
 
+
 QPoint Player::getPosition(){
     return position;
 }
