@@ -41,7 +41,6 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
 
     this->setLayout(hLayout);
 
-
     this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
     this->p1Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
@@ -96,7 +95,7 @@ void G_Game::displayMap()
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
                 item->setPos((i%30)*sizeX, (i/30)*sizeY);
 
-                //bloc->setPtrItemOnScene(item);
+                bloc->setPtrItemOnScene(item);
 
                 //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
                 break;
@@ -107,33 +106,39 @@ void G_Game::displayMap()
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
                 item->setPos((i%30)*sizeX, (i/30)*sizeY);
 
+                bloc->setPtrItemOnScene(item);
+
                 //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::blue));
                 break;
             }
-            /*
             case 3: //background
-                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            {
                 break;
+            }
             case 4: //upgrade nbre
-                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            {
                 break;
+            }
             case 5: //bonus
-                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            {
                 break;
+            }
             case 6: //upgrade power
-                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+            {
                 break;
+            }
             default :
-                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
-            */
+            {
+
+            }
         }
     }
 }
 
 void G_Game::displayPlayers()
 {
+    /*
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
-
-
+    */
 }
