@@ -1,10 +1,10 @@
 #ifndef G_GAME_H
 #define G_GAME_H
 
-#include <QMainWindow>
 #include <QLabel>
 #include <QGraphicsView>
 #include <QLayout>
+#include <QPixmap>
 #include "player.h"
 #include "game.h"
 
@@ -31,6 +31,10 @@ private:
     QGraphicsScene *scene;
     QVBoxLayout *vLayout;
     QHBoxLayout *hLayout;
+
+    QPixmap allBlocks;
+    QPixmap p1Texture;
+    QPixmap p2Texture;
 
     void displayMap();
     void displayPlayers();

@@ -41,6 +41,11 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
 
     this->setLayout(hLayout);
 
+
+    this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
+    this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
+    this->p1Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
+
     this->displayMap();
 }
 
@@ -84,7 +89,6 @@ void G_Game::displayMap()
         bloc = theMap->getMapBloc(QPoint(i/30, i%30));
 
         int type = bloc->getType();
-        QPixmap allBlocks(QString(":/resources/img/Blocs.png"));
 
         switch(type){
             case 1: //indestructible
@@ -129,7 +133,6 @@ void G_Game::displayPlayers()
 {
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
-
 
 
 }
