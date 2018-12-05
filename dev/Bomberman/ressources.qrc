@@ -6,6 +6,5 @@
         <file>resources/img/Bomberman.png</file>
         <file>resources/img/Explosions.png</file>
         <file>resources/img/Bombermanj2.png</file>
-        <file>resources/mapTest.nmm</file>
     </qresource>
 </RCC>
