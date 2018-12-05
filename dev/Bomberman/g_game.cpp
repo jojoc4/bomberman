@@ -47,6 +47,7 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
     this->p1Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
 
     this->displayMap();
+    this->displayPlayers();
 }
 
 G_Game::~G_Game()
@@ -75,8 +76,6 @@ void G_Game::displayMap()
 {
     int sizeX = this->scene->width()/30;
     int sizeY = this->scene->height()/30;
-
-    qDebug() << sizeX << "   " << sizeY;
 
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;

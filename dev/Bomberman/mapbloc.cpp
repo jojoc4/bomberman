@@ -61,3 +61,13 @@ int MapBloc::getType(){
 bool MapBloc::getTraversable(){
     return this->traversable;
 }
+
+QGraphicsItem* MapBloc::getPtrItemOnScene()
+{
+    return nullptr;
+}
+
+void MapBloc::setPtrItemOnScene()
+{
+
+}

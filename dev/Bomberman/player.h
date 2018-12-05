@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <QPoint>
+#include <QGraphicsItem>
 
 class QPoint;
 
@@ -22,12 +23,17 @@ public:
     void setPosition(QPoint np);
     void setAngle(int angle);
 
+    QGraphicsItem* getPtrItemOnScene();
+    void setPtrItemOnScene();
+
 private :
     QPoint position;
     int angle;
     bool dead;
     int nbBombe;
     int puissance;
+
+    QGraphicsItem *ptrItemOnScene;
 
 };
 

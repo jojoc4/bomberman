@@ -2,6 +2,7 @@
 #define BOMB_H
 
 #include <QPoint>
+#include <QGraphicsItem>
 
 class Bomb
 {
@@ -13,11 +14,14 @@ public:
     int getType();
     int getRange();
     QPoint getPosition();
+    QGraphicsItem* getPtrItemOnScene();
+    void setPtrItemOnScene();
 
 private:
     int type;
     int range;
     QPoint position;
+    QGraphicsItem *ptrItemOnScene;
 };
 
 #endif // BOMB_H

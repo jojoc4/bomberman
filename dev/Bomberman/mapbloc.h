@@ -2,6 +2,7 @@
 #define MAPBLOC_H
 
 #include <QString>
+#include <QGraphicsItem>
 
 class MapBloc
 {
@@ -15,9 +16,14 @@ public:
 
     void explode();
 
+    QGraphicsItem* getPtrItemOnScene();
+    void setPtrItemOnScene();
+
 private:
     int type;
     bool traversable;
+
+    QGraphicsItem *ptrItemOnScene;
 };
 
 #endif // MAPBLOC_H

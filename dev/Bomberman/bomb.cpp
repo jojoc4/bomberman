@@ -36,3 +36,13 @@ int Bomb::getRange(){
 QPoint Bomb::getPosition(){
     return position;
 }
+
+QGraphicsItem* Bomb::getPtrItemOnScene()
+{
+    return nullptr;
+}
+
+void Bomb::setPtrItemOnScene()
+{
+
+}

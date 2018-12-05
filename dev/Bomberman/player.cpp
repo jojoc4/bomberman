@@ -58,3 +58,13 @@ void Player::setPosition(QPoint np){
 void Player::setAngle(int angle){
     this->angle=angle;
 }
+
+QGraphicsItem* Player::getPtrItemOnScene()
+{
+    return nullptr;
+}
+
+void Player::setPtrItemOnScene()
+{
+
+}
