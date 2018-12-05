@@ -2,7 +2,6 @@
  * @author Jonatan Baumgartner
  */
 #include "mapbloc.h"
-#include <QRandomGenerator>
 
 MapBloc::MapBloc(){
 
@@ -43,8 +42,7 @@ void MapBloc::explode(){
     int rangeImprovment=2;
     int numberImprovment=2;
 
-    QRandomGenerator random = QRandomGenerator();
-    int r = random.bounded(9)+1;
+    int r = (qrand() % ((10 + 1) - 1) + 1);
     if(r<=bonus){
         setType(5);
     }else if(r<=bonus+rangeImprovment){
