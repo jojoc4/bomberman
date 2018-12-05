@@ -18,6 +18,7 @@ MapBloc::MapBloc(int type){
     }else{
         this->traversable=true;
     }
+    ptrItemOnScene=nullptr;
 }
 
 /**
@@ -64,10 +65,10 @@ bool MapBloc::getTraversable(){
 
 QGraphicsItem* MapBloc::getPtrItemOnScene()
 {
-    return nullptr;
+    return ptrItemOnScene;
 }
 
 void MapBloc::setPtrItemOnScene(QGraphicsItem *item)
 {
-
+    ptrItemOnScene= item;
 }

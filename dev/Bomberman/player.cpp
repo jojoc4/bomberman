@@ -10,6 +10,7 @@ Player::Player()
     dead = false;
     nbBombe = 1;
     puissance = 1;
+    ptrItemOnScene=nullptr;
 }
 void Player::manualMove()
 {
@@ -61,10 +62,10 @@ void Player::setAngle(int angle){
 
 QGraphicsItem* Player::getPtrItemOnScene()
 {
-    return nullptr;
+    return ptrItemOnScene;
 }
 
 void Player::setPtrItemOnScene(QGraphicsItem *item)
 {
-
+    ptrItemOnScene= item;
 }

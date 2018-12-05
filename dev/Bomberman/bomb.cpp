@@ -12,6 +12,7 @@ Bomb::Bomb(int type, int range, QPoint position)
     this->type=type;
     this->range=range;
     this->position=position;
+    ptrItemOnScene=nullptr;
 }
 
 /**
@@ -39,10 +40,10 @@ QPoint Bomb::getPosition(){
 
 QGraphicsItem* Bomb::getPtrItemOnScene()
 {
-    return nullptr;
+    return ptrItemOnScene;
 }
 
 void Bomb::setPtrItemOnScene(QGraphicsItem *item)
 {
-
+    ptrItemOnScene= item;
 }

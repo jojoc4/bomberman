@@ -14,6 +14,7 @@
     #include <QtWidgets>
     #include <QString>
     #include <QApplication>
+    #include <QGraphicsItem>
 #endif
 
 #endif // STABLE_H
