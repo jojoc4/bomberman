@@ -6,6 +6,9 @@
 #include "g_game.h"
 #include "bomb.h"
 #include "map.h"
+#include <QDebug>
+#include <QPixmap>
+#include <QGraphicsPixmapItem>
 
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
 {
@@ -25,6 +28,9 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
     this->vLayout->addWidget(textPlayer2, 0, Qt::AlignBottom);
 
     this->container = new QGraphicsView();
+    this->container->setFixedSize(900, 900);
+    this->container->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    this->container->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->scene = new QGraphicsScene(container);
     this->scene->setSceneRect(container->rect());
     this->container->setScene(scene);
@@ -34,6 +40,11 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
     this->hLayout->addLayout(vLayout);
 
     this->setLayout(hLayout);
+
+
+    this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
+    this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
+    this->p1Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
 
     this->displayMap();
 }
@@ -60,10 +71,12 @@ void G_Game::resizeEvent(QResizeEvent* event)
     this->displayMap();
 }
 
-void G_Game::displayMap() const
+void G_Game::displayMap()
 {
     int sizeX = this->scene->width()/30;
     int sizeY = this->scene->height()/30;
+
+    qDebug() << sizeX << "   " << sizeY;
 
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
@@ -78,28 +91,48 @@ void G_Game::displayMap() const
         int type = bloc->getType();
 
         switch(type){
-        case 1: //indestructible
-            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
-            break;
-        case 2: //destructible
-            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::blue));
-            break;
-        /*
-        case 3:
-            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
-            break;
-        default :
-            this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
+            case 1: //indestructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30)));
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i%30)*sizeX, (i/30)*sizeY);
+
+                //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
+                break;
+            }
+            case 2: //destructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i%30)*sizeX, (i/30)*sizeY);
+
+                //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::blue));
+                break;
+            }
+            /*
+            case 3: //background
+                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+                break;
+            case 4: //upgrade nbre
+                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+                break;
+            case 5: //bonus
+                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+                break;
+            case 6: //upgrade power
+                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::red));
+                break;
+            default :
+                this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::black));
             */
         }
     }
 }
 
-void G_Game::displayPlayers() const
+void G_Game::displayPlayers()
 {
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
-
 
 
 }

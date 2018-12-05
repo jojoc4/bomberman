@@ -9,11 +9,11 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     G_HomeScreen w;
 
-    Game *game = new Game();
+    Game game;
 
-    G_MapChooser b(game);
+    G_MapChooser b(&game);
 
-    G_Game g(game, nullptr);
+    G_Game g(&game, nullptr);
 
     b.show();
     w.show();
