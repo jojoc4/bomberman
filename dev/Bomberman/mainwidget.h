@@ -1,17 +1,22 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include <QWidget>
+#include <QtWidgets>
+#include "g_homescreen.h"
+#include "g_mapchooser.h"
+#include "g_game.h"
+#include "game.h"
 
-class mainWidget : public QWidget
+class MainWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit mainWidget(QWidget *parent = nullptr);
+    explicit MainWidget(Game* g, QWidget *parent = nullptr);
 
-signals:
-
-public slots:
+private:
+    G_Game* game;
+    G_HomeScreen* homescreen;
+    G_MapChooser* mapchooser;
 };
 
 #endif // MAINWIDGET_H
