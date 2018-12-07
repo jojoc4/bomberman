@@ -21,7 +21,9 @@ public slots:
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
 
 private:
     Game *game;
@@ -36,13 +38,19 @@ private:
     QPixmap p1Texture;
     QPixmap p2Texture;
 
+    int timeKeeper;
     int counterAnimP1;
     int counterAnimP2;
     bool p1Moving;
+    short p1MovingDir;
+    short nbTouchesP1;
     bool p2Moving;
+    short p2MovingDir;
+    short nbTouchesP2;
 
     void createDisplayMap();
     void createDisplayPlayers();
+    void updateDisplayPlayers();
     void incCounterAnim(short which);
 
 };
