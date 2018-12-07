@@ -6,7 +6,7 @@ MainWidget::MainWidget(Game* g, QWidget *parent) : QWidget(parent)
     mapchooser = new G_MapChooser(g, this);
     game = new G_Game(g, this);
 
-    QStackedLayout* layout = new QStackedLayout(this);
+    layout = new QStackedLayout(this);
     layout->addWidget(game);
     layout->addWidget(mapchooser);
     layout->addWidget(homescreen);

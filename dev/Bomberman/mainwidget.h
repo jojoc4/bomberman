@@ -12,6 +12,7 @@ class MainWidget : public QWidget
     Q_OBJECT
 public:
     explicit MainWidget(Game* g, QWidget *parent = nullptr);
+    QStackedLayout* layout;
 
 private:
     G_Game* game;
