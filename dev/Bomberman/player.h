@@ -9,6 +9,15 @@ class QPoint;
 class Player
 {
 public:
+
+    enum Direction: short
+    {
+        LEFT=0,
+        UP=1,
+        RIGHT=2,
+        DOWN=3
+    };
+
     Player();
 
     void moveThread();
