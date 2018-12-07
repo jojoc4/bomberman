@@ -47,14 +47,14 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
     this->p2Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
 
-    this->displayMap();
-    this->displayPlayers();
+
+    this->scene->setBackgroundBrush(Qt::gray);
+    this->createDisplayMap();
+    this->createDisplayPlayers();
 }
 
 G_Game::~G_Game()
 {
-    delete game; //This one at least is really necessary
-
     delete textPlayer1;
     delete textPlayer2;
     delete scene;
@@ -65,24 +65,27 @@ G_Game::~G_Game()
 
 void G_Game::keyPressEvent(QKeyEvent* event)
 {
+    switch(event->key())
+    {
+    case Qt::Key_W :
+        break;
+    case Qt::Key_A :
 
+    }
 }
 
 void G_Game::resizeEvent(QResizeEvent* event)
 {
-    this->displayMap();
+    //this->createDisplayMap();
 }
 
-void G_Game::displayMap()
+void G_Game::createDisplayMap()
 {
     int sizeX = this->scene->width()/30;
     int sizeY = this->scene->height()/30;
 
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
-
-
-    this->scene->setBackgroundBrush(Qt::gray);
 
     for(int i=0; i<900; ++i)
     {
@@ -98,8 +101,6 @@ void G_Game::displayMap()
                 item->setPos((i%30)*sizeX, (i/30)*sizeY);
 
                 bloc->setPtrItemOnScene(item);
-
-                //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black), QBrush(Qt::black));
                 break;
             }
             case 2: //destructible
@@ -109,12 +110,11 @@ void G_Game::displayMap()
                 item->setPos((i%30)*sizeX, (i/30)*sizeY);
 
                 bloc->setPtrItemOnScene(item);
-
-                //this->scene->addRect((i%30)*sizeX, (i/30)*sizeY, sizeX, sizeY, QPen(Qt::black),QBrush(Qt::blue));
                 break;
             }
             case 3: //background
             {
+                // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
                 break;
             }
             case 4: //upgrade nbre
@@ -137,7 +137,7 @@ void G_Game::displayMap()
     }
 }
 
-void G_Game::displayPlayers()
+void G_Game::createDisplayPlayers()
 {
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
@@ -153,17 +153,14 @@ void G_Game::displayPlayers()
     QPixmap texture(p1Texture.copy(counterAnimP1*16, line*25, 16, 25));
     QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
     item->setPos(p1Pos.x(), p1Pos.y());
+    this->game->getPlayer(false)->setPtrItemOnScene(item);
 
     line = this->game->getPlayer(true)->getDirection();
     texture = p2Texture.copy(counterAnimP2*16, line*25, 16, 25);
     item = this->scene->addPixmap(texture);
     item->setPos(p2Pos.x(), p2Pos.y());
-
-    //bloc->setPtrItemOnScene(item);
-
-
+    this->game->getPlayer(true)->setPtrItemOnScene(item);
 }
-
 
 void G_Game::incCounterAnim(short which)
 {

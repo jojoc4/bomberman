@@ -41,8 +41,8 @@ private:
     bool p1Moving;
     bool p2Moving;
 
-    void displayMap();
-    void displayPlayers();
+    void createDisplayMap();
+    void createDisplayPlayers();
     void incCounterAnim(short which);
 
 };
