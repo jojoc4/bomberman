@@ -38,11 +38,11 @@ void Game::start()
 * @param nbPlayer
 * @return faslse if impossible move, else true
 */
-bool Game::move(QPoint newPos, int newAngle, QPoint bloc, bool nbPlayer){
+bool Game::move(QPoint newPos, int newDirection, QPoint bloc, bool nbPlayer){
     MapBloc* mb = map->getMapBloc(bloc);
     if(mb->getTraversable()){
         Player* p = getPlayer(nbPlayer);
-        p->setAngle(newAngle);
+        p->setDirection(newDirection);
         p->setPosition(newPos);
         switch (mb->getType()) {
         case 4:
