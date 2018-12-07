@@ -36,8 +36,14 @@ private:
     QPixmap p1Texture;
     QPixmap p2Texture;
 
+    int counterAnimP1;
+    int counterAnimP2;
+    bool p1Moving;
+    bool p2Moving;
+
     void displayMap();
     void displayPlayers();
+    void incCounterAnim(short which);
 
 };
 

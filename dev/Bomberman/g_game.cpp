@@ -10,7 +10,7 @@
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 
-G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent)
+G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(0), counterAnimP2(0), p1Moving(false), p2Moving(false)
 {
     this->game = theGame;
     Player *p1 = game->getPlayer(false);
@@ -137,8 +137,70 @@ void G_Game::displayMap()
 
 void G_Game::displayPlayers()
 {
-    /*
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
-    */
+
+    if(p1Moving)
+        incCounterAnim(1);
+
+    if(p2Moving)
+        incCounterAnim(2);
+
+
+    int line = this->game->getPlayer(0)->getDirection();
+    QPixmap texture(p1Texture.copy(counterAnimP1*16, line*25, 16, 25));
+    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
+    item->setPos(p1Pos.x(), p1Pos.y());
+
+    //bloc->setPtrItemOnScene(item);
+
+
 }
+
+
+void G_Game::incCounterAnim(short which)
+{
+    if(which == 1)
+    {
+        counterAnimP1++;
+        if(counterAnimP1 == 3)
+            counterAnimP1 -= 3;
+    }
+    if(which == 2)
+    {
+        counterAnimP2++;
+        if(counterAnimP2 == 3)
+            counterAnimP2 -= 3;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

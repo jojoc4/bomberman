@@ -10,8 +10,10 @@ Player::Player()
     dead = false;
     nbBombe = 1;
     puissance = 1;
-    ptrItemOnScene=nullptr;
+    ptrItemOnScene = nullptr;
+    direction = 0;
 }
+
 void Player::manualMove()
 {
 
@@ -22,26 +24,25 @@ void Player::moveThread()
 
 }
 
-
-
-QPoint Player::getPosition(){
+QPoint Player::getPosition() const {
     return position;
 }
 
-int Player::getAngle(){
-    return angle;
-}
-
-bool Player::isDead(){
+bool Player::isDead() const {
     return dead;
 }
 
-int Player::getNbBomb(){
+int Player::getNbBomb() const {
     return nbBombe;
 }
 
-int Player::getPuissance(){
+int Player::getPuissance() const {
     return puissance;
+}
+
+short Player::getDirection() const
+{
+    return this->direction;
 }
 
 void Player::setPuissance(int puissance){
@@ -56,10 +57,6 @@ void Player::setPosition(QPoint np){
     position=np;
 }
 
-void Player::setAngle(int angle){
-    this->angle=angle;
-}
-
 QGraphicsItem* Player::getPtrItemOnScene()
 {
     return ptrItemOnScene;
@@ -68,4 +65,10 @@ QGraphicsItem* Player::getPtrItemOnScene()
 void Player::setPtrItemOnScene(QGraphicsItem *item)
 {
     ptrItemOnScene= item;
+}
+
+void Player::setDirection(short d)
+{
+    if(d>=0 && d<4)
+        this->direction = d;
 }

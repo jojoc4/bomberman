@@ -13,25 +13,27 @@ public:
 
     void moveThread();
     void manualMove();
-    QPoint getPosition();
-    int getAngle();
-    bool isDead();
-    int getNbBomb();
-    int getPuissance();
+
+    QPoint getPosition() const;
+    bool isDead() const;
+    int getNbBomb() const;
+    int getPuissance() const;
+    short getDirection() const;
+
     void setPuissance(int puissance);
     void setNbBomb(int nbBombe);
     void setPosition(QPoint np);
-    void setAngle(int angle);
+    void setDirection(short d);
 
     QGraphicsItem* getPtrItemOnScene();
     void setPtrItemOnScene(QGraphicsItem *item);
 
 private :
     QPoint position;
-    int angle;
     bool dead;
     int nbBombe;
     int puissance;
+    short direction;
 
     QGraphicsItem *ptrItemOnScene;
 
