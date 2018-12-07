@@ -33,7 +33,7 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
     this->vLayout->addWidget(textPlayer2, 0, Qt::AlignBottom);
 
     this->container = new QGraphicsView();
-    this->container->setFixedSize(900, 900);
+    this->container->setFixedSize(900, 900); //A map is 30x30 blocks, so 900 pixels
     this->container->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->container->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->scene = new QGraphicsScene(container);
@@ -46,19 +46,24 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
 
     this->setLayout(hLayout);
 
+    //Load the textures at the beginning, better than loading them on display
     this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
     this->p2Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
 
-
+    //set the bacjground color once at the beginning
     this->scene->setBackgroundBrush(Qt::gray);
+    //create blocks for the map and display them
     this->createDisplayMap();
+    //create players, give them their textures and display them
     this->createDisplayPlayers();
+    //start the display timer
     this->timeKeeper = this->startTimer(20, Qt::PreciseTimer);
 }
 
 G_Game::~G_Game()
 {
+    //don't forget to kill the timer
     killTimer(timeKeeper);
     delete textPlayer1;
     delete textPlayer2;
@@ -111,17 +116,17 @@ void G_Game::keyPressEvent(QKeyEvent* event)
     case Qt::Key_Return :
         break;
     }
-
-    //this->updateDisplayPlayers();
 }
 
 void G_Game::keyReleaseEvent(QKeyEvent *event)
 {
+    //player 1
     if(event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D)
     {
-        if(--nbTouchesP1 == 0)
+        if(--nbTouchesP1 == 0) //Only stop moving if the key was the last one pressed
             p1MovingDir = -1;
     }
+    //player 2
     else if(event->key() == Qt::Key_5 || event->key() == Qt::Key_1 || event->key() == Qt::Key_2 || event->key() == Qt::Key_3)
     {
         if(--nbTouchesP2 == 0)
@@ -129,16 +134,24 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-void G_Game::timerEvent(QTimerEvent *event)
+/**
+ * @brief G_Game::timerEvent
+ * basically, the "thread" which is responsible of displaying the game. Simply calls the display function
+ */
+void G_Game::timerEvent(QTimerEvent*)
 {
     this->updateDisplayPlayers();
 }
 
-void G_Game::resizeEvent(QResizeEvent* event)
+void G_Game::resizeEvent(QResizeEvent*)
 {
     //this->createDisplayMap();
 }
 
+/**
+ * @brief G_Game::createDisplayMap
+ * This function creates the QGraphicsItem items for each block of the map, adds them to the scene and saves a pointer to them in the MapBloc objects.
+ */
 void G_Game::createDisplayMap()
 {
     int sizeX = this->scene->width()/30;
@@ -147,6 +160,7 @@ void G_Game::createDisplayMap()
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
 
+    //takes all the blocks in the map, one after te other (i/30 for lines and i%30 for columns)
     for(int i=0; i<900; ++i)
     {
         bloc = theMap->getMapBloc(QPoint(i/30, i%30));
@@ -156,10 +170,12 @@ void G_Game::createDisplayMap()
         switch(type){
             case 1: //indestructible
             {
-                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30)));
+                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+                //Add and move the new block to the scene
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
                 item->setPos((i%30)*sizeX, (i/30)*sizeY);
 
+                //Keep track of the pointer to the block
                 bloc->setPtrItemOnScene(item);
                 break;
             }
@@ -197,17 +213,22 @@ void G_Game::createDisplayMap()
     }
 }
 
+/**
+ * @brief G_Game::createDisplayPlayers
+ * This function creates the QGraphicsItem items for the players and adds them to the scene and keeps a pointer to their items in the Player objects.
+ */
 void G_Game::createDisplayPlayers()
 {
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
 
-    int line = this->game->getPlayer(false)->getDirection();
-    QPixmap texture(p1Texture.copy(counterAnimP1*16, line*25, 16, 25));
-    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
+    int line = this->game->getPlayer(false)->getDirection();                //Useful for knowing which line of the player's texture file to use. One line per movement direction
+    QPixmap texture(p1Texture.copy(counterAnimP1*16, line*25, 16, 25));     //Take only the right texture
+    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);            //Add the texture to the scene and move it to its right place
     item->setPos(p1Pos.x(), p1Pos.y());
-    this->game->getPlayer(false)->setPtrItemOnScene(item);
+    this->game->getPlayer(false)->setPtrItemOnScene(item);                  //keep track of the item in the player
 
+    //Do the exact same for player 2
     line = this->game->getPlayer(true)->getDirection();
     texture = p2Texture.copy(counterAnimP2*16, line*25, 16, 25);
     item = this->scene->addPixmap(texture);
@@ -215,20 +236,26 @@ void G_Game::createDisplayPlayers()
     this->game->getPlayer(true)->setPtrItemOnScene(item);
 }
 
+/**
+ * @brief G_Game::updateDisplayPlayers
+ * This function updates the position of the players on the scene.
+ */
 void G_Game::updateDisplayPlayers()
 {
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
+    //Pointers to the QGraphicsItem of each player
     QGraphicsItem *p1 = this->game->getPlayer(false)->getPtrItemOnScene();
     QGraphicsItem *p2 = this->game->getPlayer(true)->getPtrItemOnScene();
-    bool whichPlayer = false;
 
+    //Increment the animation counter of each player
     if(p1Moving)
         incCounterAnim(1);
 
     if(p2Moving)
         incCounterAnim(2);
 
+    //Move the players
     switch(p1MovingDir)
     {
     //Player 1
@@ -260,57 +287,36 @@ void G_Game::updateDisplayPlayers()
         this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
+    //Delete the items from the scene, because cannot change the QPixmap they use.
     this->scene->removeItem(p1);
     this->scene->removeItem(p2);
+    //Set the new position of the players
     p1->setPos(this->game->getPlayer(false)->getPosition());
     p2->setPos(this->game->getPlayer(true)->getPosition());
+    //Create the new textures for the players, now that their positions are correct after their movement.
     createDisplayPlayers();
 
 }
 
+/**
+ * @brief G_Game::incCounterAnim
+ * useful to increase a counter telling which part of the player's texture to use
+ * @param which : tells which player to increase
+ */
 void G_Game::incCounterAnim(short which)
 {
     if(which == 1)
     {
-        counterAnimP1++;
+        ++counterAnimP1;
         if(counterAnimP1 == 6)
             counterAnimP1 -= 3;
     }
     if(which == 2)
     {
-        counterAnimP2++;
+        ++counterAnimP2;
         if(counterAnimP2 == 6)
             counterAnimP2 -= 3;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

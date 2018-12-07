@@ -22,8 +22,8 @@ public slots:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
-    void timerEvent(QTimerEvent *event) override;
+    void resizeEvent(QResizeEvent *) override;
+    void timerEvent(QTimerEvent *) override;
 
 private:
     Game *game;
