@@ -22,7 +22,7 @@ public:
     Player* getPlayer(bool nbPlayer);
     Map* getMap();
 
-    bool move(QPoint newPos, int newDirection, QPoint bloc, bool nbPlayer)
+    bool move(QPoint newPos, int newDirection, QPoint bloc, bool nbPlayer);
 
 private:
     int type;
