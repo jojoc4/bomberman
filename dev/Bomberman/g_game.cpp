@@ -16,10 +16,12 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
     Player *p1 = game->getPlayer(false);
     this->textPlayer1 = new QLabel(QString("Joueur 1:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2").arg(p1->getNbBomb()).arg(p1->getPuissance()));
+    p1->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(false).x()*30, this->game->getMap()->getPlayerSpawn(false).y()*30));
 
     Player *p2 = game->getPlayer(true);
     this->textPlayer2 = new QLabel(QString("Joueur 2:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2").arg(p2->getNbBomb()).arg(p2->getPuissance()));
+    p2->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(true).x()*30, this->game->getMap()->getPlayerSpawn(true).y()*30));
 
     this->vLayout = new QVBoxLayout();
     this->vLayout->setSpacing(0);
@@ -43,7 +45,7 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
 
     this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
-    this->p1Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
+    this->p2Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
 
     this->displayMap();
     this->displayPlayers();
@@ -147,10 +149,15 @@ void G_Game::displayPlayers()
         incCounterAnim(2);
 
 
-    int line = this->game->getPlayer(0)->getDirection();
+    int line = this->game->getPlayer(false)->getDirection();
     QPixmap texture(p1Texture.copy(counterAnimP1*16, line*25, 16, 25));
     QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
     item->setPos(p1Pos.x(), p1Pos.y());
+
+    line = this->game->getPlayer(true)->getDirection();
+    texture = p2Texture.copy(counterAnimP2*16, line*25, 16, 25);
+    item = this->scene->addPixmap(texture);
+    item->setPos(p2Pos.x(), p2Pos.y());
 
     //bloc->setPtrItemOnScene(item);
 

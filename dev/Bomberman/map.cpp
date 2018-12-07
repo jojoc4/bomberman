@@ -44,11 +44,11 @@ void Map::readFromFile(QString path){
                     break;
                     case '1':
                         t[i][j] = new MapBloc(3);
-                        j1 = QPoint(i,j);
+                        j1 = QPoint(j, i);
                     break;
                     case '2':
                         t[i][j] = new MapBloc(3);
-                        j2 = QPoint(i,j);
+                        j2 = QPoint(j, i);
                     break;
                     default:
                         throw "Map read error";
