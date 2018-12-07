@@ -69,7 +69,7 @@ void G_MapChooser::browseFolderMaps()
     QStringList mapsList;
     if (directory->exists())
     {
-        mapsList = directory->entryList(QStringList() << "*.nma" << "*.nma",QDir::Files);
+        mapsList = directory->entryList(QStringList() << "*.nmm" << "*.nmm",QDir::Files);
         for ( const auto& i : mapsList  )
         {
             new QListWidgetItem(i, listMaps);
