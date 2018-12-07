@@ -28,6 +28,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 
     // QGraphicsView
     previewMap = new QGraphicsView();
+    previewMap->setFixedSize(450,450);
     previewMapScene = new QGraphicsScene(previewMap);
     previewMapScene->setSceneRect(previewMap->rect());
     previewMap->setScene(previewMapScene);
@@ -37,15 +38,18 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
 
-    // Chargement de la carte
-    QDir dossier(QCoreApplication::applicationDirPath());
+    this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
 
-    dossier.cdUp();
-    dossier.cdUp();
-    dossier.cdUp();
-    qDebug() << dossier.absolutePath() + "/mapTest.nmm";
-    game->getMap()->readFromFile(dossier.absolutePath() + "/mapTest.nmm");
-    displayThumbnailsMap();
+    // Chargement de la carte
+    directory = new QDir(QCoreApplication::applicationDirPath());
+    directory->cdUp();
+    directory->cdUp();
+    directory->cdUp();
+
+
+    displayListMap();
+    QListWidgetItem * item = listMaps->item(1);
+    getMap(item->text());
 
     hbox->addLayout(vboxLeft);
     hbox->addLayout(vboxRight);
@@ -53,6 +57,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 
     connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::browseFolderMaps);
     connect(button_valider, &QPushButton::clicked, this, &G_MapChooser::validateMaps);
+    connect(listMaps, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateThumbnailsMap(QListWidgetItem *)));
 }
 /**
  * @brief G_MapChooser::parcourirDossierCarte : SLOT
@@ -61,58 +66,103 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
  */
 void G_MapChooser::browseFolderMaps()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                    "/home",
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Ouvrir dossier"),
+                                                   directory->absolutePath(),
                                                     QFileDialog::ShowDirsOnly
                                                     | QFileDialog::DontResolveSymlinks);
     directory = new QDir(dir);
+    displayListMap();
+}
+
+void G_MapChooser::displayListMap()
+{
     QStringList mapsList;
     if (directory->exists())
     {
-        mapsList = directory->entryList(QStringList() << "*.nma" << "*.nma",QDir::Files);
+        mapsList = directory->entryList(QStringList() << "*.nmm" << "*.nmm",QDir::Files);
         for ( const auto& i : mapsList  )
         {
             new QListWidgetItem(i, listMaps);
         }
+    } else {
+        QMessageBox::critical(this, tr("Erreur "), tr("Le dossier spécifié n'existe pas"), QMessageBox::Ok);
     }
-}/**
+}
+void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
+{
+    getMap(item->text());
+    displayThumbnailsMap();
+
+}
+/**
  * @brief G_MapChooser::validerCarte
- * Sélectionne la carte à affichier et quitte le programme.
+ * Sélectionne la carte à afficher et quitte le programme.
  */
 void G_MapChooser::validateMaps()
 {
     if(!listMaps->selectedItems().isEmpty())
     {
         QString element = listMaps->selectedItems().first()->text();
-        filePath = directory->absolutePath() + element;
-        qDebug() << filePath;
+        game->getMap()->readFromFile(directory->absolutePath() + "/" + element);
     } else {
-        QMessageBox::information(this, "Choix des cartes", tr("Aucune carte n'a été chargée"), QMessageBox::Ok);
+        QMessageBox::information(this, tr("Choix des cartes"), tr("Aucune carte n'a été chargée"), QMessageBox::Ok);
     }
 
 }
 
 void G_MapChooser::displayThumbnailsMap(){
+    this->previewMapScene->setBackgroundBrush(Qt::gray);
+    this->previewMapScene->clear();
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
             QPoint bloc(i,j);
-            MapBloc* monBloc = game->getMap()->getMapBloc(bloc);
+            MapBloc* monBloc =  game->getMap()->getMapBloc(bloc);
             int type = monBloc->getType();
+
+            qreal sizeX = this->previewMapScene->width()/30;
+            qreal sizeY = this->previewMapScene->height()/30;
 
             switch(type){
             case 1:
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::blue),QBrush(Qt::blue));
+            {
+                //previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::blue),QBrush(Qt::blue));
+                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30)));
+                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blocImage);
+                item->setPos(i*sizeX, j*sizeY);
+
+                monBloc->setPtrItemOnScene(item);
                 break;
+            }
             case 2:
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::yellow),QBrush(Qt::yellow));
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blocImage);
+                item->setPos(i*sizeX, j*sizeY);
+
+                monBloc->setPtrItemOnScene(item);
+
                 break;
+            }
             case 3:
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::red),QBrush(Qt::red));
+                //previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::red),QBrush(Qt::red));
                 break;
             default :
-                previewMapScene->addRect(j*(width()/30.),i*(height()/30.),previewMap->width()/30.,previewMap->height()/30.,QPen(Qt::black),QBrush(Qt::black));
+                previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::black),QBrush(Qt::black));
             }
-
         }
     }
+}
+
+
+void G_MapChooser::resizeEvent(QResizeEvent *){
+    displayThumbnailsMap();
+}
+void G_MapChooser::getMap(QString name){
+    try{
+        game->getMap()->readFromFile(directory->absolutePath() + "/" + name);
+        displayThumbnailsMap();
+    } catch(const char* error){
+        QMessageBox::information(this, tr("Erreur - ouverture de carte"), tr("Aucune carte valide dans le dossier !"), QMessageBox::Ok);
+    }
+
 }

@@ -30,7 +30,7 @@ G_HomeScreen::G_HomeScreen(QWidget *parent)
 
 
     connect(btn_quitter,SIGNAL(clicked()), this, SLOT(close()));
-    connect(btn_aide,SIGNAL(clicked()), this, SLOT(close()));
+    connect(btn_aide,SIGNAL(clicked()), this, SLOT(openHelp()));
 
 }
 
@@ -41,7 +41,6 @@ G_HomeScreen::~G_HomeScreen()
 }
 void G_HomeScreen::validateChoice(void)
 {
-    qDebug() << 1234;
     if (radio_local->isChecked())
     {
 
@@ -52,4 +51,12 @@ void G_HomeScreen::validateChoice(void)
         radio_network->setChecked(false);
         radio_local->setChecked(true);
     }
+}
+
+void G_HomeScreen::openHelp()
+{
+    helpWindow = new G_Help();
+    helpWindow->show();
+
+
 }

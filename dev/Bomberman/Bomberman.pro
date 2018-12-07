@@ -39,7 +39,8 @@ SOURCES += \
     game.cpp \
     player.cpp \
     g_mapchooser.cpp \
-    mainwidget.cpp
+    mainwidget.cpp \
+    g_help.cpp
 
 HEADERS += \
         g_homescreen.h \
@@ -51,7 +52,8 @@ HEADERS += \
     player.h \
     g_mapchooser.h \
     mainwidget.h \
-    stable.h
+    stable.h \
+    g_help.h
 
 RESOURCES += \
     ressources.qrc

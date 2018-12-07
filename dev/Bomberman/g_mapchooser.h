@@ -20,10 +20,17 @@ public slots:
 
     void browseFolderMaps();
     void validateMaps();
+    void updateThumbnailsMap(QListWidgetItem* item);
 
 private :
 
     void displayThumbnailsMap();
+    void displayListMap();
+
+
+    void getMap(QString name);
+
+    void resizeEvent(QResizeEvent *);
 
     QListWidget* listMaps;
     QDir* directory;
@@ -31,7 +38,7 @@ private :
 
     QGraphicsView* previewMap;
     QGraphicsScene* previewMapScene;
-
+    QPixmap allBlocks;
     Game* game;
 };
 
