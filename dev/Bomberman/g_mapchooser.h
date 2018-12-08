@@ -17,7 +17,7 @@ protected :
 signals:
     void openNextWidget(int);
 
-public slots:
+private slots :
 
     void browseFolderMaps();
     void validateMap();
@@ -33,11 +33,13 @@ private :
 
     void resizeEvent(QResizeEvent *);
 
+
+
     QListWidget* listMaps;
     QDir* directory;
     QString filePath;
 
-    QPushButton* button_valider;
+    QPushButton* btnValidate;
 
     QGraphicsView* previewMap;
     QGraphicsScene* previewMapScene;

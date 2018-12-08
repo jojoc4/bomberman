@@ -19,10 +19,10 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     //vboxLeft->addStretch();
 
     QHBoxLayout *hbox_button = new QHBoxLayout();
-    button_valider = new QPushButton(tr("Valider"),this);
+    btnValidate = new QPushButton(tr("Valider"),this);
     QPushButton *button_parcourir = new QPushButton(tr("Parcourir"),this);
 
-    hbox_button->addWidget(button_valider);
+    hbox_button->addWidget(btnValidate);
     hbox_button->addWidget(button_parcourir);
     vboxLeft->addLayout(hbox_button);
 
@@ -56,7 +56,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     hbox->addLayout(vboxRight);
 
     connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::browseFolderMaps);
-    connect(button_valider, &QPushButton::clicked, this, &G_MapChooser::validateMap);
+    connect(btnValidate, &QPushButton::clicked, this, &G_MapChooser::validateMap);
     connect(listMaps, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateThumbnailsMap(QListWidgetItem *)));
     connect(this,SIGNAL(openNextWidget(int)),parent,SLOT(changeWidget(int)));
 }
@@ -87,9 +87,9 @@ void G_MapChooser::displayListMap()
         listMaps->clear();
         if(mapsList.length() < 1){
             QMessageBox::critical(this, tr("Erreur "), tr("Aucune carte ne se trouve dans le dossier"), QMessageBox::Ok);
-            button_valider->setEnabled(false);
+            btnValidate->setEnabled(false);
         } else {
-            button_valider->setEnabled(true);
+            btnValidate->setEnabled(true);
         }
         for ( const auto& i : mapsList  )
         {
