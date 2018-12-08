@@ -1,3 +1,9 @@
+/**
+* contains the current map infos and can load a map from file
+*
+* @author	Jonatan Baumgartner
+* @version	1.0
+*/
 #ifndef MAP_H
 #define MAP_H
 
@@ -20,4 +26,4 @@ private:
     QPoint j2;
 };
 
-#endif // MAP_H
+#endif

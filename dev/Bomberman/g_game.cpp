@@ -1,8 +1,3 @@
-/**
- * @author Teo Schaffner
- */
-
-
 #include "g_game.h"
 #include "bomb.h"
 #include "map.h"

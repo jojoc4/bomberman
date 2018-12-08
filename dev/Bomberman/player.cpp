@@ -1,6 +1,3 @@
-/**
- * @author Julien Chappuis
- */
 #include "player.h"
 
 Player::Player()

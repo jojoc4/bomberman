@@ -1,3 +1,9 @@
+/**
+* contains the player infos
+*
+* @author	Julien Chappuis
+* @version	1.0
+*/
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -48,4 +54,4 @@ private :
 
 };
 
-#endif // PLAYER_H
+#endif

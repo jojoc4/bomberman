@@ -1,3 +1,9 @@
+/**
+*  home windows where we choose gaming mode and start a game
+*
+* @author	Julien Chappuis
+* @version	0.1
+*/
 #ifndef G_HOMESCREEN_H
 #define G_HOMESCREEN_H
 
@@ -30,4 +36,4 @@ private slots:
     void openMapChooser();
 };
 
-#endif // G_HOMESCREEN_H
+#endif

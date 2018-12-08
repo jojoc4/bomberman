@@ -1,3 +1,9 @@
+/**
+* widget to choose the map we want to play
+*
+* @author	Julien Chappuis
+* @version	0.1
+*/
 #ifndef G_MAPCHOOSER_H
 #define G_MAPCHOOSER_H
 
@@ -47,4 +53,4 @@ private :
     Game* game;
 };
 
-#endif // G_MAPCHOOSER_H
+#endif

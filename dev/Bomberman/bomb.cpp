@@ -1,6 +1,3 @@
-/**
- * @author Jonatan Baumgartner
- */
 #include "bomb.h"
 
 /**

@@ -1,3 +1,9 @@
+/**
+* contains all the game elements
+*
+* @author	Julien Chappuis
+* @version	0.1
+*/
 #ifndef GAME_H
 #define GAME_H
 
@@ -31,4 +37,4 @@ private:
     Map* map;
 };
 
-#endif // GAME_H
+#endif

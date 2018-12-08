@@ -1,5 +1,11 @@
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+/**
+* widget that contains and show all the oder in a stacked layout
+*
+* @author	Jonatan Baumgartner
+* @version	1.0
+*/
+#ifndef G_MAINWIDGET_H
+#define G_MAINWIDGET_H
 
 #include <QtWidgets>
 #include "g_homescreen.h"
@@ -7,11 +13,11 @@
 #include "g_game.h"
 #include "game.h"
 
-class MainWidget : public QWidget
+class G_MainWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit MainWidget(Game* g, QWidget *parent = nullptr);
+    explicit G_MainWidget(Game* g, QWidget *parent = nullptr);
     QStackedLayout* layout;
 
 public slots:
@@ -23,4 +29,4 @@ private:
     G_MapChooser* mapchooser;
 };
 
-#endif // MAINWIDGET_H
+#endif

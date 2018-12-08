@@ -1,3 +1,9 @@
+/**
+* Main gaming widget
+*
+* @author	Téo Schaffner
+* @version	0.1
+*/
 #ifndef G_GAME_H
 #define G_GAME_H
 
@@ -55,4 +61,4 @@ private:
 
 };
 
-#endif // G_GAME_H
+#endif

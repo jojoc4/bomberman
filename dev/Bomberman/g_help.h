@@ -1,3 +1,9 @@
+/**
+* help and about widget
+*
+* @author	Julien Chappuis
+* @version	1.0
+*/
 #ifndef G_HELP_H
 #define G_HELP_H
 
@@ -17,4 +23,4 @@ public slots:
 
 };
 
-#endif // G_HELP_H
+#endif

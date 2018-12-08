@@ -1,3 +1,9 @@
+/**
+* contains all the bombs caracteristics and the explosion mechanisme
+*
+* @author	Jonatan Baumgartner
+* @version	0.1
+*/
 #ifndef BOMB_H
 #define BOMB_H
 
@@ -24,4 +30,4 @@ private:
     QGraphicsItem *ptrItemOnScene;
 };
 
-#endif // BOMB_H
+#endif

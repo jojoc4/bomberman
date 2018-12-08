@@ -1,6 +1,3 @@
-/**
- * @author Julien Chappuis
- */
 #include "game.h"
 
 Game::Game()

@@ -1,10 +1,6 @@
-/**
- * @author Jonatan Baumgartner
- */
 #include "map.h"
 #include <fstream>
 #include <iostream>
-#include <QDebug>
 
 using namespace std;
 

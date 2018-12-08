@@ -1,6 +1,6 @@
-#include "mainwidget.h"
+#include "g_mainwidget.h"
 
-MainWidget::MainWidget(Game* g, QWidget *parent) : QWidget(parent)
+G_MainWidget::G_MainWidget(Game* g, QWidget *parent) : QWidget(parent)
 {
     homescreen = new G_HomeScreen(this);
     mapchooser = new G_MapChooser(g, this);
@@ -15,6 +15,6 @@ MainWidget::MainWidget(Game* g, QWidget *parent) : QWidget(parent)
 
     setLayout(layout);
 }
-void MainWidget::changeWidget(int index){
+void G_MainWidget::changeWidget(int index){
     layout->setCurrentIndex(index);
 }

@@ -1,3 +1,9 @@
+/**
+* represents the bloc of a map
+*
+* @author	Jonatan Baumgartner
+* @version	1.0
+*/
 #ifndef MAPBLOC_H
 #define MAPBLOC_H
 
@@ -26,4 +32,4 @@ private:
     QGraphicsItem *ptrItemOnScene;
 };
 
-#endif // MAPBLOC_H
+#endif

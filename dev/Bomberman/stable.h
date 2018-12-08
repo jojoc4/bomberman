@@ -1,20 +1,53 @@
-// Utilisation d'entêtes précompilées (PCH)
-// Voir http://qt-project.org/doc/qt-5/qmake-precompiledheaders.html
-
+/**
+* precompiled classes
+*
+* @author	Jonatan Baumgartner
+* @version	08.12.18/1
+*/
 #ifndef STABLE_H
 #define STABLE_H
 
 #if defined __cplusplus
-    #include <QPoint>
-    #include <QMainWindow>
-    #include <QLabel>
-    #include <QGraphicsView>
-    #include <QLayout>
-    #include <QDialog>
-    #include <QtWidgets>
-    #include <QString>
+//do not forget to adjust the version number
+
+//a
     #include <QApplication>
+
+//d
+    #include <QDebug>
+    #include <QDialog>
+
+//f
+    #include <fstream>
+
+//g
+    #include <QGraphicsPixmapItem>
+    #include <QGraphicsView>
     #include <QGraphicsItem>
+
+//i
+    #include <iostream>
+
+//k
+    #include <QKeyEvent>
+
+//l
+    #include <QLabel>
+    #include <QLayout>
+
+//m
+    #include <QMainWindow>
+
+//p
+    #include <QPoint>
+    #include <QPixmap>
+
+//s
+    #include <QString>
+
+//w
+    #include <QtWidgets>
+
 #endif
 
-#endif // STABLE_H
+#endif
