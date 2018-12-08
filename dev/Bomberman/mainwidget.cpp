@@ -15,3 +15,6 @@ MainWidget::MainWidget(Game* g, QWidget *parent) : QWidget(parent)
 
     setLayout(layout);
 }
+void MainWidget::changeWidget(int index){
+    layout->setCurrentIndex(index);
+}

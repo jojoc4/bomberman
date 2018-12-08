@@ -28,9 +28,11 @@ G_HomeScreen::G_HomeScreen(QWidget *parent)
     vbox_buttons->addWidget(btn_aide);
     vbox_buttons->addWidget(btn_quitter);
 
-
-    connect(btn_quitter,SIGNAL(clicked()), this, SLOT(close()));
+    connect(btn_lancer,SIGNAL(clicked()), this, SLOT(openMapChooser()));
+    connect(btn_quitter,SIGNAL(clicked()), parent, SLOT(close()));
     connect(btn_aide,SIGNAL(clicked()), this, SLOT(openHelp()));
+
+    connect(this, SIGNAL(openNextWidget(int)), parent, SLOT(changeWidget(int)));
 
 }
 
@@ -57,6 +59,8 @@ void G_HomeScreen::openHelp()
 {
     helpWindow = new G_Help();
     helpWindow->show();
-
-
+}
+void G_HomeScreen::openMapChooser()
+{
+    emit(openNextWidget(1));
 }

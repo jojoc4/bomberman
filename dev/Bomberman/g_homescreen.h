@@ -14,6 +14,8 @@ public:
 
     ~G_HomeScreen();
 
+signals:
+    void openNextWidget(int);
 
 private :
     QRadioButton* radio_local;
@@ -24,6 +26,8 @@ private :
 private slots:
     void validateChoice(void);
     void openHelp();
+
+    void openMapChooser();
 };
 
 #endif // G_HOMESCREEN_H

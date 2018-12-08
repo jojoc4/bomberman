@@ -15,11 +15,12 @@ protected :
 
 
 signals:
+    void openNextWidget(int);
 
 public slots:
 
     void browseFolderMaps();
-    void validateMaps();
+    void validateMap();
     void updateThumbnailsMap(QListWidgetItem* item);
 
 private :
@@ -35,6 +36,8 @@ private :
     QListWidget* listMaps;
     QDir* directory;
     QString filePath;
+
+    QPushButton* button_valider;
 
     QGraphicsView* previewMap;
     QGraphicsScene* previewMapScene;

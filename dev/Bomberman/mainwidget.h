@@ -14,6 +14,9 @@ public:
     explicit MainWidget(Game* g, QWidget *parent = nullptr);
     QStackedLayout* layout;
 
+public slots:
+    void changeWidget(int index);
+
 private:
     G_Game* game;
     G_HomeScreen* homescreen;
