@@ -1,11 +1,14 @@
-#include "g_homescreen.h"
+#include "game.h"
+#include "g_mainwidget.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    G_HomeScreen w;
-    w.show();
+    Game game;
+
+    G_MainWidget mw(&game);
+    mw.show();
 
     return a.exec();
 }
