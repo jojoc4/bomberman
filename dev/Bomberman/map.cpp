@@ -16,6 +16,19 @@ Map::Map()
     }
 }
 
+Map::~Map(){
+    for(int i = 0; i<30; i++){
+        for(int j = 0; j<30; j++){
+            delete t[i][j];
+            t[i][j] = nullptr;
+        }
+        t[i]=nullptr;
+    }
+    t=nullptr;
+    delete j1;
+    delete j2;
+}
+
 /**
  * @brief read the map form a file
  * @param p (pathe to the map)
