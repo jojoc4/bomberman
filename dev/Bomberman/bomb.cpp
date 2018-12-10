@@ -12,6 +12,14 @@ Bomb::Bomb(int type, int range, QPoint position)
     ptrItemOnScene=nullptr;
 }
 
+Bomb::~Bomb(){
+    delete position;
+    position=nullptr;
+
+    delete ptrItemOnScene;
+    ptrItemOnScene = nullptr;
+}
+
 /**
  * @brief bomb thread started at bomb creation
  */

@@ -16,6 +16,8 @@ public:
 
     MapBloc();
     MapBloc(int type);
+    ~MapBloc();
+
     void setType(int type);
     int getType();
     bool getTraversable();

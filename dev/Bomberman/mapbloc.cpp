@@ -18,6 +18,11 @@ MapBloc::MapBloc(int type){
     ptrItemOnScene=nullptr;
 }
 
+MapBloc::~MapBloc(){
+    delete ptrItemOnScene;
+    ptrItemOnScene = nullptr;
+}
+
 /**
  * @brief change type
  * @param type (type of bloc, see the wiki)
