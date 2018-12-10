@@ -8,7 +8,7 @@
 
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
                                                     p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
-                                                    nbTouchesP2(0)
+                                                    nbTouchesP2(0), timeKeeper(-1)
 {
     this->game = theGame;
     Player *p1 = game->getPlayer(false);
@@ -48,21 +48,13 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
 
     //set the background color once at the beginning
     this->scene->setBackgroundBrush(Qt::gray);
-
-    /*
-    //create blocks for the map and display them
-    this->createDisplayMap();
-    //create players, give them their textures and display them
-    this->createDisplayPlayers();
-    //start the display timer
-    this->timeKeeper = this->startTimer(20, Qt::PreciseTimer);
-    */
 }
 
 G_Game::~G_Game()
 {
     //don't forget to kill the timer
-    killTimer(timeKeeper);
+    if(timeKeeper!=-1)
+        killTimer(timeKeeper);
     delete textPlayer1;
     delete textPlayer2;
     delete scene;
