@@ -24,6 +24,7 @@ public:
 signals:
 
 public slots:
+    void startGame();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

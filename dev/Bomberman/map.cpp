@@ -30,20 +30,20 @@ void Map::readFromFile(QString path){
             for(int j = 0; j<30; j++){
                 switch(line[j]){
                     case 'I':
-                        t[i][j] = new MapBloc(1);
+                        t[j][i] = new MapBloc(1);
                     break;
                     case 'D':
-                        t[i][j] = new MapBloc(2);
+                        t[j][i] = new MapBloc(2);
                     break;
                     case 'F':
-                        t[i][j] = new MapBloc(3);
+                        t[j][i] = new MapBloc(3);
                     break;
                     case '1':
-                        t[i][j] = new MapBloc(3);
+                        t[j][i] = new MapBloc(3);
                         j1 = QPoint(j, i);
                     break;
                     case '2':
-                        t[i][j] = new MapBloc(3);
+                        t[j][i] = new MapBloc(3);
                         j2 = QPoint(j, i);
                     break;
                     default:

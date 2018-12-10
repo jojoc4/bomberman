@@ -14,6 +14,8 @@ G_MainWidget::G_MainWidget(Game* g, QWidget *parent) : QWidget(parent)
     layout->setCurrentWidget(homescreen);
 
     setLayout(layout);
+
+    connect(mapchooser, &G_MapChooser::startGame, game, &G_Game::startGame);
 }
 void G_MainWidget::changeWidget(int index){
     layout->setCurrentIndex(index);

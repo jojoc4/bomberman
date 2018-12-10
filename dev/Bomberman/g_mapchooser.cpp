@@ -112,6 +112,7 @@ void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
 
 void G_MapChooser::validateMap()
 {
+    emit(startGame());
     emit(openNextWidget(0));
 }
 
@@ -120,7 +121,7 @@ void G_MapChooser::displayThumbnailsMap(){
     this->previewMapScene->clear();
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
-            QPoint bloc(j,i);
+            QPoint bloc(i, j);
             MapBloc* monBloc =  game->getMap()->getMapBloc(bloc);
             int type = monBloc->getType();
 

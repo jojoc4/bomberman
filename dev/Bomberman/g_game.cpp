@@ -46,14 +46,17 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
     this->p2Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
 
-    //set the bacjground color once at the beginning
+    //set the background color once at the beginning
     this->scene->setBackgroundBrush(Qt::gray);
+
+    /*
     //create blocks for the map and display them
     this->createDisplayMap();
     //create players, give them their textures and display them
     this->createDisplayPlayers();
     //start the display timer
     this->timeKeeper = this->startTimer(20, Qt::PreciseTimer);
+    */
 }
 
 G_Game::~G_Game()
@@ -66,6 +69,16 @@ G_Game::~G_Game()
     delete container;
     delete vLayout;
     delete hLayout;
+}
+
+void G_Game::startGame()
+{
+    //create blocks for the map and display them
+    this->createDisplayMap();
+    //create players, give them their textures and display them
+    this->createDisplayPlayers();
+    //start the display timer
+    this->timeKeeper = this->startTimer(20, Qt::PreciseTimer);
 }
 
 void G_Game::keyPressEvent(QKeyEvent* event)
@@ -168,7 +181,7 @@ void G_Game::createDisplayMap()
                 QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
                 //Add and move the new block to the scene
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i%30)*sizeX, (i/30)*sizeY);
+                item->setPos((i/30)*sizeX, (i%30)*sizeY); //WRONG COORDINATES, BUT IT IS NORMAL! (INVERTED BECAUSE OF LOGIC WHEN LOADING MAP)
 
                 //Keep track of the pointer to the block
                 bloc->setPtrItemOnScene(item);
@@ -178,7 +191,7 @@ void G_Game::createDisplayMap()
             {
                 QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i%30)*sizeX, (i/30)*sizeY);
+                item->setPos((i/30)*sizeX, (i%30)*sizeY); //WRONG COORDINATES, BUT IT IS NORMAL! (INVERTED BECAUSE OF LOGIC WHEN LOADING MAP)
 
                 bloc->setPtrItemOnScene(item);
                 break;
@@ -249,6 +262,8 @@ void G_Game::updateDisplayPlayers()
 
     if(p2Moving)
         incCounterAnim(2);
+
+    //scene->addRect((p1Pos.y()/30)*30,(p1Pos.x()/30)*30,30, 30, QPen(Qt::red));
 
     //Move the players
     switch(p1MovingDir)

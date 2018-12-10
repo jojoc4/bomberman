@@ -22,6 +22,7 @@ protected :
 
 signals:
     void openNextWidget(int);
+    void startGame();
 
 private slots :
 

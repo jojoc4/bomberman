@@ -27,6 +27,8 @@ private:
     G_Game* game;
     G_HomeScreen* homescreen;
     G_MapChooser* mapchooser;
+
+    Game* gamePtr;
 };
 
 #endif
