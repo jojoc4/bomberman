@@ -25,8 +25,6 @@ Map::~Map(){
         t[i]=nullptr;
     }
     t=nullptr;
-    delete j1;
-    delete j2;
 }
 
 /**

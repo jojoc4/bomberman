@@ -13,8 +13,6 @@ Bomb::Bomb(int type, int range, QPoint position)
 }
 
 Bomb::~Bomb(){
-    delete position;
-    position=nullptr;
 
     delete ptrItemOnScene;
     ptrItemOnScene = nullptr;

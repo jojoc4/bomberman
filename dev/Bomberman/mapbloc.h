@@ -16,7 +16,7 @@ public:
 
     MapBloc();
     MapBloc(int type);
-    ~MapBloc();
+    virtual ~MapBloc();
 
     void setType(int type);
     int getType();

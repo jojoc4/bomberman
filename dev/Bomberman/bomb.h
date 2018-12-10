@@ -14,6 +14,7 @@ class Bomb
 {
 public:
     Bomb(int type, int range, QPoint position);
+    virtual ~Bomb();
 
     void bombThread();
 

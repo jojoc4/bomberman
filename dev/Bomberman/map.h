@@ -15,7 +15,7 @@ class Map
 {
 public:
     Map();
-    ~Map();
+    virtual ~Map();
     void readFromFile(QString path);
 
     MapBloc* getMapBloc(QPoint bloc);
