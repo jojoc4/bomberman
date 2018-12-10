@@ -89,18 +89,22 @@ void G_Game::keyPressEvent(QKeyEvent* event)
     case Qt::Key_W :
         p1MovingDir = Player::UP;
         ++nbTouchesP1;
+        p1Moving = true;
         break;
     case Qt::Key_A :
         p1MovingDir = Player::LEFT;
         ++nbTouchesP1;
+        p1Moving = true;
         break;
     case Qt::Key_S :
         p1MovingDir = Player::DOWN;
         ++nbTouchesP1;
+        p1Moving = true;
         break;
     case Qt::Key_D :
         p1MovingDir = Player::RIGHT;
         ++nbTouchesP1;
+        p1Moving = true;
         break;
     case Qt::Key_Space :
         break;
@@ -108,18 +112,22 @@ void G_Game::keyPressEvent(QKeyEvent* event)
     case Qt::Key_5 :
         p2MovingDir = Player::UP;
         ++nbTouchesP2;
+        p2Moving = true;
         break;
     case Qt::Key_1 :
         p2MovingDir = Player::LEFT;
         ++nbTouchesP2;
+        p2Moving = true;
         break;
     case Qt::Key_2 :
         p2MovingDir = Player::DOWN;
         ++nbTouchesP2;
+        p2Moving = true;
         break;
     case Qt::Key_3 :
         p2MovingDir = Player::RIGHT;
         ++nbTouchesP2;
+        p2Moving = true;
         break;
     case Qt::Key_Return :
         break;
@@ -132,13 +140,19 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D)
     {
         if(--nbTouchesP1 == 0) //Only stop moving if the key was the last one pressed
+        {
             p1MovingDir = -1;
+            p1Moving = false;
+        }
     }
     //player 2
     else if(event->key() == Qt::Key_5 || event->key() == Qt::Key_1 || event->key() == Qt::Key_2 || event->key() == Qt::Key_3)
     {
         if(--nbTouchesP2 == 0)
-        p2MovingDir = -1;
+        {
+            p2MovingDir = -1;
+            p2Moving = false;
+        }
     }
 }
 
@@ -149,11 +163,6 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
 void G_Game::timerEvent(QTimerEvent*)
 {
     this->updateDisplayPlayers();
-}
-
-void G_Game::resizeEvent(QResizeEvent*)
-{
-    //this->createDisplayMap();
 }
 
 /**
@@ -231,16 +240,16 @@ void G_Game::createDisplayPlayers()
     QPoint p2Pos = game->getPlayer(true)->getPosition();
 
     int line = this->game->getPlayer(false)->getDirection();                //Useful for knowing which line of the player's texture file to use. One line per movement direction
-    QPixmap texture(p1Texture.copy(counterAnimP1*16, line*25, 16, 25));     //Take only the right texture
+    QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));   //Take only the right texture
     QGraphicsPixmapItem *item = this->scene->addPixmap(texture);            //Add the texture to the scene and move it to its right place
-    item->setPos(p1Pos.x(), p1Pos.y());
+    item->setPos(p1Pos.x()-8, p1Pos.y()-18);                                //x-8 to center horizontally and y-18 because it makes more sense to take the feet into account, rather than head
     this->game->getPlayer(false)->setPtrItemOnScene(item);                  //keep track of the item in the player
 
     //Do the exact same for player 2
     line = this->game->getPlayer(true)->getDirection();
-    texture = p2Texture.copy(counterAnimP2*16, line*25, 16, 25);
+    texture = p2Texture.copy(counterAnimP2/4*16, line*25, 16, 25);
     item = this->scene->addPixmap(texture);
-    item->setPos(p2Pos.x(), p2Pos.y());
+    item->setPos(p2Pos.x()-8, p2Pos.y()-20);
     this->game->getPlayer(true)->setPtrItemOnScene(item);
 }
 
@@ -318,14 +327,14 @@ void G_Game::incCounterAnim(short which)
     if(which == 1)
     {
         ++counterAnimP1;
-        if(counterAnimP1 == 6)
-            counterAnimP1 -= 3;
+        if(counterAnimP1 == 12)
+            counterAnimP1 -= 12;
     }
     if(which == 2)
     {
         ++counterAnimP2;
-        if(counterAnimP2 == 6)
-            counterAnimP2 -= 3;
+        if(counterAnimP2 == 12)
+            counterAnimP2 -= 12;
     }
 }
 

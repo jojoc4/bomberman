@@ -29,7 +29,6 @@ public slots:
 protected:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
-    void resizeEvent(QResizeEvent *) override;
     void timerEvent(QTimerEvent *) override;
 
 private:
@@ -46,8 +45,8 @@ private:
     QPixmap p2Texture;
 
     int timeKeeper;
-    int counterAnimP1;
-    int counterAnimP2;
+    short counterAnimP1;
+    short counterAnimP2;
     bool p1Moving;
     short p1MovingDir;
     short nbTouchesP1;
