@@ -22,18 +22,23 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     btnValidate = new QPushButton(tr("Valider"),this);
     QPushButton *button_parcourir = new QPushButton(tr("Parcourir"),this);
 
+
+
     hbox_button->addWidget(btnValidate);
     hbox_button->addWidget(button_parcourir);
     vboxLeft->addLayout(hbox_button);
 
     // QGraphicsView
     previewMap = new QGraphicsView();
-    previewMap->resize(900,900);
+    previewMap->resize(300,300);
     previewMapScene = new QGraphicsScene(previewMap);
     previewMapScene->setSceneRect(previewMap->rect());
     previewMap->setScene(previewMapScene);
 
-    // position QGrapicsView
+    previewMap->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    previewMap->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    // position QGraphicsView
     QVBoxLayout* vBoxPainter = new QVBoxLayout();
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
@@ -133,7 +138,9 @@ void G_MapChooser::displayThumbnailsMap(){
             {
                 //previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::blue),QBrush(Qt::blue));
                 QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30)));
-                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blocImage);
+                QPixmap blockImageScaled = blocImage.scaled(10,10,Qt::KeepAspectRatio);
+
+                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
                 item->setPos(i*sizeX, j*sizeY);
 
                 monBloc->setPtrItemOnScene(item);
@@ -142,7 +149,10 @@ void G_MapChooser::displayThumbnailsMap(){
             case 2:
             {
                 QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blocImage);
+                QPixmap blockImageScaled = blocImage.scaled(10,10,Qt::KeepAspectRatio);
+
+
+                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
                 item->setPos(i*sizeX, j*sizeY);
 
                 monBloc->setPtrItemOnScene(item);
