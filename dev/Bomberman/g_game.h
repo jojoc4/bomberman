@@ -43,6 +43,9 @@ private:
     QPixmap allBlocks;
     QPixmap p1Texture;
     QPixmap p2Texture;
+    QPixmap bombTexture;
+    QPixmap bomb2Texture;
+    QPixmap explosionTexture;
 
     int timeKeeper;
     short counterAnimP1;

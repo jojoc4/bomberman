@@ -41,10 +41,15 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(
 
     this->setLayout(hLayout);
 
+    this->container->setFocusPolicy( Qt::NoFocus );
+
     //Load the textures at the beginning, better than loading them on display
     this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
     this->p2Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
+    this->bombTexture = QPixmap(QString(":/resources/img/Bombe.png"));
+    this->bomb2Texture = QPixmap(QString(":/resources/img/Bombe2.png"));
+    this->explosionTexture = QPixmap(QString(":/resources/img/Explosions.png"));
 
     //set the background color once at the beginning
     this->scene->setBackgroundBrush(Qt::gray);
@@ -101,22 +106,22 @@ void G_Game::keyPressEvent(QKeyEvent* event)
     case Qt::Key_Space :
         break;
     //Player 2
-    case Qt::Key_5 :
+    case Qt::Key_Up :
         p2MovingDir = Player::UP;
         ++nbTouchesP2;
         p2Moving = true;
         break;
-    case Qt::Key_1 :
+    case Qt::Key_Left :
         p2MovingDir = Player::LEFT;
         ++nbTouchesP2;
         p2Moving = true;
         break;
-    case Qt::Key_2 :
+    case Qt::Key_Down :
         p2MovingDir = Player::DOWN;
         ++nbTouchesP2;
         p2Moving = true;
         break;
-    case Qt::Key_3 :
+    case Qt::Key_Right :
         p2MovingDir = Player::RIGHT;
         ++nbTouchesP2;
         p2Moving = true;
@@ -138,7 +143,7 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
         }
     }
     //player 2
-    else if(event->key() == Qt::Key_5 || event->key() == Qt::Key_1 || event->key() == Qt::Key_2 || event->key() == Qt::Key_3)
+    else if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Left || event->key() == Qt::Key_Down || event->key() == Qt::Key_Right)
     {
         if(--nbTouchesP2 == 0)
         {
@@ -182,7 +187,7 @@ void G_Game::createDisplayMap()
                 QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
                 //Add and move the new block to the scene
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY); //WRONG COORDINATES, BUT IT IS NORMAL! (INVERTED BECAUSE OF LOGIC WHEN LOADING MAP)
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
                 //Keep track of the pointer to the block
                 bloc->setPtrItemOnScene(item);
@@ -192,7 +197,7 @@ void G_Game::createDisplayMap()
             {
                 QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
                 QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY); //WRONG COORDINATES, BUT IT IS NORMAL! (INVERTED BECAUSE OF LOGIC WHEN LOADING MAP)
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
                 bloc->setPtrItemOnScene(item);
                 break;
@@ -271,6 +276,7 @@ void G_Game::updateDisplayPlayers()
     {
     //Player 1
     case Player::UP :
+        //Ask the game object to move the player, heading to the right direction. The move() method checks hitboxes before moving.
         this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/30, (p1Pos.y()-2)/30), false);
         break;
     case Player::LEFT :
@@ -318,14 +324,12 @@ void G_Game::incCounterAnim(short which)
 {
     if(which == 1)
     {
-        ++counterAnimP1;
-        if(counterAnimP1 == 12)
+        if(++counterAnimP1 == 12)
             counterAnimP1 -= 12;
     }
     if(which == 2)
     {
-        ++counterAnimP2;
-        if(counterAnimP2 == 12)
+        if(++counterAnimP2 == 12)
             counterAnimP2 -= 12;
     }
 }
