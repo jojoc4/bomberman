@@ -6,9 +6,9 @@
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 
-G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
+G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
                                                     p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
-                                                    nbTouchesP2(0), timeKeeper(-1)
+                                                    nbTouchesP2(0)
 {
     this->game = theGame;
     Player *p1 = game->getPlayer(false);
@@ -104,7 +104,12 @@ void G_Game::keyPressEvent(QKeyEvent* event)
         p1Moving = true;
         break;
     case Qt::Key_Space :
+    {
+        Player* player = game->getPlayer(false);
+        QPoint pos = player->getPosition();
+        dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
         break;
+    }
     //Player 2
     case Qt::Key_Up :
         p2MovingDir = Player::UP;
@@ -127,7 +132,12 @@ void G_Game::keyPressEvent(QKeyEvent* event)
         p2Moving = true;
         break;
     case Qt::Key_Return :
+    {
+        Player* player = game->getPlayer(true);
+        QPoint pos = player->getPosition();
+        dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
         break;
+    }
     }
 }
 
@@ -158,6 +168,11 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
  * basically, the "thread" which is responsible of displaying the game. Simply calls the display function
  */
 void G_Game::timerEvent(QTimerEvent*)
+{
+    this->refreshDisplay();
+}
+
+void G_Game::refreshDisplay()
 {
     this->updateDisplayPlayers();
 }
@@ -334,4 +349,19 @@ void G_Game::incCounterAnim(short which)
     }
 }
 
+void G_Game::dropBomb(const QPoint& blockPos, Player* p)
+{
+    Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos);
+    bombs.push_back(theBomb);
+
+    QPixmap texture(bomb2Texture.copy(32, 0, 16, 16));
+    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
+    item->setPos(blockPos.x()*30 + 8, blockPos.y()*30 + 8);
+    theBomb->setPtrItemOnScene(item);
+}
+
+void G_Game::updateDisplayBombs()
+{
+
+}
 

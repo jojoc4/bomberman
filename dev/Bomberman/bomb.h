@@ -13,6 +13,7 @@
 class Bomb
 {
 public:
+    Bomb();
     Bomb(int type, int range, QPoint position);
     virtual ~Bomb();
 

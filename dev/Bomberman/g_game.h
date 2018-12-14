@@ -13,6 +13,7 @@
 #include <QPixmap>
 #include "player.h"
 #include "game.h"
+#include "bomb.h"
 
 class G_Game : public QWidget
 {
@@ -56,11 +57,15 @@ private:
     bool p2Moving;
     short p2MovingDir;
     short nbTouchesP2;
+    QVector<Bomb*> bombs;
 
     void createDisplayMap();
     void createDisplayPlayers();
     void updateDisplayPlayers();
     void incCounterAnim(short which);
+    void dropBomb(const QPoint& blockPos, Player* p);
+    void refreshDisplay();
+    void updateDisplayBombs();
 
 };
 
