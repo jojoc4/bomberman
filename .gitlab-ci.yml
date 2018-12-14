@@ -15,5 +15,7 @@ compile:
   script:
   # Compile our app
   - cd dev/Bomberman
+  - qmake -version
+  - apt update && apt upgrade -y
   - qmake Bomberman.pro
   - make
