@@ -1,6 +1,9 @@
 #include "mapbloc.h"
 
 MapBloc::MapBloc(){
+    ptrItemOnScene = nullptr;
+    type = 0;
+    traversable = false;
 
 }
 
@@ -19,8 +22,9 @@ MapBloc::MapBloc(int type){
 }
 
 MapBloc::~MapBloc(){
-    delete ptrItemOnScene;
-    ptrItemOnScene = nullptr;
+    //delete ptrItemOnScene;
+    //ptrItemOnScene = nullptr;
+
 }
 
 /**

@@ -17,6 +17,8 @@ class G_MapChooser : public QWidget
 public:
     explicit G_MapChooser(Game* ptrGame, QWidget *parent = nullptr);
 
+    ~G_MapChooser();
+
 protected :
 
 
