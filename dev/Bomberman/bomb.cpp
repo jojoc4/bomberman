@@ -1,6 +1,17 @@
 #include "bomb.h"
 
 /**
+ * @brief bomb default constructor
+ */
+Bomb::Bomb()
+{
+    this->type=0;
+    this->range=0;
+    this->position=QPoint(0,0);
+    ptrItemOnScene=nullptr;
+}
+
+/**
  * @brief bomb constructor
  * @param type, range, line and column
  */
