@@ -23,7 +23,13 @@ public:
 public slots:
     void changeWidget(int index);
 
+
+
 private:
+
+    void createMapScreen();
+    void createGame();
+
     G_Game* game;
     G_HomeScreen* homescreen;
     G_MapChooser* mapchooser;
