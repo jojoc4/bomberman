@@ -374,6 +374,12 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 {
     if(p->getNbBomb() > 0)
     {
+        for(Bomb* b:bombs)
+        {
+            if(b->getPosition() == blockPos)
+                return;
+        }
+
         Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos);
         bombs.push_back(theBomb);
 

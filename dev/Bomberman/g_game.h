@@ -32,9 +32,9 @@ public slots:
     void startGame();
 
 protected:
-    void keyPressEvent(QKeyEvent *event) override;
-    void keyReleaseEvent(QKeyEvent *event) override;
-    void timerEvent(QTimerEvent *) override;
+    virtual void keyPressEvent(QKeyEvent *event) override;
+    virtual void keyReleaseEvent(QKeyEvent *event) override;
+    virtual void timerEvent(QTimerEvent *) override;
 
 private:
     Game *game;
