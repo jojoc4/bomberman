@@ -36,7 +36,8 @@ public:
     short getDirection() const;
 
     void setPuissance(int puissance);
-    void setNbBomb(int nbBombe);
+    void receiveBomb(int nb);
+    void dropBomb();
     void setPosition(QPoint np);
     void setDirection(short d);
 

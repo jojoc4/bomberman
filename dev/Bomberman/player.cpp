@@ -45,8 +45,14 @@ void Player::setPuissance(int puissance){
     this->puissance=puissance;
 }
 
-void Player::setNbBomb(int nbBombe){
-    this->nbBombe=nbBombe;
+void Player::receiveBomb(int nb)
+{
+    nbBombe += nb;
+}
+
+void Player::dropBomb()
+{
+    --nbBombe;
 }
 
 void Player::setPosition(QPoint np){

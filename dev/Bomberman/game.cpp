@@ -43,7 +43,7 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
         p->setPosition(newPos);
         switch (mb->getType()) {
         case 4:
-            p->setNbBomb(p->getNbBomb()+1);
+            p->receiveBomb(1);
             break;
         case 5:
             //TODO bonus
