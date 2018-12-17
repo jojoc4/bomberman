@@ -51,7 +51,8 @@ private:
     QPixmap bombTexture;
     QPixmap explosionTexture;
 
-    QAction* easterEgg;
+    QAction* awesomeAct;
+    bool iAmAwesome;
 
     int timeKeeper;
     short counterAnimP1;
@@ -65,6 +66,7 @@ private:
     QVector<Bomb*> bombs;
 
     void createDisplayMap();
+    void updateDisplayMap();
     void createDisplayPlayers();
     void updateDisplayPlayers();
     void incCounterAnim(short which);
@@ -72,6 +74,8 @@ private:
     void refreshDisplay();
     void updateDisplayBombs();
 
+private slots:
+    void beAwesome();
 };
 
 #endif

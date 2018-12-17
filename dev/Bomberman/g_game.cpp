@@ -12,7 +12,7 @@
 #include "player.h"
 #include "game.h"
 
-G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
+G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
                                                     p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
                                                     nbTouchesP2(0)
 {
@@ -34,7 +34,7 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), timeKeeper(-1)
     this->vLayout->addWidget(textPlayer2, 0, Qt::AlignBottom);
 
     this->container = new QGraphicsView();
-    this->container->setFixedSize(900, 900); //A map is 30x30 blocks, so 900 pixels
+    this->container->setFixedSize(901, 901); //A map is 30x30 blocks, so 900 pixels
     this->container->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->container->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     this->scene = new QGraphicsScene(container);
@@ -58,6 +58,11 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), timeKeeper(-1)
 
     //set the background color once at the beginning
     this->scene->setBackgroundBrush(Qt::gray);
+
+    this->awesomeAct = new QAction(this);
+    awesomeAct->setShortcut(QKeySequence("Ctrl+H"));
+    addAction(awesomeAct);
+    connect(awesomeAct, SIGNAL(triggered(bool)), this, SLOT(beAwesome()));
 }
 
 G_Game::~G_Game()
@@ -255,6 +260,70 @@ void G_Game::createDisplayMap()
             }
         }
     }
+
+    theMap = nullptr;
+    bloc = nullptr;
+}
+
+void G_Game::updateDisplayMap()
+{
+    int sizeX = this->scene->width()/30;
+    int sizeY = this->scene->height()/30;
+
+    Map* theMap = this->game->getMap();
+    MapBloc* bloc = nullptr;
+
+    //takes all the blocks in the map, one after te other (i/30 for lines and i%30 for columns)
+    for(int i=0; i<900; ++i)
+    {
+        bloc = theMap->getMapBloc(QPoint(i/30, i%30));
+
+        int type = bloc->getType();
+
+        switch(type){
+            case 1: //indestructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+                //Add and move the new block to the scene
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+
+                //Keep track of the pointer to the block
+                bloc->setPtrItemOnScene(item);
+                break;
+            }
+            case 2: //destructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+
+                bloc->setPtrItemOnScene(item);
+                break;
+            }
+            case 3: //background
+            {
+                // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
+                break;
+            }
+            case 4: //upgrade nbre
+            {
+                break;
+            }
+            case 5: //bonus
+            {
+                break;
+            }
+            case 6: //upgrade power
+            {
+                break;
+            }
+            default :
+            {
+
+            }
+        }
+    }
 }
 
 /**
@@ -289,8 +358,8 @@ void G_Game::updateDisplayPlayers()
     QPoint p1Pos = game->getPlayer(false)->getPosition();
     QPoint p2Pos = game->getPlayer(true)->getPosition();
     //Pointers to the QGraphicsItem of each player
-    QGraphicsItem *p1 = this->game->getPlayer(false)->getPtrItemOnScene();
-    QGraphicsItem *p2 = this->game->getPlayer(true)->getPtrItemOnScene();
+    QGraphicsPixmapItem *p1 = static_cast<QGraphicsPixmapItem*>(this->game->getPlayer(false)->getPtrItemOnScene());
+    QGraphicsPixmapItem *p2 = static_cast<QGraphicsPixmapItem*>(this->game->getPlayer(true)->getPtrItemOnScene());
 
     //Increment the animation counter of each player
     if(p1Moving)
@@ -334,15 +403,16 @@ void G_Game::updateDisplayPlayers()
         this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
-    //Delete the items from the scene, because cannot change the QPixmap they use.
-    this->scene->removeItem(p1);
-    this->scene->removeItem(p2);
-    //Set the new position of the players
     p1->setPos(this->game->getPlayer(false)->getPosition());
     p2->setPos(this->game->getPlayer(true)->getPosition());
-    //Create the new textures for the players, now that their positions are correct after their movement.
-    createDisplayPlayers();
 
+    int line = this->game->getPlayer(false)->getDirection();
+    QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
+    p1->setPixmap(texture);
+
+    line = this->game->getPlayer(true)->getDirection();
+    texture = p2Texture.copy(counterAnimP2/4*16, line*25, 16, 25);
+    p2->setPixmap(texture);
 }
 
 /**
@@ -396,3 +466,10 @@ void G_Game::updateDisplayBombs()
 
 }
 
+void G_Game::beAwesome()
+{
+    if(!iAmAwesome)
+        this->bombTexture = QPixmap(QString(":/resources/img/Bombe2.png"));
+    else
+        this->bombTexture = QPixmap(QString(":/resources/img/Bombe.png"));
+}
