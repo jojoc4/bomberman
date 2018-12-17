@@ -5,6 +5,12 @@
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QLabel>
+#include <QGraphicsView>
+#include <QLayout>
+#include <QAction>
+#include "player.h"
+#include "game.h"
 
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
                                                     p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
@@ -48,7 +54,6 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), timeKeeper(-1)
     this->p1Texture = QPixmap(QString(":/resources/img/Bomberman.png"));
     this->p2Texture = QPixmap(QString(":/resources/img/Bombermanj2.png"));
     this->bombTexture = QPixmap(QString(":/resources/img/Bombe.png"));
-    this->bomb2Texture = QPixmap(QString(":/resources/img/Bombe2.png"));
     this->explosionTexture = QPixmap(QString(":/resources/img/Explosions.png"));
 
     //set the background color once at the beginning
@@ -175,6 +180,7 @@ void G_Game::timerEvent(QTimerEvent*)
 void G_Game::refreshDisplay()
 {
     this->updateDisplayPlayers();
+    this->updateDisplayBombs();
 
 
     Player *p1 = game->getPlayer(false);

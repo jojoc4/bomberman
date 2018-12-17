@@ -7,13 +7,17 @@
 #ifndef G_GAME_H
 #define G_GAME_H
 
-#include <QLabel>
-#include <QGraphicsView>
-#include <QLayout>
 #include <QPixmap>
-#include "player.h"
-#include "game.h"
-#include "bomb.h"
+
+class Game;
+class QLabel;
+class QGraphicsView;
+class QGraphicsScene;
+class QVBoxLayout;
+class QHBoxLayout;
+class QAction;
+class Bomb;
+class Player;
 
 class G_Game : public QWidget
 {
@@ -45,8 +49,9 @@ private:
     QPixmap p1Texture;
     QPixmap p2Texture;
     QPixmap bombTexture;
-    QPixmap bomb2Texture;
     QPixmap explosionTexture;
+
+    QAction* easterEgg;
 
     int timeKeeper;
     short counterAnimP1;
