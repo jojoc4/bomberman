@@ -175,6 +175,15 @@ void G_Game::timerEvent(QTimerEvent*)
 void G_Game::refreshDisplay()
 {
     this->updateDisplayPlayers();
+
+
+    Player *p1 = game->getPlayer(false);
+    Player *p2 = game->getPlayer(true);
+    this->textPlayer1->setText(QString("Joueur 1:\nNombre de bombes: %1\n"
+                                            "Puissance des bombes: %2").arg(p1->getNbBomb()).arg(p1->getPuissance()));
+
+    this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
+                                           "Puissance des bombes: %2").arg(p2->getNbBomb()).arg(p2->getPuissance()));
 }
 
 /**
@@ -349,15 +358,25 @@ void G_Game::incCounterAnim(short which)
     }
 }
 
+/**
+ * @brief G_Game::dropBomb
+ * creates a new bomb and displays it
+ * @param blockPos
+ * @param p
+ */
 void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 {
-    Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos);
-    bombs.push_back(theBomb);
+    if(p->getNbBomb() > 0)
+    {
+        Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos);
+        bombs.push_back(theBomb);
 
-    QPixmap texture(bomb2Texture.copy(32, 0, 16, 16));
-    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
-    item->setPos(blockPos.x()*30 + 8, blockPos.y()*30 + 8);
-    theBomb->setPtrItemOnScene(item);
+        QPixmap texture(bombTexture.copy(32, 0, 16, 16));
+        QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
+        item->setPos(blockPos.x()*30 + 8, blockPos.y()*30 + 8);
+        theBomb->setPtrItemOnScene(item);
+        p->dropBomb();
+    }
 }
 
 void G_Game::updateDisplayBombs()
