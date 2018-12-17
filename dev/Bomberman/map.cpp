@@ -13,6 +13,10 @@ Map::Map()
     t = new MapBloc**[30];
     for(int i = 0; i< 30; i++){
         t[i] = new MapBloc*[30];
+
+        for(int j = 0; j < 30; j++){
+            t[i][j] = nullptr;
+        }
     }
 }
 

@@ -6,17 +6,19 @@ G_MainWidget::G_MainWidget(Game* g, QWidget *parent) : QWidget(parent)
     mapchooser = new G_MapChooser(g, this);
     game = new G_Game(g, this);
 
+    game->resize(100,100);
     layout = new QStackedLayout(this);
     layout->addWidget(game);
     layout->addWidget(mapchooser);
     layout->addWidget(homescreen);
 
     layout->setCurrentWidget(homescreen);
+    resize(100,100);
 
     setLayout(layout);
 
     connect(mapchooser, &G_MapChooser::startGame, game, &G_Game::startGame);
 }
 void G_MainWidget::changeWidget(int index){
-    layout->setCurrentIndex(index);
+   layout->setCurrentIndex(index);
 }

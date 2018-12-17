@@ -6,6 +6,7 @@
  */
 G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
+
     setWindowTitle(tr("Choix des cartes"));
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
@@ -21,8 +22,6 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     QHBoxLayout *hbox_button = new QHBoxLayout();
     btnValidate = new QPushButton(tr("Valider"),this);
     QPushButton *button_parcourir = new QPushButton(tr("Parcourir"),this);
-
-
 
     hbox_button->addWidget(btnValidate);
     hbox_button->addWidget(button_parcourir);
@@ -53,9 +52,6 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 
 
     displayListMap();
-    listMaps->setCurrentRow(0);
-    QListWidgetItem * item = listMaps->item(0);
-    getMap(item->text());
 
     hbox->addLayout(vboxLeft);
     hbox->addLayout(vboxRight);
@@ -64,6 +60,10 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     connect(btnValidate, &QPushButton::clicked, this, &G_MapChooser::validateMap);
     connect(listMaps, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateThumbnailsMap(QListWidgetItem *)));
     connect(this,SIGNAL(openNextWidget(int)),parent,SLOT(changeWidget(int)));
+}
+
+G_MapChooser::~G_MapChooser(){
+
 }
 /**
  * @brief G_MapChooser::browseFolderMaps : SLOT
@@ -95,14 +95,20 @@ void G_MapChooser::displayListMap()
             btnValidate->setEnabled(false);
         } else {
             btnValidate->setEnabled(true);
-        }
-        for ( const auto& i : mapsList  )
-        {
-            new QListWidgetItem(i, listMaps);
+            for ( const auto& i : mapsList  )
+            {
+                new QListWidgetItem(i, listMaps);
+            }
+
+            listMaps->setCurrentRow(0);
+
+            QListWidgetItem * item = listMaps->item(0);
+            getMap(item->text());
         }
     } else {
         QMessageBox::critical(this, tr("Erreur "), tr("Le dossier spécifié n'existe pas"), QMessageBox::Ok);
     }
+
 }
 /**
  * @brief G_MapChooser::updateThumbnailsMap
@@ -124,10 +130,17 @@ void G_MapChooser::validateMap()
 void G_MapChooser::displayThumbnailsMap(){
     this->previewMapScene->setBackgroundBrush(Qt::gray);
     this->previewMapScene->clear();
+
     for(int i = 0; i < 30; i++){
         for(int j = 0; j < 30; j++){
             QPoint bloc(i, j);
+
             MapBloc* monBloc =  game->getMap()->getMapBloc(bloc);
+
+            if(monBloc == nullptr){
+                return;
+            }
+
             int type = monBloc->getType();
 
             qreal sizeX = this->previewMapScene->width()/30;
@@ -171,7 +184,7 @@ void G_MapChooser::displayThumbnailsMap(){
 
 
 void G_MapChooser::resizeEvent(QResizeEvent *){
-    displayThumbnailsMap();
+        displayThumbnailsMap();
 }
 void G_MapChooser::getMap(QString name){
     try{
