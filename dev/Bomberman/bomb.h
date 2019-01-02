@@ -9,6 +9,10 @@
 
 #include <QPoint>
 #include <QGraphicsItem>
+#include <QTimer>
+
+class Map;
+class MapBloc;
 
 class Bomb
 {
@@ -17,19 +21,45 @@ public:
     Bomb(int type, int range, QPoint position);
     virtual ~Bomb();
 
-    void bombThread();
+    static Map* ptrMap;
 
     int getType();
     int getRange();
+    int getStatus();
+
     QPoint getPosition();
-    QGraphicsItem* getPtrItemOnScene();
-    void setPtrItemOnScene(QGraphicsItem *item);
+    QGraphicsPixmapItem* getPtrItemOnScene();
+
+    void setPtrItemOnScene(QGraphicsPixmapItem *item);
+    void updateStatus();
+    void explode();
+
+    void resetStatus();
+    int getNbCycle();
+    void postStepExplosion();
+    int getStepExplosion();
+    void resetNbCycle();
+
+    void setExploded();
+    bool getExploded();
+
+    QGraphicsPixmapItem* addFireExplosion(QGraphicsPixmapItem*);
+    QVector<QGraphicsPixmapItem *> getItemsExplosion();
+
 
 private:
     int type;
     int range;
+
+    int status;
+    int nbCycle;
+    int stepExplosion;
+
+    bool isExploded;
+
     QPoint position;
-    QGraphicsItem *ptrItemOnScene;
+    QGraphicsPixmapItem *ptrItemOnScene;
+    QVector<QGraphicsPixmapItem*> bombExplosionElement;
 };
 
 #endif

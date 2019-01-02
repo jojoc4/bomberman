@@ -13,8 +13,8 @@
 #include "game.h"
 
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
-                                                    p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
-                                                    nbTouchesP2(0)
+    p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
+    nbTouchesP2(0)
 {
     this->game = theGame;
     Player *p1 = game->getPlayer(false);
@@ -120,7 +120,7 @@ void G_Game::keyPressEvent(QKeyEvent* event)
         dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
         break;
     }
-    //Player 2
+        //Player 2
     case Qt::Key_Up :
         p2MovingDir = Player::UP;
         ++nbTouchesP2;
@@ -185,16 +185,19 @@ void G_Game::timerEvent(QTimerEvent*)
 void G_Game::refreshDisplay()
 {
     this->updateDisplayPlayers();
-    this->updateDisplayBombs();
+
+    if(bombs.size() > 0)
+        this->updateDisplayBombs();
+
 
 
     Player *p1 = game->getPlayer(false);
     Player *p2 = game->getPlayer(true);
     this->textPlayer1->setText(QString("Joueur 1:\nNombre de bombes: %1\n"
-                                            "Puissance des bombes: %2").arg(p1->getNbBomb()).arg(p1->getPuissance()));
+                                       "Puissance des bombes: %2").arg(p1->getNbBomb()).arg(p1->getPuissance()));
 
     this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
-                                           "Puissance des bombes: %2").arg(p2->getNbBomb()).arg(p2->getPuissance()));
+                                       "Puissance des bombes: %2").arg(p2->getNbBomb()).arg(p2->getPuissance()));
 }
 
 /**
@@ -217,47 +220,47 @@ void G_Game::createDisplayMap()
         int type = bloc->getType();
 
         switch(type){
-            case 1: //indestructible
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-                //Add and move the new block to the scene
-                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+        case 1: //indestructible
+        {
+            QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+            //Add and move the new block to the scene
+            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-                //Keep track of the pointer to the block
-                bloc->setPtrItemOnScene(item);
-                break;
-            }
-            case 2: //destructible
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            //Keep track of the pointer to the block
+            bloc->setPtrItemOnScene(item);
+            break;
+        }
+        case 2: //destructible
+        {
+            QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-                bloc->setPtrItemOnScene(item);
-                break;
-            }
-            case 3: //background
-            {
-                // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
-                break;
-            }
-            case 4: //upgrade nbre
-            {
-                break;
-            }
-            case 5: //bonus
-            {
-                break;
-            }
-            case 6: //upgrade power
-            {
-                break;
-            }
-            default :
-            {
+            bloc->setPtrItemOnScene(item);
+            break;
+        }
+        case 3: //background
+        {
+            // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
+            break;
+        }
+        case 4: //upgrade nbre
+        {
+            break;
+        }
+        case 5: //bonus
+        {
+            break;
+        }
+        case 6: //upgrade power
+        {
+            break;
+        }
+        default :
+        {
 
-            }
+        }
         }
     }
 
@@ -281,47 +284,47 @@ void G_Game::updateDisplayMap()
         int type = bloc->getType();
 
         switch(type){
-            case 1: //indestructible
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-                //Add and move the new block to the scene
-                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+        case 1: //indestructible
+        {
+            QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+            //Add and move the new block to the scene
+            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-                //Keep track of the pointer to the block
-                bloc->setPtrItemOnScene(item);
-                break;
-            }
-            case 2: //destructible
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            //Keep track of the pointer to the block
+            bloc->setPtrItemOnScene(item);
+            break;
+        }
+        case 2: //destructible
+        {
+            QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-                bloc->setPtrItemOnScene(item);
-                break;
-            }
-            case 3: //background
-            {
-                // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
-                break;
-            }
-            case 4: //upgrade nbre
-            {
-                break;
-            }
-            case 5: //bonus
-            {
-                break;
-            }
-            case 6: //upgrade power
-            {
-                break;
-            }
-            default :
-            {
+            bloc->setPtrItemOnScene(item);
+            break;
+        }
+        case 3: //background
+        {
+            // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
+            break;
+        }
+        case 4: //upgrade nbre
+        {
+            break;
+        }
+        case 5: //bonus
+        {
+            break;
+        }
+        case 6: //upgrade power
+        {
+            break;
+        }
+        default :
+        {
 
-            }
+        }
         }
     }
 }
@@ -463,8 +466,141 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 
 void G_Game::updateDisplayBombs()
 {
-
+    for(Bomb* bomb:bombs){
+        if(bomb->getExploded()){
+            if(bomb->getStatus() == 10){
+                scene->removeItem(bomb->getPtrItemOnScene());
+                explodeBomb(bomb);
+                bomb->resetStatus();
+                bomb->postStepExplosion();
+            } else {
+                bomb->updateStatus();
+            }
+        } else {
+            updateBombAnimation(bomb);
+        }
+    }
 }
+void G_Game::updateBombAnimation(Bomb* bomb){
+    bomb->updateStatus();
+    if(bomb->getStatus() == 10)
+    {
+        QRect square(0, 0, 16, 16);
+        shredTexture(bomb,square);
+    }
+    if(bomb->getStatus() == 20)
+    {
+        QRect square(16, 0, 16, 16);
+        shredTexture(bomb,square);
+    }
+    if(bomb->getStatus() == 30)
+    {
+        QRect square(32, 0, 16, 16);
+        shredTexture(bomb,square);
+    }
+
+    if(bomb->getStatus() == 40)
+    {
+        QRect square(16, 0, 16, 16);
+        shredTexture(bomb,square);
+        bomb->resetStatus();
+    }
+    if(bomb->getNbCycle() == 2){
+        bomb->setExploded();
+    }
+}
+void G_Game::shredTexture(Bomb* bomb, QRect square){
+    QPixmap texture(bombTexture.copy(square));
+    QGraphicsPixmapItem *item = bomb->getPtrItemOnScene();
+    item->setPixmap(texture);
+    bomb->setPtrItemOnScene(item);
+}
+
+void G_Game::explodeBomb(Bomb *bomb){
+    QPoint position = bomb->getPosition();
+    Map* theMap = this->game->getMap();
+    MapBloc* bloc = nullptr;
+    bloc = theMap->getMapBloc(position);
+
+    // delete previous explosion flame
+
+    for(QGraphicsItem* itemToDelete:bomb->getItemsExplosion()){
+        scene->removeItem(itemToDelete);
+    }
+
+
+    int i = bomb->getStepExplosion();
+
+    if(i == 4){
+        bombs.removeOne(bomb);
+        delete bomb;
+        return;
+    }
+    QGraphicsPixmapItem* newItem = nullptr;
+    // milieu
+
+    QRect square(i*12, 0, 12, 12);
+    QPixmap texture(explosionTexture.copy(square));
+
+    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
+
+    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
+
+    newItem->setPixmap(texture);
+    newItem->setPos(position.x()*30,position.y()*30);
+    scene->addItem(newItem);
+
+    // droite
+
+    square.setRect(i*12, 48, 12, 12);
+    texture = explosionTexture.copy(square);
+    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
+
+    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
+
+    newItem->setPixmap(texture);
+    newItem->setPos((position.x()+1)*30,(position.y())*30);
+    scene->addItem(newItem);
+
+    // gauche
+
+    square.setRect(i*12, 72, 12, 12);
+    texture = explosionTexture.copy(square);
+    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
+
+    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
+
+    newItem->setPixmap(texture);
+    newItem->setPos((position.x()-1)*30,(position.y())*30);
+    scene->addItem(newItem);
+
+    // bas
+
+    square.setRect(i*12, 60, 12, 12);
+    texture = explosionTexture.copy(square);
+    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
+
+    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
+
+    newItem->setPixmap(texture);
+    newItem->setPos((position.x())*30,(position.y()+1)*30);
+    scene->addItem(newItem);
+
+    // haut
+
+    square.setRect(i*12, 36, 12, 12);
+    texture = explosionTexture.copy(square);
+    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
+
+    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
+
+    newItem->setPixmap(texture);
+    newItem->setPos((position.x())*30,(position.y()-1)*30);
+    scene->addItem(newItem);
+}
+
+
+
 
 void G_Game::beAwesome()
 {

@@ -31,6 +31,7 @@ signals:
 public slots:
     void startGame();
 
+
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *event) override;
@@ -65,16 +66,21 @@ private:
     short nbTouchesP2;
     QVector<Bomb*> bombs;
 
+
     void createDisplayMap();
     void updateDisplayMap();
     void createDisplayPlayers();
     void updateDisplayPlayers();
     void incCounterAnim(short which);
     void dropBomb(const QPoint& blockPos, Player* p);
+    void shredTexture(Bomb* bomb, QRect square);
     void refreshDisplay();
-    void updateDisplayBombs();
 
-private slots:
+    void updateDisplayBombs();
+    void updateBombAnimation(Bomb* bomb);
+    void explodeBomb(Bomb* bomb);
+
+    private slots:
     void beAwesome();
 };
 

@@ -69,12 +69,12 @@ bool MapBloc::getTraversable(){
     return this->traversable;
 }
 
-QGraphicsItem* MapBloc::getPtrItemOnScene()
+QGraphicsPixmapItem* MapBloc::getPtrItemOnScene()
 {
     return ptrItemOnScene;
 }
 
-void MapBloc::setPtrItemOnScene(QGraphicsItem *item)
+void MapBloc::setPtrItemOnScene(QGraphicsPixmapItem *item)
 {
     ptrItemOnScene= item;
 }

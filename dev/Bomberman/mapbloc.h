@@ -24,14 +24,14 @@ public:
 
     void explode();
 
-    QGraphicsItem* getPtrItemOnScene();
-    void setPtrItemOnScene(QGraphicsItem *item);
+    QGraphicsPixmapItem* getPtrItemOnScene();
+    void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
 private:
     int type;
     bool traversable;
 
-    QGraphicsItem *ptrItemOnScene;
+    QGraphicsPixmapItem *ptrItemOnScene;
 };
 
 #endif
