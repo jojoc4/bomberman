@@ -81,6 +81,7 @@ private:
     void dislayExplosionBomb(Bomb* bomb);
 
     void drawFlameExplosion(QRect location, Bomb *bomb, short x, short y);
+    void destroyBlocs(Bomb* bomb);
 
     private slots:
     void beAwesome();

@@ -286,39 +286,49 @@ void G_Game::updateDisplayMap()
         switch(type){
         case 1: //indestructible
         {
-            QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+            //QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
             //Add and move the new block to the scene
-            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+
+            //item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            //scene->removeItem(bloc->getPtrItemOnScene());
 
             //Keep track of the pointer to the block
-            bloc->setPtrItemOnScene(item);
+            //bloc->setPtrItemOnScene(item);
             break;
         }
         case 2: //destructible
         {
-            QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            //QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+            //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            //item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-            bloc->setPtrItemOnScene(item);
+            //bloc->setPtrItemOnScene(item);
+            //scene->removeItem(bloc->getPtrItemOnScene());
             break;
         }
         case 3: //background
         {
+            if(bloc->getPtrItemOnScene() != nullptr){
+                scene->removeItem(bloc->getPtrItemOnScene());
+                bloc->setPtrItemOnScene(nullptr);
+            }
             // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
             break;
         }
         case 4: //upgrade nbre
         {
+
             break;
         }
         case 5: //bonus
         {
+
             break;
         }
         case 6: //upgrade power
         {
+
             break;
         }
         default :
@@ -452,8 +462,9 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
             if(b->getPosition() == blockPos)
                 return;
         }
-
         Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos);
+        //Bomb* theBomb = new Bomb(0, 2, blockPos);
+
         bombs.push_back(theBomb);
 
         QPixmap texture(bombTexture.copy(32, 0, 16, 16));
@@ -472,7 +483,6 @@ void G_Game::updateDisplayBombs()
     for(Bomb* bomb:bombs){
         if(bomb->getExploded()){
             if(bomb->getValCounterBomb() == 10){
-                scene->removeItem(bomb->getPtrItemOnScene());
                 dislayExplosionBomb(bomb);
                 bomb->resetCounter();
                 bomb->postStepExplosion();
@@ -542,14 +552,21 @@ void G_Game::setTextureBomb(Bomb* bomb, QRect square){
 
 void G_Game::dislayExplosionBomb(Bomb *bomb){
     // delete previous explosion flame
-    for(QGraphicsItem* itemToDelete:bomb->getItemsExplosion()){
+    QList<QGraphicsPixmapItem*>* listElement = bomb->getItemsExplosion();
+    for(QGraphicsPixmapItem* itemToDelete:*(listElement)){
         scene->removeItem(itemToDelete);
+        listElement->removeOne(itemToDelete);
     }
     int i = bomb->getStepExplosion();
 
+
+    //this->updateDisplayPlayers();
     if(i == 4){
+        destroyBlocs(bomb);
+        scene->removeItem(bomb->getPtrItemOnScene());
         bombs.removeOne(bomb);
         delete bomb;
+        this->updateDisplayMap();
         return;
     }
     QRect center(i*12, 0, 12, 12);
@@ -558,20 +575,27 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
     QRect bottom(i*12, 60, 12, 12);
     QRect up(i*12, 36, 12, 12);
 
-    drawFlameExplosion(center,bomb,0,0);
-    drawFlameExplosion(right,bomb,-1,0);
-    drawFlameExplosion(left,bomb,1,0);
-    drawFlameExplosion(bottom,bomb,0,-1);
-    drawFlameExplosion(up,bomb,0,1);
+    QRect vertical(i*12,12,12,12);
+    QRect horizontal(i*12,24,12,12);
 
-    this->updateDisplayMap();
+    int powerBomb = bomb->getRange();
+    drawFlameExplosion(center,bomb,0,0);
+
+    drawFlameExplosion(right,bomb,-powerBomb,0);
+    for(int i = 1; i < powerBomb; i++){
+        drawFlameExplosion(horizontal,bomb,i,0);
+        drawFlameExplosion(horizontal,bomb,-i,0);
+        drawFlameExplosion(vertical,bomb,0,i);
+        drawFlameExplosion(vertical,bomb,0,-i);
+    }
+    drawFlameExplosion(left,bomb,powerBomb,0);
+    drawFlameExplosion(bottom,bomb,0,-powerBomb);
+    drawFlameExplosion(up,bomb,0,powerBomb);
+
 }
 void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
     QPoint position = bomb->getPosition();
     QGraphicsPixmapItem* newItem = nullptr;
-
-    Map* theMap = this->game->getMap();
-    MapBloc* bloc = nullptr;
 
     QPixmap texture(explosionTexture.copy(location));
 
@@ -582,10 +606,32 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
     newItem->setPixmap(texture);
     newItem->setPos((position.x()+x)*30,(position.y()+y)*30);
 
-    bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()+y));
-    bloc->explode();
-
     scene->addItem(newItem);
+}
+
+
+void G_Game::destroyBlocs(Bomb* bomb){
+    QPoint position = bomb->getPosition();
+    Map* theMap = this->game->getMap();
+    MapBloc* bloc = nullptr;
+    int puissance = bomb->getRange();
+
+    for(int x = -puissance; x <= puissance; x++){
+        if(position.x()+x < 30 && position.x()+x >= 0){
+            bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
+            if(bloc->getType() != 1 && bloc->getType() != 3){
+                bloc->explode();
+            }
+        }
+    }
+    for(int y = -puissance; y <= puissance; y++){
+        if(position.y()+y < 30 && position.y()+y >= 0){
+            bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
+            if(bloc->getType() != 1 && bloc->getType() != 3){
+                bloc->explode();
+            }
+        }
+    }
 }
 void G_Game::beAwesome()
 {

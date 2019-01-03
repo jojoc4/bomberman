@@ -44,7 +44,10 @@ public:
     bool getExploded();
 
     QGraphicsPixmapItem* addFireExplosion(QGraphicsPixmapItem*);
-    QVector<QGraphicsPixmapItem *> getItemsExplosion();
+    QList<QGraphicsPixmapItem *> *getItemsExplosion();
+
+    void setExplosionOver();
+    bool getExplosionOver();
 
 
 private:
@@ -56,10 +59,13 @@ private:
     int stepExplosion;
 
     bool isExploded;
+    bool isExplosionOver;
 
     QPoint position;
     QGraphicsPixmapItem *ptrItemOnScene;
-    QVector<QGraphicsPixmapItem*> bombExplosionElement;
+
+    QList<QGraphicsPixmapItem*> bombExplosionElement;
+    QList<MapBloc*> destroyedBlock;
 };
 
 #endif

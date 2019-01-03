@@ -1,4 +1,5 @@
 #include "bomb.h"
+#include "bomb.h"
 
 
 
@@ -16,6 +17,7 @@ Bomb::Bomb()
     nbCycle = 0;
     stepExplosion = 0;
     isExploded = false;
+    isExplosionOver = false;
 }
 
 /**
@@ -32,6 +34,7 @@ Bomb::Bomb(int type, int range, QPoint position)
     nbCycle = 0;
     stepExplosion = 0;
     isExploded = false;
+    isExplosionOver = false;
 }
 
 Bomb::~Bomb(){
@@ -89,8 +92,8 @@ QGraphicsPixmapItem* Bomb::addFireExplosion(QGraphicsPixmapItem* item){
     bombExplosionElement.push_back(item);
     return item;
 }
-QVector<QGraphicsPixmapItem*> Bomb::getItemsExplosion(){
-    return bombExplosionElement;
+QList<QGraphicsPixmapItem*>* Bomb::getItemsExplosion(){
+    return &bombExplosionElement;
 }
 
 void Bomb::resetNbCycle()
@@ -102,4 +105,14 @@ void Bomb::setExploded(){
 }
 bool Bomb::getExploded(){
     return isExploded;
+}
+
+void Bomb::setExplosionOver()
+{
+    isExplosionOver = true;
+}
+
+bool Bomb::getExplosionOver()
+{
+    return isExplosionOver;
 }
