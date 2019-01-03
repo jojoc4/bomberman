@@ -463,72 +463,88 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
         p->dropBomb();
     }
 }
-
+/**
+ * @brief G_Game::updateDisplayBombs
+ * Update the display of the bombs
+ */
 void G_Game::updateDisplayBombs()
 {
     for(Bomb* bomb:bombs){
         if(bomb->getExploded()){
-            if(bomb->getStatus() == 10){
+            if(bomb->getValCounterBomb() == 10){
                 scene->removeItem(bomb->getPtrItemOnScene());
-                explodeBomb(bomb);
-                bomb->resetStatus();
+                dislayExplosionBomb(bomb);
+                bomb->resetCounter();
                 bomb->postStepExplosion();
             } else {
-                bomb->updateStatus();
+                bomb->incCounterBomb();
             }
         } else {
             updateBombAnimation(bomb);
         }
     }
 }
+/**
+ * @brief G_Game::updateBombAnimation
+ * Update the display before the explosion
+ * @param bomb
+ */
 void G_Game::updateBombAnimation(Bomb* bomb){
-    bomb->updateStatus();
-    if(bomb->getStatus() == 10)
-    {
-        QRect square(0, 0, 16, 16);
-        shredTexture(bomb,square);
-    }
-    if(bomb->getStatus() == 20)
-    {
-        QRect square(16, 0, 16, 16);
-        shredTexture(bomb,square);
-    }
-    if(bomb->getStatus() == 30)
-    {
-        QRect square(32, 0, 16, 16);
-        shredTexture(bomb,square);
-    }
+    bomb->incCounterBomb();
 
-    if(bomb->getStatus() == 40)
-    {
-        QRect square(16, 0, 16, 16);
-        shredTexture(bomb,square);
-        bomb->resetStatus();
-    }
     if(bomb->getNbCycle() == 2){
         bomb->setExploded();
     }
+    int valCounter = bomb->getValCounterBomb();
+    switch(valCounter){
+    case 10 :
+    {
+        QRect square(0, 0, 16, 16);
+        setTextureBomb(bomb,square);
+        break;
+    }
+    case 20 :
+    {
+
+        QRect square(16, 0, 16, 16);
+        setTextureBomb(bomb,square);
+        break;
+    }
+    case 30 :
+    {
+        QRect square(32, 0, 16, 16);
+        setTextureBomb(bomb,square);
+        break;
+    }
+    case 40 :
+    {
+        QRect square(16, 0, 16, 16);
+        setTextureBomb(bomb,square);
+        bomb->resetCounter();
+        break;
+    }
+    default :{}
+
+    }
 }
-void G_Game::shredTexture(Bomb* bomb, QRect square){
+/**
+ * @brief G_Game::setTextureBomb
+ *
+ * @param bomb
+ * @param square
+ */
+void G_Game::setTextureBomb(Bomb* bomb, QRect square){
     QPixmap texture(bombTexture.copy(square));
     QGraphicsPixmapItem *item = bomb->getPtrItemOnScene();
     item->setPixmap(texture);
     bomb->setPtrItemOnScene(item);
 }
 
-void G_Game::explodeBomb(Bomb *bomb){
-    QPoint position = bomb->getPosition();
-    Map* theMap = this->game->getMap();
-    MapBloc* bloc = nullptr;
-    bloc = theMap->getMapBloc(position);
-
+void G_Game::dislayExplosionBomb(Bomb *bomb){
     // delete previous explosion flame
-
     for(QGraphicsItem* itemToDelete:bomb->getItemsExplosion()){
         scene->removeItem(itemToDelete);
     }
-
-
     int i = bomb->getStepExplosion();
 
     if(i == 4){
@@ -536,72 +552,41 @@ void G_Game::explodeBomb(Bomb *bomb){
         delete bomb;
         return;
     }
+    QRect center(i*12, 0, 12, 12);
+    QRect right(i*12, 48, 12, 12);
+    QRect left(i*12, 72, 12, 12);
+    QRect bottom(i*12, 60, 12, 12);
+    QRect up(i*12, 36, 12, 12);
+
+    drawFlameExplosion(center,bomb,0,0);
+    drawFlameExplosion(right,bomb,-1,0);
+    drawFlameExplosion(left,bomb,1,0);
+    drawFlameExplosion(bottom,bomb,0,-1);
+    drawFlameExplosion(up,bomb,0,1);
+
+    this->updateDisplayMap();
+}
+void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
+    QPoint position = bomb->getPosition();
     QGraphicsPixmapItem* newItem = nullptr;
-    // milieu
 
-    QRect square(i*12, 0, 12, 12);
-    QPixmap texture(explosionTexture.copy(square));
+    Map* theMap = this->game->getMap();
+    MapBloc* bloc = nullptr;
+
+    QPixmap texture(explosionTexture.copy(location));
 
     texture = texture.scaled(30,30,Qt::KeepAspectRatio);
 
     newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
 
     newItem->setPixmap(texture);
-    newItem->setPos(position.x()*30,position.y()*30);
-    scene->addItem(newItem);
+    newItem->setPos((position.x()+x)*30,(position.y()+y)*30);
 
-    // droite
+    bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()+y));
+    bloc->explode();
 
-    square.setRect(i*12, 48, 12, 12);
-    texture = explosionTexture.copy(square);
-    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
-
-    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
-
-    newItem->setPixmap(texture);
-    newItem->setPos((position.x()+1)*30,(position.y())*30);
-    scene->addItem(newItem);
-
-    // gauche
-
-    square.setRect(i*12, 72, 12, 12);
-    texture = explosionTexture.copy(square);
-    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
-
-    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
-
-    newItem->setPixmap(texture);
-    newItem->setPos((position.x()-1)*30,(position.y())*30);
-    scene->addItem(newItem);
-
-    // bas
-
-    square.setRect(i*12, 60, 12, 12);
-    texture = explosionTexture.copy(square);
-    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
-
-    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
-
-    newItem->setPixmap(texture);
-    newItem->setPos((position.x())*30,(position.y()+1)*30);
-    scene->addItem(newItem);
-
-    // haut
-
-    square.setRect(i*12, 36, 12, 12);
-    texture = explosionTexture.copy(square);
-    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
-
-    newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
-
-    newItem->setPixmap(texture);
-    newItem->setPos((position.x())*30,(position.y()-1)*30);
     scene->addItem(newItem);
 }
-
-
-
-
 void G_Game::beAwesome()
 {
     if(!iAmAwesome)

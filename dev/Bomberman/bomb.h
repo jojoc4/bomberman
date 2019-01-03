@@ -25,16 +25,16 @@ public:
 
     int getType();
     int getRange();
-    int getStatus();
+    int getValCounterBomb();
 
     QPoint getPosition();
     QGraphicsPixmapItem* getPtrItemOnScene();
 
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
-    void updateStatus();
+    void incCounterBomb();
     void explode();
 
-    void resetStatus();
+    void resetCounter();
     int getNbCycle();
     void postStepExplosion();
     int getStepExplosion();
@@ -51,7 +51,7 @@ private:
     int type;
     int range;
 
-    int status;
+    int counter;
     int nbCycle;
     int stepExplosion;
 

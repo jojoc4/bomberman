@@ -73,12 +73,14 @@ private:
     void updateDisplayPlayers();
     void incCounterAnim(short which);
     void dropBomb(const QPoint& blockPos, Player* p);
-    void shredTexture(Bomb* bomb, QRect square);
+    void setTextureBomb(Bomb* bomb, QRect square);
     void refreshDisplay();
 
     void updateDisplayBombs();
     void updateBombAnimation(Bomb* bomb);
-    void explodeBomb(Bomb* bomb);
+    void dislayExplosionBomb(Bomb* bomb);
+
+    void drawFlameExplosion(QRect location, Bomb *bomb, short x, short y);
 
     private slots:
     void beAwesome();

@@ -12,7 +12,7 @@ Bomb::Bomb()
     this->position=QPoint(0,0);
     ptrItemOnScene=nullptr;
 
-    status = 0;
+    counter = 0;
     nbCycle = 0;
     stepExplosion = 0;
     isExploded = false;
@@ -28,7 +28,7 @@ Bomb::Bomb(int type, int range, QPoint position)
     this->range=range;
     this->position=position;
     ptrItemOnScene=nullptr;
-    status = 0;
+    counter = 0;
     nbCycle = 0;
     stepExplosion = 0;
     isExploded = false;
@@ -40,12 +40,12 @@ Bomb::~Bomb(){
 void Bomb::explode(){
     delete this;
 }
-void Bomb::updateStatus(){
-    status++;
+void Bomb::incCounterBomb(){
+    counter++;
 }
 
-int Bomb::getStatus(){
-    return status;
+int Bomb::getValCounterBomb(){
+    return counter;
 }
 int Bomb::getType(){
     return type;
@@ -69,8 +69,8 @@ void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item)
     ptrItemOnScene= item;
 }
 
-void Bomb::resetStatus(){
-    status = 0;
+void Bomb::resetCounter(){
+    counter = 0;
     nbCycle++;
 }
 
@@ -97,8 +97,6 @@ void Bomb::resetNbCycle()
 {
     nbCycle = 0;
 }
-
-
 void Bomb::setExploded(){
     isExploded = true;
 }
