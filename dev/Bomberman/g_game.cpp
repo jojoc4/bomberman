@@ -318,17 +318,27 @@ void G_Game::updateDisplayMap()
         }
         case 4: //upgrade nbre
         {
-
+            if(bloc->getPtrItemOnScene() != nullptr){
+                scene->removeItem(bloc->getPtrItemOnScene());
+                bloc->setPtrItemOnScene(nullptr);
+            }
             break;
         }
         case 5: //bonus
         {
+            if(bloc->getPtrItemOnScene() != nullptr){
+                scene->removeItem(bloc->getPtrItemOnScene());
+                bloc->setPtrItemOnScene(nullptr);
+            }
 
             break;
         }
         case 6: //upgrade power
         {
-
+            if(bloc->getPtrItemOnScene() != nullptr){
+                scene->removeItem(bloc->getPtrItemOnScene());
+                bloc->setPtrItemOnScene(nullptr);
+            }
             break;
         }
         default :
