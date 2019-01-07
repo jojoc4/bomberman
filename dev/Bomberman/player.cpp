@@ -20,6 +20,29 @@ void Player::moveThread()
 
 }
 
+void Player::giveBonus(){
+    visible=false;
+    invincible=false;
+    superBomb=false;
+    autoDrop=false;
+
+    int r = (qrand() % ((10 + 1) - 1) + 1);
+    ///chance out of ten to have
+    int invis=5;
+    int invinc=1;
+    int sb=1;
+
+    if(r<=invis){
+        visible=true;
+    }else if(r<=invis+invinc){
+        invincible=true;
+    }else if(r<=invis+invinc+sb){
+        superBomb=true;
+    }else{
+        autoDrop=true;
+    }
+}
+
 QPoint Player::getPosition() const {
     return position;
 }
@@ -73,4 +96,38 @@ void Player::setDirection(short d)
 {
     if(d>=0 && d<4)
         this->direction = d;
+}
+
+
+bool Player::getVisible() const{
+    return visible;
+}
+
+bool Player::getSuperBomb() const{
+    return superBomb;
+}
+
+bool Player::getInvincible() const{
+    return invincible;
+}
+
+bool Player::getAutoDrop() const{
+    return autoDrop;
+}
+
+
+void Player::setVisible(bool s){
+    visible = s;
+}
+
+void Player::setSuperBomb(bool s){
+    superBomb = s;
+}
+
+void Player::setInvincible(bool s){
+    invincible = s;
+}
+
+void Player::setAutoDrop(bool s){
+    autoDrop = s;
 }

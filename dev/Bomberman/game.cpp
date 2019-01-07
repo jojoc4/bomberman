@@ -47,6 +47,7 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
             break;
         case 5:
             //TODO bonus
+            p->giveBonus();
             break;
         case 6:
             p->setPuissance(p->getPuissance()+1);

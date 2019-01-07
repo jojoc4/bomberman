@@ -270,9 +270,6 @@ void G_Game::createDisplayMap()
 
 void G_Game::updateDisplayMap()
 {
-    int sizeX = this->scene->width()/30;
-    int sizeY = this->scene->height()/30;
-
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
 
@@ -283,7 +280,8 @@ void G_Game::updateDisplayMap()
 
         int type = bloc->getType();
 
-        switch(type){
+        switch(type)
+        {
         case 1: //indestructible
         {
             //QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
@@ -309,13 +307,15 @@ void G_Game::updateDisplayMap()
         }
         case 3: //background
         {
-            if(bloc->getPtrItemOnScene() != nullptr){
+            if(bloc->getPtrItemOnScene() != nullptr)
+            {
                 scene->removeItem(bloc->getPtrItemOnScene());
                 bloc->setPtrItemOnScene(nullptr);
             }
             // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
             break;
         }
+
         case 4: //upgrade nbre
         {
             if(bloc->getPtrItemOnScene() != nullptr){
@@ -343,7 +343,6 @@ void G_Game::updateDisplayMap()
         }
         default :
         {
-
         }
         }
     }
@@ -426,8 +425,8 @@ void G_Game::updateDisplayPlayers()
         this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
-    p1->setPos(this->game->getPlayer(false)->getPosition());
-    p2->setPos(this->game->getPlayer(true)->getPosition());
+    p1->setPos(this->game->getPlayer(false)->getPosition().x()-8, this->game->getPlayer(false)->getPosition().y()-17);
+    p2->setPos(this->game->getPlayer(true)->getPosition().x()-8, this->game->getPlayer(true)->getPosition().y()-17);
 
     int line = this->game->getPlayer(false)->getDirection();
     QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
@@ -491,8 +490,10 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 void G_Game::updateDisplayBombs()
 {
     for(Bomb* bomb:bombs){
-        if(bomb->getExploded()){
-            if(bomb->getValCounterBomb() == 10){
+        if(bomb->getExploded())
+        {
+            if(bomb->getValCounterBomb() == 10)
+            {
                 dislayExplosionBomb(bomb);
                 bomb->resetCounter();
                 bomb->postStepExplosion();
