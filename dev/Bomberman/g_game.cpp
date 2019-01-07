@@ -240,23 +240,6 @@ void G_Game::createDisplayMap()
             bloc->setPtrItemOnScene(item);
             break;
         }
-        case 3: //background
-        {
-            // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
-            break;
-        }
-        case 4: //upgrade nbre
-        {
-            break;
-        }
-        case 5: //bonus
-        {
-            break;
-        }
-        case 6: //upgrade power
-        {
-            break;
-        }
         default :
         {
 
@@ -282,29 +265,6 @@ void G_Game::updateDisplayMap()
 
         switch(type)
         {
-        case 1: //indestructible
-        {
-            //QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-            //Add and move the new block to the scene
-            //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-
-            //item->setPos((i/30)*sizeX, (i%30)*sizeY);
-            //scene->removeItem(bloc->getPtrItemOnScene());
-
-            //Keep track of the pointer to the block
-            //bloc->setPtrItemOnScene(item);
-            break;
-        }
-        case 2: //destructible
-        {
-            //QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-            //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            //item->setPos((i/30)*sizeX, (i%30)*sizeY);
-
-            //bloc->setPtrItemOnScene(item);
-            //scene->removeItem(bloc->getPtrItemOnScene());
-            break;
-        }
         case 3: //background
         {
             if(bloc->getPtrItemOnScene() != nullptr)
