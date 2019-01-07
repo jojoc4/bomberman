@@ -283,58 +283,60 @@ void G_Game::updateDisplayMap()
 
         int type = bloc->getType();
 
-        switch(type){
-        case 1: //indestructible
+        switch(type)
         {
-            //QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-            //Add and move the new block to the scene
-            //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            case 1: //indestructible
+            {
+                //QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+                //Add and move the new block to the scene
+                //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
 
-            //item->setPos((i/30)*sizeX, (i%30)*sizeY);
-            //scene->removeItem(bloc->getPtrItemOnScene());
+                //item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                //scene->removeItem(bloc->getPtrItemOnScene());
 
-            //Keep track of the pointer to the block
-            //bloc->setPtrItemOnScene(item);
-            break;
-        }
-        case 2: //destructible
-        {
-            //QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-            //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            //item->setPos((i/30)*sizeX, (i%30)*sizeY);
-
-            //bloc->setPtrItemOnScene(item);
-            //scene->removeItem(bloc->getPtrItemOnScene());
-            break;
-        }
-        case 3: //background
-        {
-            if(bloc->getPtrItemOnScene() != nullptr){
-                scene->removeItem(bloc->getPtrItemOnScene());
-                bloc->setPtrItemOnScene(nullptr);
+                //Keep track of the pointer to the block
+                //bloc->setPtrItemOnScene(item);
+                break;
             }
-            // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
-            break;
-        }
-        case 4: //upgrade nbre
-        {
+            case 2: //destructible
+            {
+                //QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+                //QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                //item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-            break;
-        }
-        case 5: //bonus
-        {
+                //bloc->setPtrItemOnScene(item);
+                //scene->removeItem(bloc->getPtrItemOnScene());
+                break;
+            }
+            case 3: //background
+            {
+                if(bloc->getPtrItemOnScene() != nullptr)
+                {
+                    scene->removeItem(bloc->getPtrItemOnScene());
+                    bloc->setPtrItemOnScene(nullptr);
+                }
+                // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
+                break;
+            }
+            case 4: //upgrade nbre
+            {
 
-            break;
-        }
-        case 6: //upgrade power
-        {
+                break;
+            }
+            case 5: //bonus
+            {
 
-            break;
-        }
-        default :
-        {
+                break;
+            }
+            case 6: //upgrade power
+            {
 
-        }
+                break;
+            }
+            default :
+            {
+
+            }
         }
     }
 }
@@ -386,34 +388,34 @@ void G_Game::updateDisplayPlayers()
     //Move the players
     switch(p1MovingDir)
     {
-    //Player 1
-    case Player::UP :
-        //Ask the game object to move the player, heading to the right direction. The move() method checks hitboxes before moving.
-        this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/30, (p1Pos.y()-2)/30), false);
-        break;
-    case Player::LEFT :
-        this->game->move(QPoint(p1Pos.x()-2, p1Pos.y()), Player::LEFT, QPoint((p1Pos.x()-2)/30, p1Pos.y()/30), false);
-        break;
-    case Player::DOWN :
-        this->game->move(QPoint(p1Pos.x(), p1Pos.y()+2), Player::DOWN, QPoint(p1Pos.x()/30, (p1Pos.y()+2)/30), false);
-        break;
-    case Player::RIGHT :
-        this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/30, p1Pos.y()/30), false);
+        //Player 1
+        case Player::UP :
+            //Ask the game object to move the player, heading to the right direction. The move() method checks hitboxes before moving.
+            this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/30, (p1Pos.y()-2)/30), false);
+            break;
+        case Player::LEFT :
+            this->game->move(QPoint(p1Pos.x()-2, p1Pos.y()), Player::LEFT, QPoint((p1Pos.x()-2)/30, p1Pos.y()/30), false);
+            break;
+        case Player::DOWN :
+            this->game->move(QPoint(p1Pos.x(), p1Pos.y()+2), Player::DOWN, QPoint(p1Pos.x()/30, (p1Pos.y()+2)/30), false);
+            break;
+        case Player::RIGHT :
+            this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/30, p1Pos.y()/30), false);
     }
     switch(p2MovingDir)
     {
-    //Player 2
-    case Player::UP :
-        this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/30, (p2Pos.y()-2)/30), true);
-        break;
-    case Player::LEFT :
-        this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/30, p2Pos.y()/30), true);
-        break;
-    case Player::DOWN :
-        this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/30, (p2Pos.y()+2)/30), true);
-        break;
-    case Player::RIGHT :
-        this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
+        //Player 2
+        case Player::UP :
+            this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/30, (p2Pos.y()-2)/30), true);
+            break;
+        case Player::LEFT :
+            this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/30, p2Pos.y()/30), true);
+            break;
+        case Player::DOWN :
+            this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/30, (p2Pos.y()+2)/30), true);
+            break;
+        case Player::RIGHT :
+            this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
     p1->setPos(this->game->getPlayer(false)->getPosition().x()-8, this->game->getPlayer(false)->getPosition().y()-17);
@@ -481,8 +483,10 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 void G_Game::updateDisplayBombs()
 {
     for(Bomb* bomb:bombs){
-        if(bomb->getExploded()){
-            if(bomb->getValCounterBomb() == 10){
+        if(bomb->getExploded())
+        {
+            if(bomb->getValCounterBomb() == 10)
+            {
                 dislayExplosionBomb(bomb);
                 bomb->resetCounter();
                 bomb->postStepExplosion();
