@@ -240,10 +240,6 @@ void G_Game::createDisplayMap()
             bloc->setPtrItemOnScene(item);
             break;
         }
-        default :
-        {
-
-        }
         }
     }
 
@@ -300,9 +296,6 @@ void G_Game::updateDisplayMap()
                 bloc->setPtrItemOnScene(nullptr);
             }
             break;
-        }
-        default :
-        {
         }
         }
     }
