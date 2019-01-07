@@ -52,6 +52,9 @@ private:
     QPixmap bombTexture;
     QPixmap explosionTexture;
 
+    QString textSupP1;
+    QString textSupP2;
+
     QAction* awesomeAct;
     bool iAmAwesome;
 
@@ -71,6 +74,7 @@ private:
     void updateDisplayMap();
     void createDisplayPlayers();
     void updateDisplayPlayers();
+    void drawPlayer(bool which);
     void incCounterAnim(short which);
     void dropBomb(const QPoint& blockPos, Player* p);
     void setTextureBomb(Bomb* bomb, QRect square);
@@ -82,6 +86,8 @@ private:
 
     void drawFlameExplosion(QRect location, Bomb *bomb, short x, short y);
     void destroyBlocs(Bomb* bomb);
+
+    void timerPlayers();
 
     private slots:
     void beAwesome();

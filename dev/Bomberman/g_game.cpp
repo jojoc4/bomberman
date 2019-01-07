@@ -19,12 +19,12 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(fal
     this->game = theGame;
     Player *p1 = game->getPlayer(false);
     this->textPlayer1 = new QLabel(QString("Joueur 1:\nNombre de bombes: %1\n"
-                                           "Puissance des bombes: %2").arg(p1->getNbBomb()).arg(p1->getPuissance()));
+                                               "Puissance des bombes: %2\n ").arg(p1->getNbBomb()).arg(p1->getPuissance()));
     p1->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(false).x()*30, this->game->getMap()->getPlayerSpawn(false).y()*30));
 
     Player *p2 = game->getPlayer(true);
     this->textPlayer2 = new QLabel(QString("Joueur 2:\nNombre de bombes: %1\n"
-                                           "Puissance des bombes: %2").arg(p2->getNbBomb()).arg(p2->getPuissance()));
+                                               "Puissance des bombes: %2\n ").arg(p2->getNbBomb()).arg(p2->getPuissance()));
     p2->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(true).x()*30, this->game->getMap()->getPlayerSpawn(true).y()*30));
 
     this->vLayout = new QVBoxLayout();
@@ -179,7 +179,65 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
  */
 void G_Game::timerEvent(QTimerEvent*)
 {
+    this->timerPlayers();
     this->refreshDisplay();
+}
+
+void G_Game::timerPlayers(){
+    textSupP1 = "";
+    textSupP2 = "";
+    Player* p = game->getPlayer(false);
+    if(p->getAutoDrop()){
+        textSupP1 = "Bonus: pose automatique";
+        p->counter++;
+        //drop a bomb each second
+        if(p->counter>=50){
+            p->counter=0;
+            QPoint pos = p->getPosition();
+            dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
+        }
+    }else if(p->getInvincible()){
+        textSupP1 = "Bonus: invincible";
+        p->counter++;
+        if(p->counter>=250){
+            p->setInvincible(false);
+        }
+    }else if(p->getVisible()){
+        textSupP1 = "Bonus: Invisible";
+    }else if(p->getSuperBomb()){
+        textSupP1 = "Bonus: super bombe";
+        p->counter++;
+        if(p->counter>=250){
+            p->setSuperBomb(false);
+        }
+    }
+
+    //same for player 2
+    p = game->getPlayer(true);
+    if(p->getAutoDrop()){
+        textSupP2 = "Bonus: pose automatique";
+        p->counter++;
+        //drop a bomb each second
+        if(p->counter>=50){
+            p->counter=0;
+            QPoint pos = p->getPosition();
+            dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
+        }
+    }else if(p->getInvincible()){
+        textSupP2 = "Bonus: invincible";
+        p->counter++;
+        if(p->counter>=250){
+            p->setInvincible(false);
+        }
+    }else if(p->getVisible()){
+        textSupP2 = "Bonus: Invisible";
+    }else if(p->getSuperBomb()){
+        textSupP2 = "Bonus: super bombe";
+        p->counter++;
+        if(p->counter>=250){
+            p->setSuperBomb(false);
+        }
+    }
 }
 
 void G_Game::refreshDisplay()
@@ -194,10 +252,10 @@ void G_Game::refreshDisplay()
     Player *p1 = game->getPlayer(false);
     Player *p2 = game->getPlayer(true);
     this->textPlayer1->setText(QString("Joueur 1:\nNombre de bombes: %1\n"
-                                       "Puissance des bombes: %2").arg(p1->getNbBomb()).arg(p1->getPuissance()));
+                                           "Puissance des bombes: %2\n%3").arg(p1->getNbBomb()).arg(p1->getPuissance()).arg(textSupP1));
 
     this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
-                                       "Puissance des bombes: %2").arg(p2->getNbBomb()).arg(p2->getPuissance()));
+                                           "Puissance des bombes: %2\n%3").arg(p2->getNbBomb()).arg(p2->getPuissance()).arg(textSupP2));
 }
 
 /**
@@ -330,27 +388,14 @@ void G_Game::createDisplayPlayers()
  */
 void G_Game::updateDisplayPlayers()
 {
-    QPoint p1Pos = game->getPlayer(false)->getPosition();
-    QPoint p2Pos = game->getPlayer(true)->getPosition();
-    //Pointers to the QGraphicsItem of each player
-    QGraphicsPixmapItem *p1 = static_cast<QGraphicsPixmapItem*>(this->game->getPlayer(false)->getPtrItemOnScene());
-    QGraphicsPixmapItem *p2 = static_cast<QGraphicsPixmapItem*>(this->game->getPlayer(true)->getPtrItemOnScene());
+    //Player 1
+    Player* ptrP1 = game->getPlayer(false);
+    QGraphicsPixmapItem *p1 = static_cast<QGraphicsPixmapItem*>(ptrP1->getPtrItemOnScene());
+    QPoint p1Pos = ptrP1->getPosition();
 
-    //Increment the animation counter of each player
-    if(p1Moving)
-        incCounterAnim(1);
-
-    if(p2Moving)
-        incCounterAnim(2);
-
-    //scene->addRect((p1Pos.y()/30)*30,(p1Pos.x()/30)*30,30, 30, QPen(Qt::red));
-
-    //Move the players
     switch(p1MovingDir)
     {
-    //Player 1
     case Player::UP :
-        //Ask the game object to move the player, heading to the right direction. The move() method checks hitboxes before moving.
         this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/30, (p1Pos.y()-2)/30), false);
         break;
     case Player::LEFT :
@@ -362,6 +407,29 @@ void G_Game::updateDisplayPlayers()
     case Player::RIGHT :
         this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/30, p1Pos.y()/30), false);
     }
+
+    if(!ptrP1->getVisible()) //Player is not invisible
+    {
+        drawPlayer(false);
+    }
+    else
+    {
+        ptrP1->incrementCptInvisibility(20);
+        if(!ptrP1->getVisibleState())
+        {
+            p1->setPixmap(QPixmap(p1Texture.copy(0, 0, 2, 2)));
+        }
+        else
+        {
+            drawPlayer(false);
+        }
+    }
+
+    //Player 2
+    Player* ptrP2 = game->getPlayer(true);
+    QGraphicsPixmapItem *p2 = static_cast<QGraphicsPixmapItem*>(ptrP2->getPtrItemOnScene());
+    QPoint p2Pos = ptrP2->getPosition();
+
     switch(p2MovingDir)
     {
     //Player 2
@@ -378,16 +446,52 @@ void G_Game::updateDisplayPlayers()
         this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
-    p1->setPos(this->game->getPlayer(false)->getPosition().x()-8, this->game->getPlayer(false)->getPosition().y()-17);
-    p2->setPos(this->game->getPlayer(true)->getPosition().x()-8, this->game->getPlayer(true)->getPosition().y()-17);
 
-    int line = this->game->getPlayer(false)->getDirection();
-    QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
-    p1->setPixmap(texture);
+    if(!ptrP2->getVisible()) //Player is not invisible
+    {
+        drawPlayer(true);
+    }
+    else
+    {
+        ptrP2->incrementCptInvisibility(20);
+        if(!ptrP2->getVisibleState())
+        {
+            p2->setPixmap(QPixmap(p2Texture.copy(0, 0, 2, 2)));
+        }
+        else
+        {
+            drawPlayer(true);
+        }
+    }
+}
 
-    line = this->game->getPlayer(true)->getDirection();
-    texture = p2Texture.copy(counterAnimP2/4*16, line*25, 16, 25);
-    p2->setPixmap(texture);
+void G_Game::drawPlayer(bool which)
+{
+    Player* ptrPlayer = game->getPlayer(which);
+    //Pointers to the QGraphicsItem of each player
+    QGraphicsPixmapItem *ptrItem = static_cast<QGraphicsPixmapItem*>(ptrPlayer->getPtrItemOnScene());
+
+    //Increment the animation counter for the player
+    QPixmap texture;
+    int line = ptrPlayer->getDirection();
+    if(!which)
+    {
+        if(p1Moving)
+            incCounterAnim(1);
+        texture = QPixmap(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
+    }
+    else
+    {
+        if(p2Moving)
+            incCounterAnim(2);
+        texture = QPixmap(p2Texture.copy(counterAnimP2/4*16, line*25, 16, 25));
+    }
+
+    //Move the player
+    ptrItem->setPos(ptrPlayer->getPosition().x()-8, ptrPlayer->getPosition().y()-17);
+
+    //QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
+    ptrItem->setPixmap(texture);
 }
 
 /**

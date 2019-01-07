@@ -38,6 +38,8 @@ public:
     bool getSuperBomb() const;
     bool getInvincible() const;
     bool getAutoDrop() const;
+    bool getVisibleState() const;
+    int getCptInvisibility() const;
 
     void setPuissance(int puissance);
     void receiveBomb(int nb);
@@ -48,8 +50,12 @@ public:
     void setSuperBomb(bool s);
     void setInvincible(bool s);
     void setAutoDrop(bool s);
+    void setVisibleState(bool state);
+    void incrementCptInvisibility(int nb);
 
     void giveBonus();
+
+    int counter;
 
     QGraphicsItem* getPtrItemOnScene();
     void setPtrItemOnScene(QGraphicsItem *item);
@@ -64,6 +70,8 @@ private :
     bool visible;
     bool invincible;
     bool autoDrop;
+    bool visibleState;
+    int cptInvisibility;
 
     QGraphicsItem *ptrItemOnScene;
 

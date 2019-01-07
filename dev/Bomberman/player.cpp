@@ -1,13 +1,9 @@
 #include "player.h"
 
-Player::Player()
+Player::Player() : dead(false), nbBombe(1), puissance(1), direction(0), superBomb(false), visible(false),
+                    invincible(false), autoDrop(false), visibleState(false), cptInvisibility(0), ptrItemOnScene(nullptr)
 {
     position = QPoint(0,0);
-    dead = false;
-    nbBombe = 1;
-    puissance = 1;
-    ptrItemOnScene = nullptr;
-    direction = 0;
 }
 
 void Player::manualMove()
@@ -25,6 +21,7 @@ void Player::giveBonus(){
     invincible=false;
     superBomb=false;
     autoDrop=false;
+    counter=0;
 
     int r = (qrand() % ((10 + 1) - 1) + 1);
     ///chance out of ten to have
@@ -130,4 +127,40 @@ void Player::setInvincible(bool s){
 
 void Player::setAutoDrop(bool s){
     autoDrop = s;
+}
+
+bool Player::getVisibleState() const
+{
+    return this->visibleState;
+}
+
+int Player::getCptInvisibility() const
+{
+    return this->cptInvisibility;
+}
+
+void Player::setVisibleState(bool state)
+{
+    this->visibleState = state;
+}
+
+void Player::incrementCptInvisibility(int nb)
+{
+    cptInvisibility += nb;
+    if(this->visibleState)
+    {
+        if(cptInvisibility >= 500)
+        {
+            this->visibleState = false;
+            cptInvisibility = 0;
+        }
+    }
+    else
+    {
+        if(cptInvisibility >= 2000)
+        {
+            this->visibleState = true;
+            cptInvisibility = 0;
+        }
+    }
 }
