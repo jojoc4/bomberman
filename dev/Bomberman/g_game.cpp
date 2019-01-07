@@ -92,62 +92,62 @@ void G_Game::keyPressEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
-    //Player 1
-    case Qt::Key_W :
-        p1MovingDir = Player::UP;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_A :
-        p1MovingDir = Player::LEFT;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_S :
-        p1MovingDir = Player::DOWN;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_D :
-        p1MovingDir = Player::RIGHT;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_Space :
-    {
-        Player* player = game->getPlayer(false);
-        QPoint pos = player->getPosition();
-        dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
-        break;
-    }
-        //Player 2
-    case Qt::Key_Up :
-        p2MovingDir = Player::UP;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Left :
-        p2MovingDir = Player::LEFT;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Down :
-        p2MovingDir = Player::DOWN;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Right :
-        p2MovingDir = Player::RIGHT;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Return :
-    {
-        Player* player = game->getPlayer(true);
-        QPoint pos = player->getPosition();
-        dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
-        break;
-    }
+        //Player 1
+        case Qt::Key_W :
+            p1MovingDir = Player::UP;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_A :
+            p1MovingDir = Player::LEFT;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_S :
+            p1MovingDir = Player::DOWN;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_D :
+            p1MovingDir = Player::RIGHT;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_Space :
+        {
+            Player* player = game->getPlayer(false);
+            QPoint pos = player->getPosition();
+            dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
+            break;
+        }
+            //Player 2
+        case Qt::Key_Up :
+            p2MovingDir = Player::UP;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Left :
+            p2MovingDir = Player::LEFT;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Down :
+            p2MovingDir = Player::DOWN;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Right :
+            p2MovingDir = Player::RIGHT;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Return :
+        {
+            Player* player = game->getPlayer(true);
+            QPoint pos = player->getPosition();
+            dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
+            break;
+        }
     }
 }
 
@@ -416,8 +416,8 @@ void G_Game::updateDisplayPlayers()
         this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
-    p1->setPos(this->game->getPlayer(false)->getPosition());
-    p2->setPos(this->game->getPlayer(true)->getPosition());
+    p1->setPos(this->game->getPlayer(false)->getPosition().x()-8, this->game->getPlayer(false)->getPosition().y()-17);
+    p2->setPos(this->game->getPlayer(true)->getPosition().x()-8, this->game->getPlayer(true)->getPosition().y()-17);
 
     int line = this->game->getPlayer(false)->getDirection();
     QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
