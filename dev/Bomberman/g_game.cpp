@@ -242,6 +242,7 @@ void G_Game::timerPlayers(){
 
 void G_Game::refreshDisplay()
 {
+    this->updateDisplayMap();
     this->updateDisplayPlayers();
 
     if(bombs.size() > 0)
@@ -307,6 +308,9 @@ void G_Game::createDisplayMap()
 
 void G_Game::updateDisplayMap()
 {
+    int sizeX = this->scene->width()/30;
+    int sizeY = this->scene->height()/30;
+
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
 
@@ -314,6 +318,7 @@ void G_Game::updateDisplayMap()
     for(int i=0; i<900; ++i)
     {
         bloc = theMap->getMapBloc(QPoint(i/30, i%30));
+        QGraphicsPixmapItem *ptrItem = bloc->getPtrItemOnScene();
 
         int type = bloc->getType();
 
@@ -321,37 +326,50 @@ void G_Game::updateDisplayMap()
         {
         case 3: //background
         {
-            if(bloc->getPtrItemOnScene() != nullptr)
+            if(ptrItem != nullptr)
             {
-                scene->removeItem(bloc->getPtrItemOnScene());
+                scene->removeItem(ptrItem);
                 bloc->setPtrItemOnScene(nullptr);
             }
-            // Actually, does nothing, because the background is set by scene->setBackgroundBrush() earlier.
             break;
         }
 
         case 4: //upgrade nbre
         {
-            if(bloc->getPtrItemOnScene() != nullptr){
-                scene->removeItem(bloc->getPtrItemOnScene());
-                bloc->setPtrItemOnScene(nullptr);
+            if(ptrItem != nullptr){
+                ptrItem->setPixmap(allBlocks.copy(QRect(60, 0, 30, 30)));
+            }
+            else
+            {
+                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(60, 0, 30, 30))));
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                bloc->setPtrItemOnScene(item);
             }
             break;
         }
         case 5: //bonus
         {
-            if(bloc->getPtrItemOnScene() != nullptr){
-                scene->removeItem(bloc->getPtrItemOnScene());
-                bloc->setPtrItemOnScene(nullptr);
+            if(ptrItem != nullptr){
+                ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
             }
-
+            else
+            {
+                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                bloc->setPtrItemOnScene(item);
+            }
             break;
         }
         case 6: //upgrade power
         {
-            if(bloc->getPtrItemOnScene() != nullptr){
-                scene->removeItem(bloc->getPtrItemOnScene());
-                bloc->setPtrItemOnScene(nullptr);
+            if(ptrItem != nullptr){
+                ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
+            }
+            else
+            {
+                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                bloc->setPtrItemOnScene(item);
             }
             break;
         }
