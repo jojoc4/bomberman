@@ -347,11 +347,11 @@ void G_Game::updateDisplayMap()
             case 5: //bonus
             {
                 if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
+                    ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
                 }
                 else
                 {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
                     item->setPos((i/30)*sizeX, (i%30)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }
@@ -360,11 +360,11 @@ void G_Game::updateDisplayMap()
             case 6: //upgrade power
             {
                 if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
+                    ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
                 }
                 else
                 {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
                     item->setPos((i/30)*sizeX, (i%30)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }
