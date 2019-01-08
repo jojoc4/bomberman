@@ -677,34 +677,104 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
     scene->addItem(newItem);
 }
 
-
 void G_Game::destroyBlocs(Bomb* bomb){
     QPoint position = bomb->getPosition();
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
     int puissance = bomb->getRange();
 
-    for(int x = -puissance; x <= puissance; x++){
-        if(position.x()+x < 30 && position.x()+x >= 0){
-            bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
-            if(bloc->getType() != 1 && bloc->getType() != 3){
-                bloc->explode();
+    Player* posPlayer1 = game->getPlayer(false);
+    Player* posPlayer2 = game->getPlayer(true);
+
+    // superbomb
+    if(bomb->getType() == 1){
+        for(int x = -puissance; x <= puissance; x++){
+            if(position.x()+x < 30 && position.x()+x >= 0){
+                bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
+                if(bloc->getType() != 1 && bloc->getType() != 3){
+                    bloc->explode();
+                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+                }
             }
         }
-    }
-    for(int y = -puissance; y <= puissance; y++){
-        if(position.y()+y < 30 && position.y()+y >= 0){
-            bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
-            if(bloc->getType() != 1 && bloc->getType() != 3){
-                bloc->explode();
+        for(int y = -puissance; y <= puissance; y++){
+            if(position.y()+y < 30 && position.y()+y >= 0){
+                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
+                if(bloc->getType() != 1 && bloc->getType() != 3){
+                    bloc->explode();
+                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
+                }
+            }
+        }
+    } else {
+        // normal
+        for(int x = 0; x <= puissance; x++){
+            if(position.x()+x < 30 && position.x()+x >= 0){
+                bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
+                if(bloc->getType() != 1 && bloc->getType() != 3){
+                    bloc->explode();
+                    x = puissance;
+                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+                }
+            }
+        }
+        for(int x = 0; x >= -puissance; x--){
+            if(position.x()+x < 30 && position.x()+x >= 0){
+                bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
+                if(bloc->getType() != 1 && bloc->getType() != 3){
+                    bloc->explode();
+                    x = puissance;
+                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+                }
+            }
+        }
+        for(int y = 0; y <= puissance; y++){
+            if(position.y()+y < 30 && position.y()+y >= 0){
+                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
+                if(bloc->getType() != 1 && bloc->getType() != 3){
+                    bloc->explode();
+                    y = puissance;
+                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
+                }
+            }
+        }
+        for(int y = 0; y >= -puissance; y--){
+            if(position.y()+y < 30 && position.y()+y >= 0){
+                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
+                if(bloc->getType() != 1 && bloc->getType() != 3){
+                    bloc->explode();
+                    y = puissance;
+                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
+                }
             }
         }
     }
 }
+
+void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int y)
+{
+    qDebug() << " j1 : " << player1->getPosition().rx()/30;
+    qDebug() << " j1 : " << player1->getPosition().ry()/30;
+
+    qDebug() << " j2 : " << player2->getPosition().rx()/30;
+    qDebug() << " j2 : " << player2->getPosition().ry()/30;
+
+
+
+    if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y){
+        qDebug() << "p1 : mort";
+    }
+    if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y){
+        qDebug() << "p2 : mort";
+    }
+}
+
 void G_Game::beAwesome()
 {
     if(!iAmAwesome)
         this->bombTexture = QPixmap(QString(":/resources/img/Bombe2.png"));
     else
         this->bombTexture = QPixmap(QString(":/resources/img/Bombe.png"));
+
+    iAmAwesome = !iAmAwesome;
 }
