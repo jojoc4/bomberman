@@ -123,8 +123,8 @@ void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
 
 void G_MapChooser::validateMap()
 {
-    emit(startGame());
     emit(openNextWidget(2));
+    emit(startGame());
 }
 
 void G_MapChooser::displayThumbnailsMap(){

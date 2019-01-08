@@ -17,16 +17,14 @@ class G_MainWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit G_MainWidget(Game* g, QWidget *parent = nullptr);
+    explicit G_MainWidget(Game* g = nullptr, QWidget *parent = nullptr);
     QStackedLayout* layout;
 
 public slots:
     void changeWidget(int index);
-
-
+    void finishGame();
 
 private:
-
     void createMapScreen();
     void createGame();
 
