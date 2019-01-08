@@ -189,25 +189,25 @@ void G_Game::timerPlayers(){
     Player* p = game->getPlayer(false);
     if(p->getAutoDrop()){
         textSupP1 = "Bonus: pose automatique";
-        p->counter++;
+        p->incrementCounter();
         //drop a bomb each second
-        if(p->counter>=50){
-            p->counter=0;
+        if(p->getCounter()>=50){
+            p->setCounter(0);
             QPoint pos = p->getPosition();
             dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
         }
     }else if(p->getInvincible()){
         textSupP1 = "Bonus: invincible";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setInvincible(false);
         }
     }else if(p->getVisible()){
         textSupP1 = "Bonus: Invisible";
     }else if(p->getSuperBomb()){
         textSupP1 = "Bonus: super bombe";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setSuperBomb(false);
         }
     }
@@ -216,25 +216,25 @@ void G_Game::timerPlayers(){
     p = game->getPlayer(true);
     if(p->getAutoDrop()){
         textSupP2 = "Bonus: pose automatique";
-        p->counter++;
+        p->incrementCounter();
         //drop a bomb each second
-        if(p->counter>=50){
-            p->counter=0;
+        if(p->getCounter()>=50){
+            p->setCounter(0);
             QPoint pos = p->getPosition();
             dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
         }
     }else if(p->getInvincible()){
         textSupP2 = "Bonus: invincible";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setInvincible(false);
         }
     }else if(p->getVisible()){
         textSupP2 = "Bonus: Invisible";
     }else if(p->getSuperBomb()){
         textSupP2 = "Bonus: super bombe";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setSuperBomb(false);
         }
     }
@@ -718,6 +718,9 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
 
     texture = texture.scaled(30,30,Qt::KeepAspectRatio);
 
+    //newItem = scene->addPixmap(texture);
+    //bomb->addFireExplosion(newItem);
+    //Modifier addFireExplosion pour renvoyer void
     newItem = bomb->addFireExplosion(new QGraphicsPixmapItem());
 
     newItem->setPixmap(texture);

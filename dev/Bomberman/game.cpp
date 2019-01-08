@@ -14,20 +14,6 @@ Game::~Game()
     delete map;
 }
 
-/**
- * @brief Game::keyoardThread method not implemented
- */
-void Game::keyoardThread()
-{
-
-}
-/**
- * @brief Game::start method not implemented
- */
-void Game::start()
-{
-
-}
 
 /**
 * @brief Game::canMove make the changes in the player if it is a special bloc

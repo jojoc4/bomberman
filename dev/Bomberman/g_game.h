@@ -70,20 +70,22 @@ private:
     QVector<Bomb*> bombs;
 
 
+    void refreshDisplay();
+
     void createDisplayMap();
     void updateDisplayMap();
+
     void createDisplayPlayers();
     void updateDisplayPlayers();
     void drawPlayer(bool which);
     void incCounterAnim(short which);
+
     void dropBomb(const QPoint& blockPos, Player* p);
     void setTextureBomb(Bomb* bomb, QRect square);
-    void refreshDisplay();
-
     void updateDisplayBombs();
     void updateBombAnimation(Bomb* bomb);
-    void dislayExplosionBomb(Bomb* bomb);
 
+    void dislayExplosionBomb(Bomb* bomb);
     void drawFlameExplosion(QRect location, Bomb *bomb, short x, short y);
     void destroyBlocs(Bomb* bomb);
 

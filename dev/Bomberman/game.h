@@ -22,9 +22,6 @@ public:
     Game();
     virtual ~Game();
 
-    void start();
-    void keyoardThread();
-
     Player* getPlayer(bool nbPlayer);
     Map* getMap();
 

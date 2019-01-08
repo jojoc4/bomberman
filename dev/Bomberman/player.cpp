@@ -6,16 +6,6 @@ Player::Player() : dead(false), nbBombe(1), puissance(1), direction(0), superBom
     position = QPoint(0,0);
 }
 
-void Player::manualMove()
-{
-
-}
-
-void Player::moveThread()
-{
-
-}
-
 void Player::giveBonus(){
     visible=false;
     invincible=false;
@@ -112,6 +102,9 @@ bool Player::getAutoDrop() const{
     return autoDrop;
 }
 
+int Player::getCounter() const{
+    return counter;
+}
 
 void Player::setVisible(bool s){
     visible = s;
@@ -163,4 +156,14 @@ void Player::incrementCptInvisibility(int nb)
             cptInvisibility = 0;
         }
     }
+}
+
+void Player::setCounter(int c)
+{
+    counter = c;
+}
+
+void Player::incrementCounter()
+{
+    ++counter;
 }

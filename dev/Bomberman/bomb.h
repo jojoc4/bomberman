@@ -22,34 +22,28 @@ public:
     Bomb(int type, int range, QPoint position, Player *pOwner);
     virtual ~Bomb();
 
-    //static Map* ptrMap;
-
     int getType();
     int getRange();
     int getValCounterBomb();
-
     QPoint getPosition();
     QGraphicsPixmapItem* getPtrItemOnScene();
     Player* getOwner();
+    int getNbCycle();
+    int getStepExplosion();
+    bool getExploded();
+    QList<QGraphicsPixmapItem*>* getItemsExplosion();
+    bool getExplosionOver();
 
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
     void incCounterBomb();
-    void explode();
-
     void resetCounter();
-    int getNbCycle();
     void postStepExplosion();
-    int getStepExplosion();
     void resetNbCycle();
-
     void setExploded();
-    bool getExploded();
-
-    QGraphicsPixmapItem* addFireExplosion(QGraphicsPixmapItem*);
-    QList<QGraphicsPixmapItem *> *getItemsExplosion();
-
+    QGraphicsPixmapItem* addFireExplosion(QGraphicsPixmapItem *item);
     void setExplosionOver();
-    bool getExplosionOver();
+
+    void explode();
 
 private:
     int type;
