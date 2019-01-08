@@ -49,5 +49,6 @@ void G_MainWidget::createGame()
     game = new G_Game(gamePtr, this);
     layout->addWidget(game);
     connect(mapchooser, &G_MapChooser::startGame, game, &G_Game::startGame);
+    connect(game, &G_Game::gameOver, this, &G_MainWidget::finishGame);
 }
 
