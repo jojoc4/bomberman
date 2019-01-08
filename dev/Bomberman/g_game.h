@@ -27,10 +27,10 @@ public:
     virtual ~G_Game();
 
 signals:
+    void gameOver();
 
 public slots:
     void startGame();
-
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
