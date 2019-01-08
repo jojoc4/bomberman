@@ -13,15 +13,16 @@
 
 class Map;
 class MapBloc;
-
+class Player;
 class Bomb
+
 {
 public:
     Bomb();
-    Bomb(int type, int range, QPoint position);
+    Bomb(int type, int range, QPoint position, Player *pOwner);
     virtual ~Bomb();
 
-    static Map* ptrMap;
+    //static Map* ptrMap;
 
     int getType();
     int getRange();
@@ -29,6 +30,7 @@ public:
 
     QPoint getPosition();
     QGraphicsPixmapItem* getPtrItemOnScene();
+    Player* getOwner();
 
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
     void incCounterBomb();
@@ -49,7 +51,6 @@ public:
     void setExplosionOver();
     bool getExplosionOver();
 
-
 private:
     int type;
     int range;
@@ -60,6 +61,8 @@ private:
 
     bool isExploded;
     bool isExplosionOver;
+
+    Player* owner;
 
     QPoint position;
     QGraphicsPixmapItem *ptrItemOnScene;

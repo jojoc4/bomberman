@@ -528,7 +528,7 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
             if(b->getPosition() == blockPos)
                 return;
         }
-        Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos);
+        Bomb* theBomb = new Bomb(0, p->getPuissance(), blockPos,p);
         //Bomb* theBomb = new Bomb(0, 2, blockPos);
 
         bombs.push_back(theBomb);
@@ -574,35 +574,68 @@ void G_Game::updateBombAnimation(Bomb* bomb){
         bomb->setExploded();
     }
     int valCounter = bomb->getValCounterBomb();
-    switch(valCounter){
-    case 10 :
-    {
-        QRect square(0, 0, 16, 16);
-        setTextureBomb(bomb,square);
-        break;
-    }
-    case 20 :
-    {
+    if(bomb->getType() == 0){
 
-        QRect square(16, 0, 16, 16);
-        setTextureBomb(bomb,square);
-        break;
-    }
-    case 30 :
-    {
-        QRect square(32, 0, 16, 16);
-        setTextureBomb(bomb,square);
-        break;
-    }
-    case 40 :
-    {
-        QRect square(16, 0, 16, 16);
-        setTextureBomb(bomb,square);
-        bomb->resetCounter();
-        break;
-    }
-    default :{}
+        switch(valCounter){
+        case 10 :
+        {
+            QRect square(0, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            break;
+        }
+        case 20 :
+        {
 
+            QRect square(16, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            break;
+        }
+        case 30 :
+        {
+            QRect square(32, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            break;
+        }
+        case 40 :
+        {
+            QRect square(16, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            bomb->resetCounter();
+            break;
+        }
+        default :{}
+
+        }
+    } else {
+        switch(valCounter){
+        case 10 :
+        {
+            QRect square(48, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            break;
+        }
+        case 20 :
+        {
+
+            QRect square(64, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            break;
+        }
+        case 30 :
+        {
+            QRect square(80, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            break;
+        }
+        case 40 :
+        {
+            QRect square(16, 0, 16, 16);
+            setTextureBomb(bomb,square);
+            bomb->resetCounter();
+            break;
+        }
+        default :{}
+        }
     }
 }
 /**
@@ -635,6 +668,7 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
         bombs.removeOne(bomb);
         delete bomb;
         this->updateDisplayMap();
+        bomb->getOwner()->receiveBomb(1);
         return;
     }
     QRect center(i*12, 0, 12, 12);

@@ -12,6 +12,7 @@ Bomb::Bomb()
     this->range=0;
     this->position=QPoint(0,0);
     ptrItemOnScene=nullptr;
+    owner = nullptr;
 
     counter = 0;
     nbCycle = 0;
@@ -24,7 +25,7 @@ Bomb::Bomb()
  * @brief bomb constructor
  * @param type, range, line and column
  */
-Bomb::Bomb(int type, int range, QPoint position)
+Bomb::Bomb(int type, int range, QPoint position, Player* pOwner)
 {
     this->type=type;
     this->range=range;
@@ -35,6 +36,8 @@ Bomb::Bomb(int type, int range, QPoint position)
     stepExplosion = 0;
     isExploded = false;
     isExplosionOver = false;
+
+    owner = pOwner;
 }
 
 Bomb::~Bomb(){
@@ -115,4 +118,7 @@ void Bomb::setExplosionOver()
 bool Bomb::getExplosionOver()
 {
     return isExplosionOver;
+}
+Player* Bomb::getOwner(){
+    return owner;
 }
