@@ -44,13 +44,15 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
         switch (mb->getType()) {
         case 4:
             p->receiveBomb(1);
+            mb->setType(3);
             break;
         case 5:
-            //TODO bonus
             p->giveBonus();
+            mb->setType(3);
             break;
         case 6:
             p->setPuissance(p->getPuissance()+1);
+            mb->setType(3);
             break;
         default:
             break;
