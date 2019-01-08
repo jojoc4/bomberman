@@ -248,8 +248,6 @@ void G_Game::refreshDisplay()
     if(bombs.size() > 0)
         this->updateDisplayBombs();
 
-
-
     Player *p1 = game->getPlayer(false);
     Player *p2 = game->getPlayer(true);
     this->textPlayer1->setText(QString("Joueur 1:\nNombre de bombes: %1\n"
@@ -324,55 +322,54 @@ void G_Game::updateDisplayMap()
 
         switch(type)
         {
-        case 3: //background
-        {
-            if(ptrItem != nullptr)
+            case 3: //background
             {
-                scene->removeItem(ptrItem);
-                bloc->setPtrItemOnScene(nullptr);
+                if(ptrItem != nullptr)
+                {
+                    scene->removeItem(ptrItem);
+                    bloc->setPtrItemOnScene(nullptr);
+                }
+                break;
             }
-            break;
-        }
-
-        case 4: //upgrade nbre
-        {
-            if(ptrItem != nullptr){
-                ptrItem->setPixmap(allBlocks.copy(QRect(60, 0, 30, 30)));
-            }
-            else
+            case 4: //upgrade nbre
             {
-                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(60, 0, 30, 30))));
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
-                bloc->setPtrItemOnScene(item);
+                if(ptrItem != nullptr){
+                    ptrItem->setPixmap(allBlocks.copy(QRect(60, 0, 30, 30)));
+                }
+                else
+                {
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(60, 0, 30, 30))));
+                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                    bloc->setPtrItemOnScene(item);
+                }
+                break;
             }
-            break;
-        }
-        case 5: //bonus
-        {
-            if(ptrItem != nullptr){
-                ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
-            }
-            else
+            case 5: //bonus
             {
-                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
-                bloc->setPtrItemOnScene(item);
+                if(ptrItem != nullptr){
+                    ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
+                }
+                else
+                {
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
+                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                    bloc->setPtrItemOnScene(item);
+                }
+                break;
             }
-            break;
-        }
-        case 6: //upgrade power
-        {
-            if(ptrItem != nullptr){
-                ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
-            }
-            else
+            case 6: //upgrade power
             {
-                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
-                bloc->setPtrItemOnScene(item);
+                if(ptrItem != nullptr){
+                    ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
+                }
+                else
+                {
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
+                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                    bloc->setPtrItemOnScene(item);
+                }
+                break;
             }
-            break;
-        }
         }
     }
 }
