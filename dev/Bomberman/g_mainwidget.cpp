@@ -1,11 +1,8 @@
 #include "g_mainwidget.h"
 
-G_MainWidget::G_MainWidget(Game* g, QWidget *parent) : QWidget(parent)
+G_MainWidget::G_MainWidget(QWidget *parent) : QWidget(parent)
 {
-    if(g != nullptr)
-        gamePtr = g;
-    else
-        gamePtr = new Game();
+    gamePtr = new Game();
 
     mapchooser = nullptr;
     game = nullptr;

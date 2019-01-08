@@ -17,7 +17,7 @@ class G_MainWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit G_MainWidget(Game* g = nullptr, QWidget *parent = nullptr);
+    explicit G_MainWidget(QWidget *parent = nullptr);
     QStackedLayout* layout;
 
 public slots:
