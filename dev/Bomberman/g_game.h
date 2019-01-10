@@ -18,6 +18,7 @@ class QHBoxLayout;
 class QAction;
 class Bomb;
 class Player;
+class MapBloc;
 
 class G_Game : public QWidget
 {
@@ -68,6 +69,7 @@ private:
     short p2MovingDir;
     short nbTouchesP2;
     QVector<Bomb*> bombs;
+    int nbDestroyedBlock[4];
 
 
     void createDisplayMap();

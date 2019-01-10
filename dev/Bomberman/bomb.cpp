@@ -91,9 +91,8 @@ int Bomb::getStepExplosion()
 {
     return stepExplosion;
 }
-QGraphicsPixmapItem* Bomb::addFireExplosion(QGraphicsPixmapItem* item){
+void Bomb::addFireExplosion(QGraphicsPixmapItem* item){
     bombExplosionElement.push_back(item);
-    return item;
 }
 QList<QGraphicsPixmapItem*>* Bomb::getItemsExplosion(){
     return &bombExplosionElement;
