@@ -189,25 +189,25 @@ void G_Game::timerPlayers(){
     Player* p = game->getPlayer(false);
     if(p->getAutoDrop()){
         textSupP1 = "Bonus: pose automatique";
-        p->counter++;
+        p->incrementCounter();
         //drop a bomb each second
-        if(p->counter>=50){
-            p->counter=0;
+        if(p->getCounter()>=50){
+            p->setCounter(0);
             QPoint pos = p->getPosition();
             dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
         }
     }else if(p->getInvincible()){
         textSupP1 = "Bonus: invincible";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setInvincible(false);
         }
     }else if(p->getVisible()){
         textSupP1 = "Bonus: Invisible";
     }else if(p->getSuperBomb()){
         textSupP1 = "Bonus: super bombe";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setSuperBomb(false);
         }
     }
@@ -216,25 +216,25 @@ void G_Game::timerPlayers(){
     p = game->getPlayer(true);
     if(p->getAutoDrop()){
         textSupP2 = "Bonus: pose automatique";
-        p->counter++;
+        p->incrementCounter();
         //drop a bomb each second
-        if(p->counter>=50){
-            p->counter=0;
+        if(p->getCounter()>=50){
+            p->setCounter(0);
             QPoint pos = p->getPosition();
             dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
         }
     }else if(p->getInvincible()){
         textSupP2 = "Bonus: invincible";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setInvincible(false);
         }
     }else if(p->getVisible()){
         textSupP2 = "Bonus: Invisible";
     }else if(p->getSuperBomb()){
         textSupP2 = "Bonus: super bombe";
-        p->counter++;
-        if(p->counter>=250){
+        p->incrementCounter();
+        if(p->getCounter()>=250){
             p->setSuperBomb(false);
         }
     }
@@ -347,11 +347,11 @@ void G_Game::updateDisplayMap()
             case 5: //bonus
             {
                 if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
+                    ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
                 }
                 else
                 {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
                     item->setPos((i/30)*sizeX, (i%30)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }
@@ -360,11 +360,11 @@ void G_Game::updateDisplayMap()
             case 6: //upgrade power
             {
                 if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
+                    ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
                 }
                 else
                 {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
                     item->setPos((i/30)*sizeX, (i%30)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }

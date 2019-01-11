@@ -26,9 +26,6 @@ public:
 
     Player();
 
-    void moveThread();
-    void manualMove();
-
     QPoint getPosition() const;
     bool isDead() const;
     int getNbBomb() const;
@@ -40,6 +37,7 @@ public:
     bool getAutoDrop() const;
     bool getVisibleState() const;
     int getCptInvisibility() const;
+    int getCounter() const;
 
     void setPuissance(int puissance);
     void receiveBomb(int nb);
@@ -52,10 +50,11 @@ public:
     void setAutoDrop(bool s);
     void setVisibleState(bool state);
     void incrementCptInvisibility(int nb);
+    void setCounter(int c);
+    void incrementCounter();
 
     void giveBonus();
 
-    int counter;
 
     QGraphicsItem* getPtrItemOnScene();
     void setPtrItemOnScene(QGraphicsItem *item);
@@ -72,6 +71,7 @@ private :
     bool autoDrop;
     bool visibleState;
     int cptInvisibility;
+    int counter;
 
     QGraphicsItem *ptrItemOnScene;
 

@@ -21,10 +21,10 @@ public:
     void setType(int type);
     int getType();
     bool getTraversable();
+    QGraphicsPixmapItem* getPtrItemOnScene();
 
     void explode();
 
-    QGraphicsPixmapItem* getPtrItemOnScene();
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
 private:
