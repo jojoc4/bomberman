@@ -19,6 +19,8 @@ Bomb::Bomb()
     stepExplosion = 0;
     isExploded = false;
     isExplosionOver = false;
+
+
 }
 
 /**
@@ -120,4 +122,15 @@ bool Bomb::getExplosionOver()
 }
 Player* Bomb::getOwner(){
     return owner;
+}
+int Bomb::getNbDestroyedBlock(int id){
+    if(id < 4 && id >= 0)
+        return nbDestroyedBlock[id];
+    else
+        return 0;
+}
+
+void Bomb::addDestroyedBlock(int id, int value){
+    if(id < 4 && id >= 0)
+        nbDestroyedBlock[id] = value;
 }
