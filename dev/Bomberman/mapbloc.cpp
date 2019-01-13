@@ -51,11 +51,11 @@ void MapBloc::explode(){
 
     int r = (qrand() % ((10 + 1) - 1) + 1);
     if(r<=bonus){
-        setType(4);
-    }else if(r<=bonus+rangeImprovment){
         setType(5);
-    }else if(r<=bonus+rangeImprovment+numberImprovment){
+    }else if(r<=bonus+rangeImprovment){
         setType(6);
+    }else if(r<=bonus+rangeImprovment+numberImprovment){
+        setType(4);
     }else{
         setType(3);
     }

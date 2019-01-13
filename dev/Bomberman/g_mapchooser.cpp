@@ -8,6 +8,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
 
     setWindowTitle(tr("Choix des cartes"));
+
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
     QVBoxLayout* vboxRight = new QVBoxLayout();
@@ -59,7 +60,9 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::browseFolderMaps);
     connect(btnValidate, &QPushButton::clicked, this, &G_MapChooser::validateMap);
     connect(listMaps, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateThumbnailsMap(QListWidgetItem *)));
-    connect(this,SIGNAL(openNextWidget(int)),parent,SLOT(changeWidget(int)));
+
+
+
 }
 
 G_MapChooser::~G_MapChooser(){
@@ -124,7 +127,6 @@ void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
 void G_MapChooser::validateMap()
 {
     emit(openNextWidget(2));
-    emit(startGame());
 }
 
 void G_MapChooser::displayThumbnailsMap(){
@@ -184,7 +186,7 @@ void G_MapChooser::displayThumbnailsMap(){
 
 
 void G_MapChooser::resizeEvent(QResizeEvent *){
-        displayThumbnailsMap();
+        //displayThumbnailsMap();
 }
 void G_MapChooser::getMap(QString name){
     try{

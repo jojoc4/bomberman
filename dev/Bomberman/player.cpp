@@ -1,6 +1,6 @@
 #include "player.h"
 
-Player::Player() : dead(false), nbBombe(1), puissance(5), direction(0), superBomb(false), visible(false),
+Player::Player() : dead(false), nbBombe(1), puissance(1), direction(0), superBomb(false), visible(false),
                     invincible(false), autoDrop(false), visibleState(false), cptInvisibility(0), ptrItemOnScene(nullptr)
 {
     position = QPoint(0,0);

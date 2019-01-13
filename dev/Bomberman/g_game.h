@@ -70,6 +70,8 @@ private:
     short nbTouchesP2;
     QVector<Bomb*> bombs;
 
+    bool gameEnd;
+
     void refreshDisplay();
 
     void createDisplayMap();

@@ -8,7 +8,7 @@
  */
 Bomb::Bomb()
 {
-    this->type=0;
+    this->type=bomb;
     this->range=0;
     this->position=QPoint(0,0);
     ptrItemOnScene=nullptr;

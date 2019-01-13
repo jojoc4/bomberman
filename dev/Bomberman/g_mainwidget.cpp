@@ -25,8 +25,10 @@ void G_MainWidget::changeWidget(int index){
     switch(index){
         case 1 :
             createMapScreen();
+            break;
         case 2 :
             createGame();
+            break;
     }
     layout->setCurrentIndex(index);
 }
@@ -35,24 +37,43 @@ void G_MainWidget::finishGame()
 {
     delete gamePtr;
     gamePtr = new Game();
+
+    deleteG_Game();
+
     changeWidget(1);
 }
 
 void G_MainWidget::createMapScreen()
 {
     if(mapchooser != nullptr)
-        delete mapchooser;
+        deleteG_MapChooser();
     mapchooser = new G_MapChooser(gamePtr, this);
+    connect(mapchooser,SIGNAL(openNextWidget(int)),this,SLOT(changeWidget(int)));
+
     layout->addWidget(mapchooser);
 }
 
 void G_MainWidget::createGame()
 {
     if(game != nullptr)
-        delete game;
+        deleteG_Game();
+
     game = new G_Game(gamePtr, this);
     layout->addWidget(game);
-    connect(mapchooser, &G_MapChooser::startGame, game, &G_Game::startGame);
+    connect(this, &G_MainWidget::startGame, game, &G_Game::startGame);
     connect(game, &G_Game::gameOver, this, &G_MainWidget::finishGame);
+
+    emit(startGame());
 }
 
+void G_MainWidget::deleteG_Game(){
+    delete game;
+    layout->removeWidget(game);
+    game = nullptr;
+}
+
+void G_MainWidget::deleteG_MapChooser(){
+    layout->removeWidget(mapchooser);
+    delete mapchooser;
+    mapchooser = nullptr;
+}

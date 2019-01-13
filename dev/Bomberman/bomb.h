@@ -50,6 +50,7 @@ public:
 
     void explode();
 
+    enum type{bomb,superbomb};
 private:
     int type;
     int range;
@@ -69,6 +70,8 @@ private:
     QGraphicsPixmapItem *ptrItemOnScene;
 
     QList<QGraphicsPixmapItem*> bombExplosionElement;
+
+
 
 };
 

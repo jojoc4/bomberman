@@ -9,9 +9,6 @@ G_Help::G_Help(QWidget *parent) : QWidget(parent)
     QVBoxLayout* vbox = new QVBoxLayout(this);
     this->setLayout(vbox);
 
-    QLabel* lblHelp = new QLabel(this);
-
-
     vbox->addWidget(new QLabel(tr("Raccourcis clavier")));
     vbox->addWidget(new QLabel(tr("Joueur 1 :")));
     vbox->addWidget(new QLabel(tr("W : avancer")));

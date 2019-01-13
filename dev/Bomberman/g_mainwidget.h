@@ -21,6 +21,9 @@ public:
     explicit G_MainWidget(QWidget *parent = nullptr);
     QStackedLayout* layout;
 
+signals :
+    void startGame();
+
 public slots:
     void changeWidget(int index);
     void finishGame();
@@ -28,6 +31,9 @@ public slots:
 private:
     void createMapScreen();
     void createGame();
+
+    void deleteG_Game();
+    void deleteG_MapChooser();
 
     G_Game* game;
     G_HomeScreen* homescreen;
