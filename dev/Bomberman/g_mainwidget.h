@@ -8,10 +8,11 @@
 #define G_MAINWIDGET_H
 
 #include <QtWidgets>
-#include "g_homescreen.h"
-#include "g_mapchooser.h"
-#include "g_game.h"
-#include "game.h"
+
+class G_Game;
+class G_HomeScreen;
+class G_MapChooser;
+class Game;
 
 class G_MainWidget : public QWidget
 {

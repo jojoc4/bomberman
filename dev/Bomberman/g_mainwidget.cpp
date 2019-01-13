@@ -1,4 +1,8 @@
 #include "g_mainwidget.h"
+#include "g_homescreen.h"
+#include "g_mapchooser.h"
+#include "g_game.h"
+#include "game.h"
 
 G_MainWidget::G_MainWidget(QWidget *parent) : QWidget(parent)
 {
@@ -29,7 +33,7 @@ void G_MainWidget::changeWidget(int index){
 
 void G_MainWidget::finishGame()
 {
-    delete game;
+    delete gamePtr;
     gamePtr = new Game();
     changeWidget(1);
 }

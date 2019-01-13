@@ -277,26 +277,26 @@ void G_Game::createDisplayMap()
         int type = bloc->getType();
 
         switch(type){
-        case 1: //indestructible
-        {
-            QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-            //Add and move the new block to the scene
-            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            case 1: //indestructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+                //Add and move the new block to the scene
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-            //Keep track of the pointer to the block
-            bloc->setPtrItemOnScene(item);
-            break;
-        }
-        case 2: //destructible
-        {
-            QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                //Keep track of the pointer to the block
+                bloc->setPtrItemOnScene(item);
+                break;
+            }
+            case 2: //destructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-            bloc->setPtrItemOnScene(item);
-            break;
-        }
+                bloc->setPtrItemOnScene(item);
+                break;
+            }
         }
     }
 
