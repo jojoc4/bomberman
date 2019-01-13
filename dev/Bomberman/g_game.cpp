@@ -665,7 +665,6 @@ void G_Game::setTextureBomb(Bomb* bomb, QRect square){
     QPixmap texture(bombTexture.copy(square));
     QGraphicsPixmapItem *item = bomb->getPtrItemOnScene();
     item->setPixmap(texture);
-    bomb->setPtrItemOnScene(item);
 }
 
 void G_Game::dislayExplosionBomb(Bomb *bomb){
@@ -679,7 +678,7 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
     int stepExplosion = bomb->getStepExplosion();
 
     if(stepExplosion == 4){
-
+        qDebug() << " ===========================";
         scene->removeItem(bomb->getPtrItemOnScene());
         bombs.removeOne(bomb);
         bomb->getOwner()->receiveBomb(1);
@@ -714,35 +713,39 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
         drawFlameExplosion(up,bomb,0,powerBomb);
     } else {
 
-        qDebug() << "gauche " << nbDestroyedBlock[0];
-        qDebug() << "droite " << nbDestroyedBlock[1];
-        qDebug() << "bas " << nbDestroyedBlock[2];
-        qDebug() << "haut " << nbDestroyedBlock[3];
-        qDebug() << " ";
+        qDebug() << "gauche " << bomb->getNbDestroyedBlock(0);
+        qDebug() << "droite " <<bomb->getNbDestroyedBlock(1);
+        qDebug() << "bas " << bomb->getNbDestroyedBlock(2);
+        qDebug() << "haut " << bomb->getNbDestroyedBlock(3);
 
-        for(int i = nbDestroyedBlock[0]+1; i < 0; i++){
+
+        for(int i = bomb->getNbDestroyedBlock(0)+1; i < 0; i++){
             drawFlameExplosion(horizontal,bomb,i,0);
         }
-        for(int i = nbDestroyedBlock[1]-1; i > 0; i--){
+        for(int i = bomb->getNbDestroyedBlock(1)-1; i > 0; i--){
             drawFlameExplosion(horizontal,bomb,i,0);
         }
 
-        for(int i = nbDestroyedBlock[2]+1; i < 0; i++){
+        for(int i = -bomb->getNbDestroyedBlock(2)-1; i > 0; i--){
             drawFlameExplosion(vertical,bomb,0,i);
         }
-        for(int i = nbDestroyedBlock[3]-1; i > 0; i--){
-            drawFlameExplosion(vertical,bomb,0,i);
+        for(int i = bomb->getNbDestroyedBlock(3)-1; i > 0; i--){
+            drawFlameExplosion(vertical,bomb,0,-i);
         }
 
         drawFlameExplosion(center,bomb,0,0);
-        drawFlameExplosion(left,bomb, nbDestroyedBlock[0],0);
-        drawFlameExplosion(right,bomb, nbDestroyedBlock[1],0);
-        drawFlameExplosion(bottom,bomb,0, -nbDestroyedBlock[2]);
-        drawFlameExplosion(up,bomb,0, -nbDestroyedBlock[3]);
 
+        if(bomb->getNbDestroyedBlock(0) != 0)
+            drawFlameExplosion(left,bomb, bomb->getNbDestroyedBlock(0),0);
+        if(bomb->getNbDestroyedBlock(1) != 0)
+            drawFlameExplosion(right,bomb,bomb->getNbDestroyedBlock(1),0);
+        if(bomb->getNbDestroyedBlock(2) != 0)
+            drawFlameExplosion(bottom,bomb,0, -bomb->getNbDestroyedBlock(2));
+        if(bomb->getNbDestroyedBlock(3) != 0)
+            drawFlameExplosion(up,bomb,0, -bomb->getNbDestroyedBlock(3));
         }
 }
-void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
+void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y){
     QPoint position = bomb->getPosition();
 
     QGraphicsPixmapItem* newItem = new QGraphicsPixmapItem();
@@ -755,6 +758,7 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,short x,short y){
 
     newItem->setPixmap(texture);
     newItem->setPos((position.x()+x)*30,(position.y()+y)*30);
+    qDebug() << texture << newItem->pos() << newItem->pos().x()/30 << " " <<  newItem->pos().y()/30;
 
     scene->addItem(newItem);
 }
@@ -789,94 +793,92 @@ void G_Game::destroyBlocs(Bomb* bomb){
             }
         }
     } else {
-        // normal
+        checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y());
 
         // droite
         for(int x = 0; x <= puissance; x++){
             if(position.x()+x < 30 && position.x()+x >= 0){
                 bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
                 if(bloc->getType() == 1){
-                    //nbDestroyedBlock[1]=x-1;
                     break;
                 } else if (bloc->getType() != 3){
                     bloc->explode();
-                    nbDestroyedBlock[1]=x;
+                    bomb->addDestroyedBlock(1,x);
                     checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
                     break;
                 }
+                bomb->addDestroyedBlock(1,x);
             }
-            nbDestroyedBlock[1]=x;
+
         }
         // gauche
         for(int x = -1; x >= -puissance; x--){
             if(position.x()+x < 30 && position.x()+x >= 0){
                 bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
                 if(bloc->getType() == 1){
-                    //nbDestroyedBlock[0]=x-1;
                     break;
                 } else if (bloc->getType() != 3){
                     bloc->explode();
-                    nbDestroyedBlock[0]=x;
+                    bomb->addDestroyedBlock(0,x);
                     checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
                     break;
                 }
+                 bomb->addDestroyedBlock(0,x);
             }
-            nbDestroyedBlock[0]=x;
+
         }
 
         // bas
-        for(int y = -1; y >= -puissance; y--){
+        for(int y = 1; y <= puissance; y++){
             if(position.y()+y < 30 && position.y()+y >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()-y));
-                qDebug() << y;
+                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
                 if(bloc->getType() == 1){
-                    //nbDestroyedBlock[2]=y+1;
                     break;
                 } else if (bloc->getType() != 3){
                     bloc->explode();
-                    nbDestroyedBlock[2]=y;
+                    bomb->addDestroyedBlock(2,-y);
                     checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
                     break;
                 }
+                bomb->addDestroyedBlock(2,-y);
             }
-            nbDestroyedBlock[2]=y;
+
         }
 
         // haut
         for(int y = 1; y <= puissance; y++){
-            if(position.y()+y < 30 && position.y()+y >= 0){
+            if(position.y()-y < 30 && position.y()-y >= 0){
                 bloc = theMap->getMapBloc(QPoint(position.x(),position.y()-y));
                 if(bloc->getType() == 1){
-                    //nbDestroyedBlock[3]=y-1;
                     break;
                 } else if (bloc->getType() != 3){
                     bloc->explode();
-                    nbDestroyedBlock[3]=y;
+                    bomb->addDestroyedBlock(3,y);
                     checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
                     break;
                 }
+                bomb->addDestroyedBlock(3,y);
             }
-            nbDestroyedBlock[3]=y;
         }
     }
 }
 
 void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int y)
 {
-//    qDebug() << " j1 : " << player1->getPosition().rx()/30;
-//    qDebug() << " j1 : " << player1->getPosition().ry()/30;
-//    qDebug() << x << " " << y;
+    qDebug() << " j1 : " << player1->getPosition().rx()/30;
+    qDebug() << " j1 : " << player1->getPosition().ry()/30;
+    qDebug() << x << " " << y;
 
-//    qDebug() << " j2 : " << player2->getPosition().rx()/30;
-//    qDebug() << " j2 : " << player2->getPosition().ry()/30;
+    qDebug() << " j2 : " << player2->getPosition().rx()/30;
+    qDebug() << " j2 : " << player2->getPosition().ry()/30;
 
 
 
     if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y){
-        qDebug() << "p1 : mort";
+        //emit gameOver();
     }
     if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y){
-        qDebug() << "p2 : mort";
+        //emit gameOver();
     }
 }
 

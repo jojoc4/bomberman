@@ -33,6 +33,9 @@ public:
     bool getExploded();
     QList<QGraphicsPixmapItem*>* getItemsExplosion();
     bool getExplosionOver();
+    int getNbDestroyedBlock(int id);
+
+    void addDestroyedBlock(int id, int value);
 
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
     void incCounterBomb();
@@ -54,6 +57,8 @@ private:
     int counter;
     int nbCycle;
     int stepExplosion;
+
+    int nbDestroyedBlock[4] = {0,0,0,0};
 
     bool isExploded;
     bool isExplosionOver;

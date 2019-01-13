@@ -69,7 +69,7 @@ private:
     short p2MovingDir;
     short nbTouchesP2;
     QVector<Bomb*> bombs;
-    int nbDestroyedBlock[4];
+
 
 
     void refreshDisplay();
@@ -88,7 +88,7 @@ private:
     void updateBombAnimation(Bomb* bomb);
 
     void dislayExplosionBomb(Bomb* bomb);
-    void drawFlameExplosion(QRect location, Bomb *bomb, short x, short y);
+    void drawFlameExplosion(QRect location, Bomb *bomb, int x, int y);
     void destroyBlocs(Bomb* bomb);
 
     void timerPlayers();
