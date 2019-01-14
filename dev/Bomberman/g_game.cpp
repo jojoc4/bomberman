@@ -260,7 +260,7 @@ void G_Game::refreshDisplay()
     this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2\n%3").arg(p2->getNbBomb()).arg(p2->getPuissance()).arg(textSupP2));
 
-    if(bombs.size() == 0 && gameEnd){
+    if(gameEnd){
 
         QString msg;
         if(game->getPlayer(false)->isDead()){
@@ -791,107 +791,75 @@ void G_Game::destroyBlocs(Bomb* bomb){
     Player* posPlayer1 = game->getPlayer(false);
     Player* posPlayer2 = game->getPlayer(true);
 
-    // superbomb
-    /*if(bomb->getType() == 1){
-        for(int x = 1; x <= puissance; x++){
-            if(position.x()+x < 30 && position.x()+x >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
-                if(bloc->getType() == 1){
-
-                } else if(bloc->getType()!= 3){
-                    bloc->explode();
-                }
-            }
-        }
-        for(int y = -puissance; y <= puissance; y++){
-            if(position.y()+y < 30 && position.y()+y >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
-                if(bloc->getType() == 1){
-                    break;
-                } else if (bloc->getType() != 3){
-                    bloc->explode();
-                    checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
-                }
-            }
-        }
-    } else {*/
-        //checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y());
-
-        // droite
-        for(int x = 0; x <= puissance; x++){
-            if(position.x()+x < 30 && position.x()+x >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
-                if(bloc->getType() == 1){
-                    break;
-                } else if (bloc->getType() != 3){
-                    bloc->explode();
-                    bomb->addDestroyedBlock(1,x);
-
-                    if(bomb->getType() != Bomb::superbomb)
-                        break;
-                }
-                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+    for(int x = 0; x <= puissance; x++){
+        if(position.x()+x < 30 && position.x()+x >= 0){
+            bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
+            if(bloc->getType() == 1){
+                break;
+            } else if (bloc->getType() != 3){
+                bloc->explode();
                 bomb->addDestroyedBlock(1,x);
-            }
 
-        }
-        // gauche
-        for(int x = -1; x >= -puissance; x--){
-            if(position.x()+x < 30 && position.x()+x >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
-                if(bloc->getType() == 1){
+                if(bomb->getType() != Bomb::superbomb)
                     break;
-                } else if (bloc->getType() != 3){
-                    bloc->explode();
-                    bomb->addDestroyedBlock(0,x);
+            }
+            bomb->addDestroyedBlock(1,x);
+        }
 
-                    if(bomb->getType() != 1)
-                        break;
-                }
-                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+    }
+    // gauche
+    for(int x = -1; x >= -puissance; x--){
+        if(position.x()+x < 30 && position.x()+x >= 0){
+            bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
+            if(bloc->getType() == 1){
+                break;
+            } else if (bloc->getType() != 3){
+                bloc->explode();
                 bomb->addDestroyedBlock(0,x);
-            }
 
+                if(bomb->getType() != 1)
+                    break;
+            }
+            bomb->addDestroyedBlock(0,x);
         }
 
-        // bas
-        for(int y = 1; y <= puissance; y++){
-            if(position.y()+y < 30 && position.y()+y >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
+    }
 
-                if(bloc->getType() == 1){
-                    break;
-                } else if (bloc->getType() != 3){
-                    bloc->explode();
-                    bomb->addDestroyedBlock(2,-y);
+    // bas
+    for(int y = 1; y <= puissance; y++){
+        if(position.y()+y < 30 && position.y()+y >= 0){
+            bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
 
-                    if(bomb->getType() != 1)
-                        break;
-                }
-                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
+            if(bloc->getType() == 1){
+                break;
+            } else if (bloc->getType() != 3){
+                bloc->explode();
                 bomb->addDestroyedBlock(2,-y);
-            }
 
-        }
-
-        // haut
-        for(int y = 1; y <= puissance; y++ ){
-            if(position.y()-y < 30 && position.y()-y >= 0){
-                bloc = theMap->getMapBloc(QPoint(position.x(),position.y()-y));
-                if(bloc->getType() == 1){
+                if(bomb->getType() != 1)
                     break;
-                } else if (bloc->getType() != 3){
-                    bloc->explode();
-                    bomb->addDestroyedBlock(3,y);
-
-                    if(bomb->getType() != 1)
-                        break;
-                }
-                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
-                bomb->addDestroyedBlock(3,y);
             }
+            bomb->addDestroyedBlock(2,-y);
         }
-    /*}*/
+
+    }
+
+    // haut
+    for(int y = 1; y <= puissance; y++ ){
+        if(position.y()-y < 30 && position.y()-y >= 0){
+            bloc = theMap->getMapBloc(QPoint(position.x(),position.y()-y));
+            if(bloc->getType() == 1){
+                break;
+            } else if (bloc->getType() != 3){
+                bloc->explode();
+                bomb->addDestroyedBlock(3,y);
+
+                if(bomb->getType() != 1)
+                    break;
+            }
+            bomb->addDestroyedBlock(3,y);
+        }
+    }
 }
 
 void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int y)
