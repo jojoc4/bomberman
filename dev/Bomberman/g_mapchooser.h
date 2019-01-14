@@ -36,10 +36,9 @@ private :
 
     void displayThumbnailsMap();
     void displayListMap();
+    void resizeEvent(QResizeEvent *);
 
     void getMap(QString name);
-
-    void resizeEvent(QResizeEvent *);
 
     QListWidget* listMaps;
     QDir* directory;

@@ -6,7 +6,6 @@
  */
 G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
-
     setWindowTitle(tr("Choix des cartes"));
 
     QHBoxLayout* hbox = new QHBoxLayout(this);
@@ -18,7 +17,6 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     listMaps = new QListWidget();
     listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
     vboxLeft->addWidget(listMaps);
-    //vboxLeft->addStretch();
 
     QHBoxLayout *hbox_button = new QHBoxLayout();
     btnValidate = new QPushButton(tr("Valider"),this);
@@ -38,19 +36,18 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     previewMap->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     previewMap->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    // position QGraphicsView
+    // QGrapgics view
     QVBoxLayout* vBoxPainter = new QVBoxLayout();
     previewMap->setLayout(vBoxPainter);
     vboxRight->addWidget(previewMap);
 
     this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
 
-    // Chargement de la carte
+    // Loading of the map
     directory = new QDir(QCoreApplication::applicationDirPath());
     directory->cdUp();
     directory->cdUp();
     directory->cdUp();
-
 
     displayListMap();
 
@@ -60,14 +57,15 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
     connect(button_parcourir, &QPushButton::clicked, this, &G_MapChooser::browseFolderMaps);
     connect(btnValidate, &QPushButton::clicked, this, &G_MapChooser::validateMap);
     connect(listMaps, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(updateThumbnailsMap(QListWidgetItem *)));
-
-
-
 }
 
+/**
+ * @brief G_MapChooser::~G_MapChooser
+ */
 G_MapChooser::~G_MapChooser(){
 
 }
+
 /**
  * @brief G_MapChooser::browseFolderMaps : SLOT
  * Choose a folder with some maps
@@ -82,6 +80,7 @@ void G_MapChooser::browseFolderMaps()
     directory = new QDir(dir);
     displayListMap();
 }
+
 /**
  * @brief G_MapChooser::displayListMap
  * Display the list of maps available
@@ -102,7 +101,6 @@ void G_MapChooser::displayListMap()
             {
                 new QListWidgetItem(i, listMaps);
             }
-
             listMaps->setCurrentRow(0);
 
             QListWidgetItem * item = listMaps->item(0);
@@ -113,6 +111,7 @@ void G_MapChooser::displayListMap()
     }
 
 }
+
 /**
  * @brief G_MapChooser::updateThumbnailsMap
  * @param item
@@ -124,11 +123,17 @@ void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
     displayThumbnailsMap();
 }
 
+/**
+ * @brief G_MapChooser::validateMap
+ */
 void G_MapChooser::validateMap()
 {
     emit(openNextWidget(2));
 }
 
+/**
+ *
+ */
 void G_MapChooser::displayThumbnailsMap(){
     this->previewMapScene->setBackgroundBrush(Qt::gray);
     this->previewMapScene->clear();
@@ -149,9 +154,8 @@ void G_MapChooser::displayThumbnailsMap(){
             qreal sizeY = this->previewMapScene->height()/30;
 
             switch(type){
-            case 1:
+            case MapBloc::INDESTRUCTIBLE:
             {
-                //previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::blue),QBrush(Qt::blue));
                 QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30)));
                 QPixmap blockImageScaled = blocImage.scaled(10,10,Qt::KeepAspectRatio);
 
@@ -161,12 +165,10 @@ void G_MapChooser::displayThumbnailsMap(){
                 monBloc->setPtrItemOnScene(item);
                 break;
             }
-            case 2:
+            case MapBloc::DESTRUCTIBLE:
             {
                 QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
                 QPixmap blockImageScaled = blocImage.scaled(10,10,Qt::KeepAspectRatio);
-
-
                 QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
                 item->setPos(i*sizeX, j*sizeY);
 
@@ -174,20 +176,22 @@ void G_MapChooser::displayThumbnailsMap(){
 
                 break;
             }
-            case 3:
-                //previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::red),QBrush(Qt::red));
-                break;
-                // default :
-                //previewMapScene->addRect(j*(sizeX),i*(sizeY),sizeX,sizeY,QPen(Qt::black),QBrush(Qt::black));
             }
         }
     }
 }
 
-
+/**
+ *
+ */
 void G_MapChooser::resizeEvent(QResizeEvent *){
         //displayThumbnailsMap();
 }
+
+/**
+ * @brief G_MapChooser::getMap
+ * @param name
+ */
 void G_MapChooser::getMap(QString name){
     try{
         game->getMap()->readFromFile(directory->absolutePath() + "/" + name);

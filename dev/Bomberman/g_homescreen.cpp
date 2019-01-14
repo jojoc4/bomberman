@@ -31,11 +31,8 @@ G_HomeScreen::G_HomeScreen(QWidget *parent)
     connect(btn_lancer,SIGNAL(clicked()), this, SLOT(openMapChooser()));
     connect(btn_quitter,SIGNAL(clicked()), parent, SLOT(close()));
     connect(btn_aide,SIGNAL(clicked()), this, SLOT(openHelp()));
-
     connect(this, SIGNAL(openNextWidget(int)), parent, SLOT(changeWidget(int)));
-
 }
-
 
 G_HomeScreen::~G_HomeScreen()
 {
@@ -49,7 +46,7 @@ void G_HomeScreen::validateChoice(void)
     }
     if (radio_network->isChecked())
     {
-        QMessageBox::information(this, "Information", "Le mode réseau n'est pas encore disponible");
+        QMessageBox::information(this, tr("Information"), tr("Le mode réseau n'est pas encore disponible"));
         radio_network->setChecked(false);
         radio_local->setChecked(true);
     }
