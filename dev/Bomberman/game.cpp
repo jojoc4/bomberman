@@ -1,12 +1,17 @@
 #include "game.h"
 
+/**
+ * @brief Game::Game
+ */
 Game::Game()
 {
     player1 = new Player();
     player2 = new Player();
     map = new Map();
 }
-
+/**
+ * @brief Game::~Game
+ */
 Game::~Game()
 {
     delete player1;
@@ -28,24 +33,25 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
         p->setDirection(newDirection);
         p->setPosition(newPos);
         switch (mb->getType()) {
-        case 4:
+        case MapBloc::AMELIORATION_NOMBRE :
             p->receiveBomb(1);
-            mb->setType(3);
+            mb->setType(MapBloc::FOND);
             break;
-        case 5:
+        case MapBloc::BONUS:
             p->giveBonus();
-            mb->setType(3);
+            mb->setType(MapBloc::FOND);
             break;
-        case 6:
+        case MapBloc::AMELIORATION_PUISSANCE:
             p->setPuissance(p->getPuissance()+1);
-            mb->setType(3);
+            mb->setType(MapBloc::FOND);
             break;
         default:
             break;
         }
         return true;
+    } else {
+        return false;
     }
-    return false;
 }
 
 /**
@@ -53,15 +59,18 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
  * @param nbPlayer (0 or false is player1 and 1 or true is player2)
  * @return pointer on the selected player
  */
-Player* Game::getPlayer(bool nbPlayer)
+Player* Game::getPlayer(bool nbPlayer) const
 {
     if(!nbPlayer)
         return this->player1;
     else
         return this->player2;
 }
-
-Map* Game::getMap()
+/**
+ * @brief Game::getMap
+ * @return
+ */
+Map* Game::getMap() const
 {
     return this->map;
 }

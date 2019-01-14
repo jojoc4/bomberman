@@ -19,12 +19,12 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(fal
     this->game = theGame;
     Player *p1 = game->getPlayer(false);
     this->textPlayer1 = new QLabel(QString("Joueur 1:\nNombre de bombes: %1\n"
-                                               "Puissance des bombes: %2\n ").arg(p1->getNbBomb()).arg(p1->getPuissance()));
+                                           "Puissance des bombes: %2\n ").arg(p1->getNbBomb()).arg(p1->getPuissance()));
     p1->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(false).x()*30, this->game->getMap()->getPlayerSpawn(false).y()*30));
 
     Player *p2 = game->getPlayer(true);
     this->textPlayer2 = new QLabel(QString("Joueur 2:\nNombre de bombes: %1\n"
-                                               "Puissance des bombes: %2\n ").arg(p2->getNbBomb()).arg(p2->getPuissance()));
+                                           "Puissance des bombes: %2\n ").arg(p2->getNbBomb()).arg(p2->getPuissance()));
     p2->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(true).x()*30, this->game->getMap()->getPlayerSpawn(true).y()*30));
 
     this->vLayout = new QVBoxLayout();
@@ -96,62 +96,62 @@ void G_Game::keyPressEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
-        //Player 1
-        case Qt::Key_W :
-            p1MovingDir = Player::UP;
-            ++nbTouchesP1;
-            p1Moving = true;
-            break;
-        case Qt::Key_A :
-            p1MovingDir = Player::LEFT;
-            ++nbTouchesP1;
-            p1Moving = true;
-            break;
-        case Qt::Key_S :
-            p1MovingDir = Player::DOWN;
-            ++nbTouchesP1;
-            p1Moving = true;
-            break;
-        case Qt::Key_D :
-            p1MovingDir = Player::RIGHT;
-            ++nbTouchesP1;
-            p1Moving = true;
-            break;
-        case Qt::Key_Space :
-        {
-            Player* player = game->getPlayer(false);
-            QPoint pos = player->getPosition();
-            dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
-            break;
-        }
-            //Player 2
-        case Qt::Key_Up :
-            p2MovingDir = Player::UP;
-            ++nbTouchesP2;
-            p2Moving = true;
-            break;
-        case Qt::Key_Left :
-            p2MovingDir = Player::LEFT;
-            ++nbTouchesP2;
-            p2Moving = true;
-            break;
-        case Qt::Key_Down :
-            p2MovingDir = Player::DOWN;
-            ++nbTouchesP2;
-            p2Moving = true;
-            break;
-        case Qt::Key_Right :
-            p2MovingDir = Player::RIGHT;
-            ++nbTouchesP2;
-            p2Moving = true;
-            break;
-        case Qt::Key_Return :
-        {
-            Player* player = game->getPlayer(true);
-            QPoint pos = player->getPosition();
-            dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
-            break;
-        }
+    //Player 1
+    case Qt::Key_W :
+        p1MovingDir = Player::UP;
+        ++nbTouchesP1;
+        p1Moving = true;
+        break;
+    case Qt::Key_A :
+        p1MovingDir = Player::LEFT;
+        ++nbTouchesP1;
+        p1Moving = true;
+        break;
+    case Qt::Key_S :
+        p1MovingDir = Player::DOWN;
+        ++nbTouchesP1;
+        p1Moving = true;
+        break;
+    case Qt::Key_D :
+        p1MovingDir = Player::RIGHT;
+        ++nbTouchesP1;
+        p1Moving = true;
+        break;
+    case Qt::Key_Space :
+    {
+        Player* player = game->getPlayer(false);
+        QPoint pos = player->getPosition();
+        dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
+        break;
+    }
+        //Player 2
+    case Qt::Key_Up :
+        p2MovingDir = Player::UP;
+        ++nbTouchesP2;
+        p2Moving = true;
+        break;
+    case Qt::Key_Left :
+        p2MovingDir = Player::LEFT;
+        ++nbTouchesP2;
+        p2Moving = true;
+        break;
+    case Qt::Key_Down :
+        p2MovingDir = Player::DOWN;
+        ++nbTouchesP2;
+        p2Moving = true;
+        break;
+    case Qt::Key_Right :
+        p2MovingDir = Player::RIGHT;
+        ++nbTouchesP2;
+        p2Moving = true;
+        break;
+    case Qt::Key_Return :
+    {
+        Player* player = game->getPlayer(true);
+        QPoint pos = player->getPosition();
+        dropBomb(QPoint(pos.x()/30, pos.y()/30), player);
+        break;
+    }
     }
 }
 
@@ -255,10 +255,10 @@ void G_Game::refreshDisplay()
     Player *p1 = game->getPlayer(false);
     Player *p2 = game->getPlayer(true);
     this->textPlayer1->setText(QString("Joueur 1:\nNombre de bombes: %1\n"
-                                           "Puissance des bombes: %2\n%3").arg(p1->getNbBomb()).arg(p1->getPuissance()).arg(textSupP1));
+                                       "Puissance des bombes: %2\n%3").arg(p1->getNbBomb()).arg(p1->getPuissance()).arg(textSupP1));
 
     this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
-                                           "Puissance des bombes: %2\n%3").arg(p2->getNbBomb()).arg(p2->getPuissance()).arg(textSupP2));
+                                       "Puissance des bombes: %2\n%3").arg(p2->getNbBomb()).arg(p2->getPuissance()).arg(textSupP2));
 
     if(gameEnd){
 
@@ -297,33 +297,35 @@ void G_Game::createDisplayMap()
         int type = bloc->getType();
 
         switch(type){
-            case 1: //indestructible
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-                //Add and move the new block to the scene
-                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+        case 1: //indestructible
+        {
+            QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+            //Add and move the new block to the scene
+            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-                //Keep track of the pointer to the block
-                bloc->setPtrItemOnScene(item);
-                break;
-            }
-            case 2: //destructible
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+            //Keep track of the pointer to the block
+            bloc->setPtrItemOnScene(item);
+            break;
+        }
+        case 2: //destructible
+        {
+            QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
+            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+            item->setPos((i/30)*sizeX, (i%30)*sizeY);
 
-                bloc->setPtrItemOnScene(item);
-                break;
-            }
+            bloc->setPtrItemOnScene(item);
+            break;
+        }
         }
     }
 
     theMap = nullptr;
     bloc = nullptr;
 }
-
+/**
+ * @brief G_Game::updateDisplayMap
+ */
 void G_Game::updateDisplayMap()
 {
     int sizeX = this->scene->width()/30;
@@ -342,54 +344,56 @@ void G_Game::updateDisplayMap()
 
         switch(type)
         {
-            case 3: //background
+        case 3: //background
+        {
+            if(ptrItem != nullptr)
             {
-                if(ptrItem != nullptr)
-                {
-                    scene->removeItem(ptrItem);
-                    bloc->setPtrItemOnScene(nullptr);
-                }
-                break;
+                scene->removeItem(ptrItem);
+                bloc->setPtrItemOnScene(nullptr);
             }
-            case 4: //upgrade nbre
+            break;
+        }
+        case 4: //upgrade nbre
+        {
+            if(ptrItem != nullptr)
             {
-                if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(60, 0, 30, 30)));
-                }
-                else
-                {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(60, 0, 30, 30))));
-                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
-                    bloc->setPtrItemOnScene(item);
-                }
-                break;
+                ptrItem->setPixmap(allBlocks.copy(QRect(60, 0, 30, 30)));
             }
-            case 5: //bonus
+            else
             {
-                if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
-                }
-                else
-                {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
-                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
-                    bloc->setPtrItemOnScene(item);
-                }
-                break;
+                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(60, 0, 30, 30))));
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                bloc->setPtrItemOnScene(item);
             }
-            case 6: //upgrade power
+            break;
+        }
+        case 5: //bonus
+        {
+            if(ptrItem != nullptr)
             {
-                if(ptrItem != nullptr){
-                    ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
-                }
-                else
-                {
-                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
-                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
-                    bloc->setPtrItemOnScene(item);
-                }
-                break;
+                ptrItem->setPixmap(allBlocks.copy(QRect(120, 0, 30, 30)));
             }
+            else
+            {
+                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(120, 0, 30, 30))));
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                bloc->setPtrItemOnScene(item);
+            }
+            break;
+        }
+        case 6: //upgrade power
+        {
+            if(ptrItem != nullptr){
+                ptrItem->setPixmap(allBlocks.copy(QRect(90, 0, 30, 30)));
+            }
+            else
+            {
+                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(90, 0, 30, 30))));
+                item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                bloc->setPtrItemOnScene(item);
+            }
+            break;
+        }
         }
     }
 }
@@ -467,18 +471,18 @@ void G_Game::updateDisplayPlayers()
 
     switch(p2MovingDir)
     {
-        //Player 2
-        case Player::UP :
-            this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/30, (p2Pos.y()-2)/30), true);
-            break;
-        case Player::LEFT :
-            this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/30, p2Pos.y()/30), true);
-            break;
-        case Player::DOWN :
-            this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/30, (p2Pos.y()+2)/30), true);
-            break;
-        case Player::RIGHT :
-            this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
+    //Player 2
+    case Player::UP :
+        this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/30, (p2Pos.y()-2)/30), true);
+        break;
+    case Player::LEFT :
+        this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/30, p2Pos.y()/30), true);
+        break;
+    case Player::DOWN :
+        this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/30, (p2Pos.y()+2)/30), true);
+        break;
+    case Player::RIGHT :
+        this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/30, p2Pos.y()/30), true);
     }
 
 
@@ -499,7 +503,10 @@ void G_Game::updateDisplayPlayers()
         }
     }
 }
-
+/**
+ * @brief G_Game::drawPlayer
+ * @param which
+ */
 void G_Game::drawPlayer(bool which)
 {
     Player* ptrPlayer = game->getPlayer(which);
@@ -524,8 +531,6 @@ void G_Game::drawPlayer(bool which)
 
     //Move the player
     ptrItem->setPos(ptrPlayer->getPosition().x()-8, ptrPlayer->getPosition().y()-17);
-
-    //QPixmap texture(p1Texture.copy(counterAnimP1/4*16, line*25, 16, 25));
     ptrItem->setPixmap(texture);
 }
 
@@ -607,7 +612,6 @@ void G_Game::updateBombAnimation(Bomb* bomb){
     if(bomb->getNbCycle() == 2){
         bomb->setExploded();
         destroyBlocs(bomb);
-
     }
     int valCounter = bomb->getValCounterBomb();
     if(bomb->getType() == 0){
@@ -685,7 +689,10 @@ void G_Game::setTextureBomb(Bomb* bomb, QRect square){
     QGraphicsPixmapItem *item = bomb->getPtrItemOnScene();
     item->setPixmap(texture);
 }
-
+/**
+ * @brief G_Game::dislayExplosionBomb
+ * @param bomb
+ */
 void G_Game::dislayExplosionBomb(Bomb *bomb){
     // delete previous explosion flame
     QList<QGraphicsPixmapItem*>* listElement = bomb->getItemsExplosion();
@@ -697,7 +704,6 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
     int stepExplosion = bomb->getStepExplosion();
 
     if(stepExplosion == 4){
-        qDebug() << " ===========================";
         scene->removeItem(bomb->getPtrItemOnScene());
         bombs.removeOne(bomb);
         bomb->getOwner()->receiveBomb(1);
@@ -714,54 +720,38 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
     QRect vertical(stepExplosion*12,12,12,12);
     QRect horizontal(stepExplosion*12,24,12,12);
 
+    for(int i = bomb->getNbDestroyedBlock(0)+1; i < 0; i++){
+        drawFlameExplosion(horizontal,bomb,i,0);
+    }
+    for(int i = bomb->getNbDestroyedBlock(1)-1; i > 0; i--){
+        drawFlameExplosion(horizontal,bomb,i,0);
+    }
 
-    /*if(superBombe == 1){
-        drawFlameExplosion(center,bomb,0,0);
+    for(int i = -bomb->getNbDestroyedBlock(2)-1; i > 0; i--){
+        drawFlameExplosion(vertical,bomb,0,i);
+    }
+    for(int i = bomb->getNbDestroyedBlock(3)-1; i > 0; i--){
+        drawFlameExplosion(vertical,bomb,0,-i);
+    }
 
-        drawFlameExplosion(right,bomb,-powerBomb,0);
-        for(int i = 1; i < powerBomb; i++){
-            drawFlameExplosion(horizontal,bomb,i,0);
-            drawFlameExplosion(horizontal,bomb,-i,0);
-            drawFlameExplosion(vertical,bomb,0,i);
-            drawFlameExplosion(vertical,bomb,0,-i);
-        }
-        drawFlameExplosion(left,bomb,powerBomb,0);
-        drawFlameExplosion(bottom,bomb,0,-powerBomb);
-        drawFlameExplosion(up,bomb,0,powerBomb);*/
-    /*} else {*/
+    drawFlameExplosion(center,bomb,0,0);
 
-        qDebug() << "gauche " << bomb->getNbDestroyedBlock(0);
-        qDebug() << "droite " <<bomb->getNbDestroyedBlock(1);
-        qDebug() << "bas " << bomb->getNbDestroyedBlock(2);
-        qDebug() << "haut " << bomb->getNbDestroyedBlock(3);
-
-
-        for(int i = bomb->getNbDestroyedBlock(0)+1; i < 0; i++){
-            drawFlameExplosion(horizontal,bomb,i,0);
-        }
-        for(int i = bomb->getNbDestroyedBlock(1)-1; i > 0; i--){
-            drawFlameExplosion(horizontal,bomb,i,0);
-        }
-
-        for(int i = -bomb->getNbDestroyedBlock(2)-1; i > 0; i--){
-            drawFlameExplosion(vertical,bomb,0,i);
-        }
-        for(int i = bomb->getNbDestroyedBlock(3)-1; i > 0; i--){
-            drawFlameExplosion(vertical,bomb,0,-i);
-        }
-
-        drawFlameExplosion(center,bomb,0,0);
-
-        if(bomb->getNbDestroyedBlock(0) != 0)
-            drawFlameExplosion(left,bomb, bomb->getNbDestroyedBlock(0),0);
-        if(bomb->getNbDestroyedBlock(1) != 0)
-            drawFlameExplosion(right,bomb,bomb->getNbDestroyedBlock(1),0);
-        if(bomb->getNbDestroyedBlock(2) != 0)
-            drawFlameExplosion(bottom,bomb,0, -bomb->getNbDestroyedBlock(2));
-        if(bomb->getNbDestroyedBlock(3) != 0)
-            drawFlameExplosion(up,bomb,0, -bomb->getNbDestroyedBlock(3));
-        /*}*/
+    if(bomb->getNbDestroyedBlock(0) != 0)
+        drawFlameExplosion(left,bomb, bomb->getNbDestroyedBlock(0),0);
+    if(bomb->getNbDestroyedBlock(1) != 0)
+        drawFlameExplosion(right,bomb,bomb->getNbDestroyedBlock(1),0);
+    if(bomb->getNbDestroyedBlock(2) != 0)
+        drawFlameExplosion(bottom,bomb,0, -bomb->getNbDestroyedBlock(2));
+    if(bomb->getNbDestroyedBlock(3) != 0)
+        drawFlameExplosion(up,bomb,0, -bomb->getNbDestroyedBlock(3));
 }
+/**
+ * @brief G_Game::drawFlameExplosion
+ * @param location
+ * @param bomb
+ * @param x
+ * @param y
+ */
 void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y){
     QPoint position = bomb->getPosition();
 
@@ -781,15 +771,15 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y){
 
     scene->addItem(newItem);
 }
-
+/**
+ * @brief G_Game::destroyBlocs
+ * @param bomb
+ */
 void G_Game::destroyBlocs(Bomb* bomb){
     QPoint position = bomb->getPosition();
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
     int puissance = bomb->getRange();
-
-    Player* posPlayer1 = game->getPlayer(false);
-    Player* posPlayer2 = game->getPlayer(true);
 
     for(int x = 0; x <= puissance; x++){
         if(position.x()+x < 30 && position.x()+x >= 0){
@@ -800,12 +790,11 @@ void G_Game::destroyBlocs(Bomb* bomb){
                 bloc->explode();
                 bomb->addDestroyedBlock(1,x);
 
-                if(bomb->getType() != Bomb::superbomb)
+                if(bomb->getType() != Bomb::SUPERBOMB)
                     break;
             }
             bomb->addDestroyedBlock(1,x);
         }
-
     }
     // gauche
     for(int x = -1; x >= -puissance; x--){
@@ -822,7 +811,6 @@ void G_Game::destroyBlocs(Bomb* bomb){
             }
             bomb->addDestroyedBlock(0,x);
         }
-
     }
 
     // bas
@@ -841,7 +829,6 @@ void G_Game::destroyBlocs(Bomb* bomb){
             }
             bomb->addDestroyedBlock(2,-y);
         }
-
     }
 
     // haut
@@ -861,18 +848,15 @@ void G_Game::destroyBlocs(Bomb* bomb){
         }
     }
 }
-
+/**
+ * @brief G_Game::checkPlayerExplosion
+ * @param player1
+ * @param player2
+ * @param x
+ * @param y
+ */
 void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int y)
 {
-    qDebug() << " j1 : " << player1->getPosition().rx()/30;
-    qDebug() << " j1 : " << player1->getPosition().ry()/30;
-    qDebug() << x << " " << y;
-
-    qDebug() << " j2 : " << player2->getPosition().rx()/30;
-    qDebug() << " j2 : " << player2->getPosition().ry()/30;
-
-
-
     if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y && !gameEnd){
         player1->die();
         gameEnd = true;
@@ -883,7 +867,10 @@ void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int 
         gameEnd = true;
     }
 }
-
+/**
+ * @brief G_Game::beAwesome
+ * Display a gift
+ */
 void G_Game::beAwesome()
 {
     if(!iAmAwesome)

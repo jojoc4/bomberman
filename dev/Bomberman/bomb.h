@@ -22,18 +22,18 @@ public:
     Bomb(int type, int range, QPoint position, Player *pOwner);
     virtual ~Bomb();
 
-    int getType();
-    int getRange();
-    int getValCounterBomb();
-    QPoint getPosition();
-    QGraphicsPixmapItem* getPtrItemOnScene();
-    Player* getOwner();
-    int getNbCycle();
-    int getStepExplosion();
-    bool getExploded();
+    int getType() const;
+    int getRange() const;
+    int getValCounterBomb() const;
+    QPoint getPosition() const;
+    QGraphicsPixmapItem* getPtrItemOnScene() const;
+    Player* getOwner() const;
+    int getNbCycle() const;
+    int getStepExplosion() const;
+    bool getExploded() const;
     QList<QGraphicsPixmapItem*>* getItemsExplosion();
-    bool getExplosionOver();
-    int getNbDestroyedBlock(int id);
+    bool getExplosionOver() const;
+    int getNbDestroyedBlock(int id) const;
 
     void addDestroyedBlock(int id, int value);
 
@@ -50,7 +50,22 @@ public:
 
     void explode();
 
-    enum type{bomb,superbomb};
+    enum type : short
+    {
+        BOMB = 0,
+        SUPERBOMB=1
+
+
+    };
+
+    enum Direction: short
+    {
+        LEFT=0,
+        UP=1,
+        RIGHT=2,
+        DOWN=3
+    };
+
 private:
     int type;
     int range;

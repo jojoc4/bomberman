@@ -8,7 +8,7 @@
  */
 Bomb::Bomb()
 {
-    this->type=bomb;
+    this->type=BOMB;
     this->range=0;
     this->position=QPoint(0,0);
     ptrItemOnScene=nullptr;
@@ -52,28 +52,27 @@ void Bomb::incCounterBomb(){
     counter++;
 }
 
-int Bomb::getValCounterBomb(){
+int Bomb::getValCounterBomb() const{
     return counter;
 }
-int Bomb::getType(){
+int Bomb::getType() const{
     return type;
 }
 
-int Bomb::getRange(){
+int Bomb::getRange() const{
     return range;
 }
 
-QPoint Bomb::getPosition(){
+QPoint Bomb::getPosition() const{
     return position;
 }
 
-QGraphicsPixmapItem *Bomb::getPtrItemOnScene()
-{
+QGraphicsPixmapItem *Bomb::getPtrItemOnScene() const{
+
     return ptrItemOnScene;
 }
 
-void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item)
-{
+void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item){
     ptrItemOnScene= item;
 }
 
@@ -82,14 +81,14 @@ void Bomb::resetCounter(){
     nbCycle++;
 }
 
-int Bomb::getNbCycle(){
+int Bomb::getNbCycle() const{
     return nbCycle;
 }
 void Bomb::postStepExplosion()
 {
     stepExplosion++;
 }
-int Bomb::getStepExplosion()
+int Bomb::getStepExplosion() const
 {
     return stepExplosion;
 }
@@ -107,7 +106,7 @@ void Bomb::resetNbCycle()
 void Bomb::setExploded(){
     isExploded = true;
 }
-bool Bomb::getExploded(){
+bool Bomb::getExploded() const{
     return isExploded;
 }
 
@@ -116,14 +115,14 @@ void Bomb::setExplosionOver()
     isExplosionOver = true;
 }
 
-bool Bomb::getExplosionOver()
+bool Bomb::getExplosionOver() const
 {
     return isExplosionOver;
 }
-Player* Bomb::getOwner(){
+Player* Bomb::getOwner() const{
     return owner;
 }
-int Bomb::getNbDestroyedBlock(int id){
+int Bomb::getNbDestroyedBlock(int id) const{
     if(id < 4 && id >= 0)
         return nbDestroyedBlock[id];
     else

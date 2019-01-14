@@ -7,11 +7,10 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "player.h"
-
 #include <QPoint>
 
 #include "map.h"
+#include "player.h"
 
 class Player;
 class Map;
@@ -22,8 +21,8 @@ public:
     Game();
     virtual ~Game();
 
-    Player* getPlayer(bool nbPlayer);
-    Map* getMap();
+    Player* getPlayer(bool nbPlayer) const;
+    Map* getMap() const;
 
     bool move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer);
 

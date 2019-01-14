@@ -1,10 +1,12 @@
 #include "mapbloc.h"
 
+/**
+ * @brief MapBloc::MapBloc
+ */
 MapBloc::MapBloc(){
     ptrItemOnScene = nullptr;
-    type = 0;
+    type = BlocType::UNDEFINED;
     traversable = false;
-
 }
 
 /**
@@ -13,17 +15,17 @@ MapBloc::MapBloc(){
  */
 MapBloc::MapBloc(int type){
     this->type=type;
-    if(this->type<=2){
+    if(this->type<=BlocType::DESTRUCTIBLE){
         this->traversable=false;
     }else{
         this->traversable=true;
     }
     ptrItemOnScene=nullptr;
 }
-
+/**
+ * @brief MapBloc::~MapBloc
+ */
 MapBloc::~MapBloc(){
-    //delete ptrItemOnScene;
-    //ptrItemOnScene = nullptr;
 
 }
 
@@ -51,29 +53,41 @@ void MapBloc::explode(){
 
     int r = (qrand() % ((10 + 1) - 1) + 1);
     if(r<=bonus){
-        setType(5);
+        setType(BlocType::BONUS);
     }else if(r<=bonus+rangeImprovment){
-        setType(6);
+        setType(BlocType::AMELIORATION_PUISSANCE);
     }else if(r<=bonus+rangeImprovment+numberImprovment){
-        setType(4);
+        setType(BlocType::AMELIORATION_NOMBRE);
     }else{
-        setType(3);
+        setType(BlocType::FOND);
     }
 }
-
-int MapBloc::getType(){
+/**
+ * @brief MapBloc::getType
+ * @return
+ */
+int MapBloc::getType() const{
     return this->type;
 }
-
-bool MapBloc::getTraversable(){
+/**
+ * @brief MapBloc::getTraversable
+ * @return
+ */
+bool MapBloc::getTraversable() const{
     return this->traversable;
 }
-
-QGraphicsPixmapItem* MapBloc::getPtrItemOnScene()
+/**
+ * @brief MapBloc::getPtrItemOnScene
+ * @return
+ */
+QGraphicsPixmapItem* MapBloc::getPtrItemOnScene() const
 {
     return ptrItemOnScene;
 }
-
+/**
+ * @brief MapBloc::setPtrItemOnScene
+ * @param item
+ */
 void MapBloc::setPtrItemOnScene(QGraphicsPixmapItem *item)
 {
     ptrItemOnScene= item;
