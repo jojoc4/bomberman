@@ -777,6 +777,8 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y){
     newItem->setPos((position.x()+x)*30,(position.y()+y)*30);
     qDebug() << texture << newItem->pos() << newItem->pos().x()/30 << " " <<  newItem->pos().y()/30;
 
+    checkPlayerExplosion(game->getPlayer(false),game->getPlayer(true),position.x()+x,position.y()+y);
+
     scene->addItem(newItem);
 }
 
@@ -813,7 +815,7 @@ void G_Game::destroyBlocs(Bomb* bomb){
             }
         }
     } else {*/
-        checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y());
+        //checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y());
 
         // droite
         for(int x = 0; x <= puissance; x++){
@@ -825,10 +827,10 @@ void G_Game::destroyBlocs(Bomb* bomb){
                     bloc->explode();
                     bomb->addDestroyedBlock(1,x);
 
-                    if(bomb->getType() == Bomb::superbomb)
+                    if(bomb->getType() != Bomb::superbomb)
                         break;
                 }
-                checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
                 bomb->addDestroyedBlock(1,x);
             }
 
@@ -846,7 +848,7 @@ void G_Game::destroyBlocs(Bomb* bomb){
                     if(bomb->getType() != 1)
                         break;
                 }
-                checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
+                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x()+x,position.y());
                 bomb->addDestroyedBlock(0,x);
             }
 
@@ -856,6 +858,7 @@ void G_Game::destroyBlocs(Bomb* bomb){
         for(int y = 1; y <= puissance; y++){
             if(position.y()+y < 30 && position.y()+y >= 0){
                 bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
+
                 if(bloc->getType() == 1){
                     break;
                 } else if (bloc->getType() != 3){
@@ -865,7 +868,7 @@ void G_Game::destroyBlocs(Bomb* bomb){
                     if(bomb->getType() != 1)
                         break;
                 }
-                checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
+                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
                 bomb->addDestroyedBlock(2,-y);
             }
 
@@ -884,7 +887,7 @@ void G_Game::destroyBlocs(Bomb* bomb){
                     if(bomb->getType() != 1)
                         break;
                 }
-                checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
+                //checkPlayerExplosion(posPlayer1,posPlayer2,position.x(),position.y()+y);
                 bomb->addDestroyedBlock(3,y);
             }
         }
