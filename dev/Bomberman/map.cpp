@@ -19,7 +19,9 @@ Map::Map()
         }
     }
 }
-
+/**
+ * @brief Map::~Map
+ */
 Map::~Map(){
     for(int i = 0; i<30; i++){
         for(int j = 0; j<30; j++){
@@ -81,7 +83,7 @@ void Map::readFromFile(QString path){
  * @param p (QPoint line column)
  * @return specified Mapbloc
  */
-MapBloc* Map::getMapBloc(QPoint bloc){
+MapBloc* Map::getMapBloc(QPoint bloc) const{
     return t[bloc.x()][bloc.y()];
 }
 

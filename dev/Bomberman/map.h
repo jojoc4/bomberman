@@ -18,7 +18,7 @@ public:
     virtual ~Map();
     void readFromFile(QString path);
 
-    MapBloc* getMapBloc(QPoint bloc);
+    MapBloc* getMapBloc(QPoint bloc) const;
     QPoint getPlayerSpawn(bool nbPlayer) const;
 
 private:

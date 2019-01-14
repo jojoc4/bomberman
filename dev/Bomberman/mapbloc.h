@@ -18,20 +18,31 @@ public:
     MapBloc(int type);
     virtual ~MapBloc();
 
+    int getType() const;
+    bool getTraversable() const;
+    QGraphicsPixmapItem* getPtrItemOnScene() const;
+
     void setType(int type);
-    int getType();
-    bool getTraversable();
-    QGraphicsPixmapItem* getPtrItemOnScene();
+    void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
     void explode();
 
-    void setPtrItemOnScene(QGraphicsPixmapItem *item);
+    enum BlocType: short
+    {
+        UNDEFINED = 0,
+        INDESTRUCTIBLE=1,
+        DESTRUCTIBLE=2,
+        FOND=3,
+        AMELIORATION_NOMBRE=4,
+        BONUS=5,
+        AMELIORATION_PUISSANCE=6
+    };
 
 private:
-    int type;
-    bool traversable;
+    int type = 0;
+    bool traversable = false;
 
-    QGraphicsPixmapItem *ptrItemOnScene;
+    QGraphicsPixmapItem *ptrItemOnScene = nullptr;
 };
 
 #endif
