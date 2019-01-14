@@ -857,12 +857,12 @@ void G_Game::destroyBlocs(Bomb* bomb){
  */
 void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int y)
 {
-    if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y && !gameEnd){
+    if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y && !gameEnd && !player1->getInvincible()){
         player1->die();
         gameEnd = true;
 
     }
-    if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y && !gameEnd){
+    if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y && !gameEnd && !player2->getInvincible()){
         player2->die();
         gameEnd = true;
     }
