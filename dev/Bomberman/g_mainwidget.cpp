@@ -25,10 +25,10 @@ void G_MainWidget::changeWidget(int index){
     switch(index){
         case 1 :
             createMapScreen();
-            break;
+            //break;
         case 2 :
             createGame();
-            break;
+            //break;1
     }
     layout->setCurrentIndex(index);
 }

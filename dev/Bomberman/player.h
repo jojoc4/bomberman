@@ -54,6 +54,7 @@ public:
     void incrementCounter();
 
     void giveBonus();
+    void die();
 
 
     QGraphicsItem* getPtrItemOnScene();

@@ -260,9 +260,21 @@ void G_Game::refreshDisplay()
     this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2\n%3").arg(p2->getNbBomb()).arg(p2->getPuissance()).arg(textSupP2));
 
-    if(gameEnd){
+    if(bombs.size() == 0 && gameEnd){
+
+        QString msg;
+        if(game->getPlayer(false)->isDead()){
+            msg = tr("Le joueur 1 a perdu !");
+        } else {
+            msg = tr("Le joueur 2 a perdu !");
+        }
+
+        QMessageBox msgBox;
+        msgBox.setText(msg);
+        msgBox.exec();
         emit gameOver();
     }
+
 }
 
 /**
@@ -691,8 +703,6 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
         bomb->getOwner()->receiveBomb(1);
         delete bomb;
         this->updateDisplayMap();
-
-
         return;
     }
     QRect center(stepExplosion*12, 0, 12, 12);
@@ -863,7 +873,7 @@ void G_Game::destroyBlocs(Bomb* bomb){
 
         // haut
         for(int y = 1; y <= puissance; y++ ){
-            if(position.y()-y < 30 && position.y()-y >= 0 && !gameEnd){
+            if(position.y()-y < 30 && position.y()-y >= 0){
                 bloc = theMap->getMapBloc(QPoint(position.x(),position.y()-y));
                 if(bloc->getType() == 1){
                     break;
@@ -892,19 +902,13 @@ void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int 
 
 
 
-    if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y){
-        //killTimer(timeKeeper);
-        QMessageBox msgBox;
-        msgBox.setText("Le joueur 1 est mort ! ");
-        msgBox.exec();
+    if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y && !gameEnd){
+        player1->die();
         gameEnd = true;
 
     }
-    if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y){
-        //killTimer(timeKeeper);
-        QMessageBox msgBox;
-        msgBox.setText("Le joueur 2 est mort ! ");
-        msgBox.exec();
+    if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y && !gameEnd){
+        player2->die();
         gameEnd = true;
     }
 }

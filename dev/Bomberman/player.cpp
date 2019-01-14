@@ -167,3 +167,8 @@ void Player::incrementCounter()
 {
     ++counter;
 }
+
+
+void Player::die(){
+    dead = true;
+}
