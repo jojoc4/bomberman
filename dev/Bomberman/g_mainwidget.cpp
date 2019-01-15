@@ -4,12 +4,6 @@
 #include "g_game.h"
 #include "game.h"
 
-/**
- * @brief G_MainWidget::G_MainWidget
- * Constructor
- * @param parent : pointer of the parent who create this widget
- */
-
 G_MainWidget::G_MainWidget(QWidget *parent) : QWidget(parent)
 {
     gamePtr = new Game();
@@ -25,33 +19,20 @@ G_MainWidget::G_MainWidget(QWidget *parent) : QWidget(parent)
 
 }
 
-/**
- * @brief G_MainWidget::changeWidget
- * Slot : receive a number and create the asked widget
- * @param index : no widget
- */
-void G_MainWidget::changeWidget(int index)
-{
-    switch(index)
-    {
-        case Widget::G_MAPCHOOSER :
+void G_MainWidget::changeWidget(int index){
+    switch(index){
+        case 1 :
             createMapScreen();
             //break;
-        //case Widget::G_GAME :
+        case 2 :
             createGame();
-            // break;
-
+           // break;
     }
-    if(index ==  Widget::G_GAME)
+    if(index == 2)
         emit(startGame());
     layout->setCurrentIndex(index);
 }
 
-
-/**
- * @brief G_MainWidget::finishGame
- * Called when the game ends. Destroy the old game and restart it
- */
 void G_MainWidget::finishGame()
 {
     delete gamePtr;
@@ -59,14 +40,9 @@ void G_MainWidget::finishGame()
 
     deleteG_Game();
 
-    changeWidget(Widget::G_MAPCHOOSER);
+    changeWidget(1);
 }
 
-
-/**
- * @brief G_MainWidget::createMapScreen
- * Create the mapScreen Widget
- */
 void G_MainWidget::createMapScreen()
 {
     if(mapchooser != nullptr)
@@ -77,11 +53,6 @@ void G_MainWidget::createMapScreen()
     layout->addWidget(mapchooser);
 }
 
-
-/**
- * @brief G_MainWidget::createGame
- * Create the game Widget
- */
 void G_MainWidget::createGame()
 {
     if(game != nullptr)
@@ -93,24 +64,13 @@ void G_MainWidget::createGame()
     connect(game, &G_Game::gameOver, this, &G_MainWidget::finishGame);
 }
 
-/**
- * @brief G_MainWidget::deleteG_Game
- * Delete g_game widget and his left over
- */
-void G_MainWidget::deleteG_Game()
-{
+void G_MainWidget::deleteG_Game(){
     delete game;
     layout->removeWidget(game);
     game = nullptr;
 }
 
-
-/**
- * @brief G_MainWidget::deleteG_MapChooser
- * Delete g_mapChooser widget and his left over
- */
-void G_MainWidget::deleteG_MapChooser()
-{
+void G_MainWidget::deleteG_MapChooser(){
     layout->removeWidget(mapchooser);
     delete mapchooser;
     mapchooser = nullptr;
