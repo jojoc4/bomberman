@@ -104,7 +104,7 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(fal
     this->hLayout->addWidget(container);
     this->hLayout->addLayout(vLayout);
 
-    this->setLayout(hLayout);
+    this->setLayout(hLayout); //fuck
 
     this->container->setFocusPolicy( Qt::NoFocus );
 
