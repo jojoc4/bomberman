@@ -45,9 +45,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 
     // Loading of the map
     directory = new QDir(QCoreApplication::applicationDirPath());
-    directory->cdUp();
-    directory->cdUp();
-    directory->cdUp();
+    directory->cd("maps");
 
     displayListMap();
 
@@ -198,8 +196,8 @@ void G_MapChooser::resizeEvent(QResizeEvent *)
 }
 
 /**
- * @brief G_MapChooser::getMap
- * @param name
+ *
+ *
  */
 void G_MapChooser::getMap(QString name)
 {

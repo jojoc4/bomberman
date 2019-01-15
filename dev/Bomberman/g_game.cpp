@@ -770,7 +770,6 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y){
 
     newItem->setPixmap(texture);
     newItem->setPos((position.x()+x)*30,(position.y()+y)*30);
-    qDebug() << texture << newItem->pos() << newItem->pos().x()/30 << " " <<  newItem->pos().y()/30;
 
     checkPlayerExplosion(game->getPlayer(false),game->getPlayer(true),position.x()+x,position.y()+y);
 
