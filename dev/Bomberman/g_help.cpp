@@ -4,8 +4,6 @@ G_Help::G_Help(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("Aide"));
 
-    //setMinimumSize(600,400);
-
     QVBoxLayout* vbox = new QVBoxLayout(this);
     this->setLayout(vbox);
     QPixmap allBlocks =  QPixmap(QString(":/resources/img/Blocs.png"));
@@ -55,7 +53,6 @@ G_Help::G_Help(QWidget *parent) : QWidget(parent)
     hb5->addWidget(new QLabel(tr("Donne un des bonus suivant:")));
     vbox->addLayout(hb5);
 
-    //à completer
     vbox->addWidget(new QLabel(tr("invisibilité: vous rend invisible 1 seconde sur deux")));
     vbox->addWidget(new QLabel(tr("invincibilité: vous rend invincible quelques secondes")));
     vbox->addWidget(new QLabel(tr("Super bombe: vos bombes explose tout sur leurs passage")));

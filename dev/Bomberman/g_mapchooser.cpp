@@ -62,7 +62,8 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 /**
  * @brief G_MapChooser::~G_MapChooser
  */
-G_MapChooser::~G_MapChooser(){
+G_MapChooser::~G_MapChooser()
+{
 
 }
 
@@ -92,10 +93,12 @@ void G_MapChooser::displayListMap()
     {
         mapsList = directory->entryList(QStringList() << "*.nmm" << "*.nmm",QDir::Files);
         listMaps->clear();
-        if(mapsList.length() < 1){
+        if(mapsList.length() < 1)
+        {
             QMessageBox::critical(this, tr("Erreur "), tr("Aucune carte ne se trouve dans le dossier"), QMessageBox::Ok);
             btnValidate->setEnabled(false);
-        } else {
+        } else
+        {
             btnValidate->setEnabled(true);
             for ( const auto& i : mapsList  )
             {
@@ -106,7 +109,8 @@ void G_MapChooser::displayListMap()
             QListWidgetItem * item = listMaps->item(0);
             getMap(item->text());
         }
-    } else {
+    } else
+    {
         QMessageBox::critical(this, tr("Erreur "), tr("Le dossier spécifié n'existe pas"), QMessageBox::Ok);
     }
 
@@ -134,17 +138,21 @@ void G_MapChooser::validateMap()
 /**
  *
  */
-void G_MapChooser::displayThumbnailsMap(){
+void G_MapChooser::displayThumbnailsMap()
+{
     this->previewMapScene->setBackgroundBrush(Qt::gray);
     this->previewMapScene->clear();
 
-    for(int i = 0; i < 30; i++){
-        for(int j = 0; j < 30; j++){
+    for(int i = 0; i < 30; i++)
+    {
+        for(int j = 0; j < 30; j++)
+        {
             QPoint bloc(i, j);
 
             MapBloc* monBloc =  game->getMap()->getMapBloc(bloc);
 
-            if(monBloc == nullptr){
+            if(monBloc == nullptr)
+            {
                 return;
             }
 
@@ -184,7 +192,8 @@ void G_MapChooser::displayThumbnailsMap(){
 /**
  *
  */
-void G_MapChooser::resizeEvent(QResizeEvent *){
+void G_MapChooser::resizeEvent(QResizeEvent *)
+{
         //displayThumbnailsMap();
 }
 
@@ -192,11 +201,14 @@ void G_MapChooser::resizeEvent(QResizeEvent *){
  * @brief G_MapChooser::getMap
  * @param name
  */
-void G_MapChooser::getMap(QString name){
-    try{
+void G_MapChooser::getMap(QString name)
+{
+    try
+    {
         game->getMap()->readFromFile(directory->absolutePath() + "/" + name);
         displayThumbnailsMap();
-    } catch(const char* error){
+    } catch(const char* error)
+    {
         QMessageBox::critical(this, tr("Erreur - ouverture de carte"), tr("Fichier de carte non valide"), QMessageBox::Ok);
     }
 }

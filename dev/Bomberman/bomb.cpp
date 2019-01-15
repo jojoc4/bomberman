@@ -25,7 +25,7 @@ Bomb::Bomb()
 
 /**
  * @brief bomb constructor
- * @param type, range, line and column
+ * @param type, range, position, and owner
  */
 Bomb::Bomb(int type, int range, QPoint position, Player* pOwner)
 {
@@ -42,46 +42,57 @@ Bomb::Bomb(int type, int range, QPoint position, Player* pOwner)
     owner = pOwner;
 }
 
-Bomb::~Bomb(){
+Bomb::~Bomb()
+{
 
 }
-void Bomb::explode(){
+void Bomb::explode()
+{
     delete this;
 }
-void Bomb::incCounterBomb(){
+void Bomb::incCounterBomb()
+{
     counter++;
 }
 
-int Bomb::getValCounterBomb() const{
+int Bomb::getValCounterBomb() const
+{
     return counter;
 }
-int Bomb::getType() const{
+int Bomb::getType() const
+{
     return type;
 }
 
-int Bomb::getRange() const{
+int Bomb::getRange() const
+{
     return range;
 }
 
-QPoint Bomb::getPosition() const{
+QPoint Bomb::getPosition() const
+{
     return position;
 }
 
-QGraphicsPixmapItem *Bomb::getPtrItemOnScene() const{
+QGraphicsPixmapItem *Bomb::getPtrItemOnScene() const
+{
 
     return ptrItemOnScene;
 }
 
-void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item){
+void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item)
+{
     ptrItemOnScene= item;
 }
 
-void Bomb::resetCounter(){
+void Bomb::resetCounter()
+{
     counter = 0;
     nbCycle++;
 }
 
-int Bomb::getNbCycle() const{
+int Bomb::getNbCycle() const
+{
     return nbCycle;
 }
 void Bomb::postStepExplosion()
@@ -92,10 +103,12 @@ int Bomb::getStepExplosion() const
 {
     return stepExplosion;
 }
-void Bomb::addFireExplosion(QGraphicsPixmapItem* item){
+void Bomb::addFireExplosion(QGraphicsPixmapItem* item)
+{
     bombExplosionElement.push_back(item);
 }
-QList<QGraphicsPixmapItem*>* Bomb::getItemsExplosion(){
+QList<QGraphicsPixmapItem*>* Bomb::getItemsExplosion()
+{
     return &bombExplosionElement;
 }
 
@@ -103,10 +116,14 @@ void Bomb::resetNbCycle()
 {
     nbCycle = 0;
 }
-void Bomb::setExploded(){
+
+void Bomb::setExploded()
+{
     isExploded = true;
 }
-bool Bomb::getExploded() const{
+
+bool Bomb::getExploded() const
+{
     return isExploded;
 }
 
@@ -119,17 +136,22 @@ bool Bomb::getExplosionOver() const
 {
     return isExplosionOver;
 }
-Player* Bomb::getOwner() const{
+
+Player* Bomb::getOwner() const
+{
     return owner;
 }
-int Bomb::getNbDestroyedBlock(int id) const{
+
+int Bomb::getNbDestroyedBlock(int id) const
+{
     if(id < 4 && id >= 0)
         return nbDestroyedBlock[id];
     else
         return 0;
 }
 
-void Bomb::addDestroyedBlock(int id, int value){
+void Bomb::addDestroyedBlock(int id, int value)
+{
     if(id < 4 && id >= 0)
         nbDestroyedBlock[id] = value;
 }

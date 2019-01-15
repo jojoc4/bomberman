@@ -6,7 +6,8 @@ Player::Player() : dead(false), nbBombe(1), puissance(1), direction(0), superBom
     position = QPoint(0,0);
 }
 
-void Player::giveBonus(){
+void Player::giveBonus()
+{
     visible=false;
     invincible=false;
     superBomb=false;
@@ -19,30 +20,38 @@ void Player::giveBonus(){
     int invinc=1;
     int sb=1;
 
-    if(r<=invis){
+    if(r<=invis)
+    {
         visible=true;
-    }else if(r<=invis+invinc){
+    }else if(r<=invis+invinc)
+    {
         invincible=true;
-    }else if(r<=invis+invinc+sb){
+    }else if(r<=invis+invinc+sb)
+    {
         superBomb=true;
-    }else{
+    }else
+    {
         autoDrop=true;
     }
 }
 
-QPoint Player::getPosition() const {
+QPoint Player::getPosition() const
+{
     return position;
 }
 
-bool Player::isDead() const {
+bool Player::isDead() const
+{
     return dead;
 }
 
-int Player::getNbBomb() const {
+int Player::getNbBomb() const
+{
     return nbBombe;
 }
 
-int Player::getPuissance() const {
+int Player::getPuissance() const
+{
     return puissance;
 }
 
@@ -51,7 +60,8 @@ short Player::getDirection() const
     return this->direction;
 }
 
-void Player::setPuissance(int puissance){
+void Player::setPuissance(int puissance)
+{
     this->puissance=puissance;
 }
 
@@ -65,7 +75,8 @@ void Player::dropBomb()
     --nbBombe;
 }
 
-void Player::setPosition(QPoint np){
+void Player::setPosition(QPoint np)
+{
     position=np;
 }
 
@@ -86,35 +97,43 @@ void Player::setDirection(short d)
 }
 
 
-bool Player::getVisible() const{
+bool Player::getVisible() const
+{
     return visible;
 }
 
-bool Player::getSuperBomb() const{
+bool Player::getSuperBomb() const
+{
     return superBomb;
 }
 
-bool Player::getInvincible() const{
+bool Player::getInvincible() const
+{
     return invincible;
 }
 
-bool Player::getAutoDrop() const{
+bool Player::getAutoDrop() const
+{
     return autoDrop;
 }
 
-int Player::getCounter() const{
+int Player::getCounter() const
+{
     return counter;
 }
 
-void Player::setVisible(bool s){
+void Player::setVisible(bool s)
+{
     visible = s;
 }
 
-void Player::setSuperBomb(bool s){
+void Player::setSuperBomb(bool s)
+{
     superBomb = s;
 }
 
-void Player::setInvincible(bool s){
+void Player::setInvincible(bool s)
+{
     invincible = s;
 }
 
@@ -169,6 +188,7 @@ void Player::incrementCounter()
 }
 
 
-void Player::die(){
+void Player::die()
+{
     dead = true;
 }
