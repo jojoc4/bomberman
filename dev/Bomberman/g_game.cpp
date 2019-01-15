@@ -12,6 +12,60 @@
 #include "player.h"
 #include "game.h"
 
+#define NB_BLOCS_X 30
+#define NB_BLOCS_Y 30
+
+
+#define LEFT_EXPLOSION_BLOC_ARRAY 0
+#define RIGHT_EXPLOSION_BLOC_ARRAY 1
+#define BOTTOM_EXPLOSION_BLOC_ARRAY 2
+#define TOP_EXPLOSION_BLOC_ARRAY 3
+
+#define TEXTURE_FIRE_SIZE_X 12
+#define TEXUTRE_FIRE_SIZE_Y 12
+
+#define TEXTURE_FIRE_UP 36
+#define TEXTURE_FIRE_CENTER 0
+#define TEXTURE_FIRE_LEFT 72
+#define TEXTURE_FIRE_BOTTOM 60
+#define TEXTURE_FIRE_RIGHT 48
+#define TEXTURE_FIRE_HORIZONTAL 12
+#define TEXTURE_FIRE_VERTICAL 24
+
+#define FINAL_STEP_EXPLOSION 4
+
+#define NB_CYCLE_DISPLAY 2
+
+
+#define TIME_BLINKING_BOMB_1 10
+#define TIME_BLINKING_BOMB_2 20
+#define TIME_BLINKING_BOMB_3 30
+#define TIME_BLINKING_BOMB_4 40
+#define TIME_BEFORE_EXPLOSION 10
+
+#define TEXTURE_BOMB_X 16
+#define TEXTURE_BOMB_Y 16
+
+#define TEXTURE_PLAYER_X 16
+#define TEXTURE_PLAYER_Y 16
+
+#define TEXTURE_BOMB_STEP_1_X 0
+#define TEXTURE_BOMB_STEP_2_X 16
+#define TEXTURE_BOMB_STEP_3_X 32
+#define TEXTURE_BOMB_STEP_X_Y 0
+
+
+#define TEXTURE_SUPERBOMB_STEP_1_X 48
+#define TEXTURE_SUPERBOMB_STEP_2_X 64
+#define TEXTURE_SUPERBOMB_STEP_3_X 80
+#define TEXTURE_SUPERBOMB_STEP_X_Y 0
+
+#define TEXTURE_SUPERBOMB_X 16
+#define TEXTURE_SUPERBOMB_Y 16
+
+#define PLAYER_ANIMATION_COUNTER_MAX 12
+
+
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
     p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1),
     nbTouchesP2(0)
@@ -530,12 +584,12 @@ void G_Game::drawPlayer(bool which)
     }
 
     //Move the player
-    ptrItem->setPos(ptrPlayer->getPosition().x()-8, ptrPlayer->getPosition().y()-17);
+    ptrItem->setPos(ptrPlayer->getPosition().x()-TEXTURE_PLAYER_X/2, ptrPlayer->getPosition().y()-17);
     ptrItem->setPixmap(texture);
 }
 
 /**
- * @brief G_Game::incCounterAnim
+ * incCounterAni()m
  * useful to increase a counter telling which part of the player's texture to use
  * @param which : tells which player to increase
  */
@@ -543,21 +597,21 @@ void G_Game::incCounterAnim(short which)
 {
     if(which == 1)
     {
-        if(++counterAnimP1 == 12)
-            counterAnimP1 -= 12;
+        if(++counterAnimP1 == PLAYER_ANIMATION_COUNTER_MAX)
+            counterAnimP1 -= PLAYER_ANIMATION_COUNTER_MAX;
     }
     if(which == 2)
     {
-        if(++counterAnimP2 == 12)
-            counterAnimP2 -= 12;
+        if(++counterAnimP2 == PLAYER_ANIMATION_COUNTER_MAX)
+            counterAnimP2 -= PLAYER_ANIMATION_COUNTER_MAX;
     }
 }
 
 /**
- * @brief G_Game::dropBomb
+ * dropBomb()
  * creates a new bomb and displays it
- * @param blockPos
- * @param p
+ * @param blockPos : position (x,y) of the bloc
+ * @param p : pointer of the player who drop the player
  */
 void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 {
@@ -574,26 +628,27 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 
         QPixmap texture;
         if(theBomb->getType() == Bomb::BOMB){
-            texture = bombTexture.copy(32, 0, 16, 16);
+            texture = bombTexture.copy(TEXTURE_BOMB_STEP_3_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
         } else {
-            texture = bombTexture.copy(80, 0, 16, 16);
+            texture = bombTexture.copy(TEXTURE_SUPERBOMB_STEP_3_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
         }
         QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
-        item->setPos(blockPos.x()*30 + 8, blockPos.y()*30 + 8);
+        item->setPos(blockPos.x()*NB_BLOCS_X + TEXTURE_BOMB_X/2, blockPos.y()*NB_BLOCS_Y + TEXTURE_BOMB_Y/2);
         theBomb->setPtrItemOnScene(item);
         p->dropBomb();
     }
 }
 /**
- * @brief G_Game::updateDisplayBombs
+ * updateDisplayBombs()
  * Update the display of the bombs
  */
 void G_Game::updateDisplayBombs()
 {
-    for(Bomb* bomb:bombs){
+    for(Bomb* bomb:bombs)
+    {
         if(bomb->getExploded())
         {
-            if(bomb->getValCounterBomb() == 10)
+            if(bomb->getValCounterBomb() == TIME_BEFORE_EXPLOSION)
             {
                 dislayExplosionBomb(bomb);
                 bomb->resetCounter();
@@ -607,43 +662,45 @@ void G_Game::updateDisplayBombs()
     }
 }
 /**
- * @brief G_Game::updateBombAnimation
+ * updateBombAnimation
  * Update the display before the explosion
- * @param bomb
+ * @param bomb : pointer of the current bomb
  */
-void G_Game::updateBombAnimation(Bomb* bomb){
+void G_Game::updateBombAnimation(Bomb* bomb)
+{
     bomb->incCounterBomb();
 
-    if(bomb->getNbCycle() == 2){
+    if(bomb->getNbCycle() == NB_CYCLE_DISPLAY)
+    {
         bomb->setExploded();
         destroyBlocs(bomb);
     }
     int valCounter = bomb->getValCounterBomb();
-    if(bomb->getType() == Bomb::BOMB){
-
+    if(bomb->getType() == Bomb::BOMB)
+    {
         switch(valCounter){
-        case 10 :
+        case TIME_BLINKING_BOMB_1 :
         {
-            QRect square(0, 0, 16, 16);
+            QRect square(TEXTURE_BOMB_STEP_1_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
             setTextureBomb(bomb,square);
             break;
         }
-        case 20 :
+        case TIME_BLINKING_BOMB_2 :
         {
 
-            QRect square(16, 0, 16, 16);
+            QRect square(TEXTURE_BOMB_STEP_2_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
             setTextureBomb(bomb,square);
             break;
         }
-        case 30 :
+        case TIME_BLINKING_BOMB_3 :
         {
-            QRect square(32, 0, 16, 16);
+            QRect square(TEXTURE_BOMB_STEP_3_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
             setTextureBomb(bomb,square);
             break;
         }
-        case 40 :
+        case TIME_BLINKING_BOMB_4 :
         {
-            QRect square(16, 0, 16, 16);
+            QRect square(TEXTURE_BOMB_STEP_2_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
             setTextureBomb(bomb,square);
             bomb->resetCounter();
             break;
@@ -652,29 +709,30 @@ void G_Game::updateBombAnimation(Bomb* bomb){
 
         }
     } else {
-        switch(valCounter){
-        case 10 :
+        switch(valCounter)
         {
-            QRect square(48, 0, 16, 16);
+        case TIME_BLINKING_BOMB_1 :
+        {
+            QRect square(TEXTURE_SUPERBOMB_STEP_1_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
             setTextureBomb(bomb,square);
             break;
         }
-        case 20 :
+        case TIME_BLINKING_BOMB_2 :
         {
 
-            QRect square(64, 0, 16, 16);
+            QRect square(TEXTURE_SUPERBOMB_STEP_2_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
             setTextureBomb(bomb,square);
             break;
         }
-        case 30 :
+        case TIME_BLINKING_BOMB_3 :
         {
-            QRect square(80, 0, 16, 16);
+            QRect square(TEXTURE_SUPERBOMB_STEP_3_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
             setTextureBomb(bomb,square);
             break;
         }
-        case 40 :
+        case TIME_BLINKING_BOMB_4 :
         {
-            QRect square(64, 0, 16, 16);
+            QRect square(TEXTURE_SUPERBOMB_STEP_2_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
             setTextureBomb(bomb,square);
             bomb->resetCounter();
             break;
@@ -683,32 +741,39 @@ void G_Game::updateBombAnimation(Bomb* bomb){
         }
     }
 }
+
 /**
- * @brief G_Game::setTextureBomb
- *
- * @param bomb
- * @param square
+ * setTextureBomb()
+ * Apply the blinking bomb before the explosion
+ * @param bomb : pointer of the current bomb
+ * @param square : position (x,y) of the texture in the ressources
  */
-void G_Game::setTextureBomb(Bomb* bomb, QRect square){
+void G_Game::setTextureBomb(Bomb* bomb, QRect square)
+{
     QPixmap texture(bombTexture.copy(square));
     QGraphicsPixmapItem *item = bomb->getPtrItemOnScene();
     item->setPixmap(texture);
 }
+
 /**
- * @brief G_Game::dislayExplosionBomb
- * @param bomb
+ * dislayExplosionBomb()
+ * Call the function to display the explosion and manage the step of explosion
+ * @param bomb : pointer of the explosing bomb
  */
-void G_Game::dislayExplosionBomb(Bomb *bomb){
+void G_Game::dislayExplosionBomb(Bomb *bomb)
+{
     // delete previous explosion flame
     QList<QGraphicsPixmapItem*>* listElement = bomb->getItemsExplosion();
-    for(QGraphicsPixmapItem* itemToDelete:*(listElement)){
+    for(QGraphicsPixmapItem* itemToDelete:*(listElement))
+    {
         scene->removeItem(itemToDelete);
         delete itemToDelete;
         listElement->removeOne(itemToDelete);
     }
     int stepExplosion = bomb->getStepExplosion();
 
-    if(stepExplosion == 4){
+    if(stepExplosion == FINAL_STEP_EXPLOSION)
+    {
         scene->removeItem(bomb->getPtrItemOnScene());
         bombs.removeOne(bomb);
         bomb->getOwner()->receiveBomb(1);
@@ -716,164 +781,191 @@ void G_Game::dislayExplosionBomb(Bomb *bomb){
         this->updateDisplayMap();
         return;
     }
-    QRect center(stepExplosion*12, 0, 12, 12);
-    QRect right(stepExplosion*12, 48, 12, 12);
-    QRect left(stepExplosion*12, 72, 12, 12);
-    QRect bottom(stepExplosion*12, 60, 12, 12);
-    QRect up(stepExplosion*12, 36, 12, 12);
+    QRect center(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_CENTER, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
+    QRect right(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_RIGHT, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
+    QRect left(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_LEFT, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
+    QRect bottom(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_BOTTOM, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
+    QRect up(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_UP, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
 
-    QRect vertical(stepExplosion*12,12,12,12);
-    QRect horizontal(stepExplosion*12,24,12,12);
+    QRect vertical(stepExplosion*TEXTURE_FIRE_SIZE_X,TEXTURE_FIRE_HORIZONTAL,TEXTURE_FIRE_SIZE_X,TEXUTRE_FIRE_SIZE_Y);
+    QRect horizontal(stepExplosion*TEXTURE_FIRE_SIZE_X,TEXTURE_FIRE_VERTICAL,TEXTURE_FIRE_SIZE_X,TEXUTRE_FIRE_SIZE_Y);
 
-    for(int i = bomb->getNbDestroyedBlock(0)+1; i < 0; i++){
+    for(int i = bomb->getNbDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY)+1; i < 0; i++)
+    {
         drawFlameExplosion(horizontal,bomb,i,0);
     }
-    for(int i = bomb->getNbDestroyedBlock(1)-1; i > 0; i--){
+    for(int i = bomb->getNbDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY)-1; i > 0; i--)
+    {
         drawFlameExplosion(horizontal,bomb,i,0);
     }
 
-    for(int i = -bomb->getNbDestroyedBlock(2)-1; i > 0; i--){
+    for(int i = -bomb->getNbDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY)-1; i > 0; i--)
+    {
         drawFlameExplosion(vertical,bomb,0,i);
     }
-    for(int i = bomb->getNbDestroyedBlock(3)-1; i > 0; i--){
+    for(int i = bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY)-1; i > 0; i--)
+    {
         drawFlameExplosion(vertical,bomb,0,-i);
     }
 
     drawFlameExplosion(center,bomb,0,0);
 
-    if(bomb->getNbDestroyedBlock(0) != 0)
-        drawFlameExplosion(left,bomb, bomb->getNbDestroyedBlock(0),0);
-    if(bomb->getNbDestroyedBlock(1) != 0)
-        drawFlameExplosion(right,bomb,bomb->getNbDestroyedBlock(1),0);
-    if(bomb->getNbDestroyedBlock(2) != 0)
-        drawFlameExplosion(bottom,bomb,0, -bomb->getNbDestroyedBlock(2));
-    if(bomb->getNbDestroyedBlock(3) != 0)
-        drawFlameExplosion(up,bomb,0, -bomb->getNbDestroyedBlock(3));
+    if(bomb->getNbDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY) != 0)
+        drawFlameExplosion(left,bomb, bomb->getNbDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY),0);
+    if(bomb->getNbDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY) != 0)
+        drawFlameExplosion(right,bomb,bomb->getNbDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY),0);
+    if(bomb->getNbDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY) != 0)
+        drawFlameExplosion(bottom,bomb,0, -bomb->getNbDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY));
+    if(bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY) != 0)
+        drawFlameExplosion(up,bomb,0, -bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY));
 }
 /**
- * @brief G_Game::drawFlameExplosion
- * @param location
- * @param bomb
- * @param x
- * @param y
+ * drawFlameExplosion()
+ * Add and display the flame on the scene
+ * @param location where to cut the explosionTexture
+ * @param bomb : pointer of the explosing bomb
+ * @param x : value x of the bloc where the flame is going to be
+ * @param y : value y of the bloc where the flame is going to be
  */
-void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y){
+void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y)
+{
     QPoint position = bomb->getPosition();
 
     QGraphicsPixmapItem* newItem = new QGraphicsPixmapItem();
 
     QPixmap texture(explosionTexture.copy(location));
 
-    texture = texture.scaled(30,30,Qt::KeepAspectRatio);
+    texture = texture.scaled(NB_BLOCS_X,NB_BLOCS_Y,Qt::KeepAspectRatio);
 
     bomb->addFireExplosion(newItem);
 
     newItem->setPixmap(texture);
-    newItem->setPos((position.x()+x)*30,(position.y()+y)*30);
+    newItem->setPos((position.x()+x)*NB_BLOCS_X,(position.y()+y)*NB_BLOCS_Y);
 
     checkPlayerExplosion(game->getPlayer(false),game->getPlayer(true),position.x()+x,position.y()+y);
 
     scene->addItem(newItem);
 }
 /**
- * @brief G_Game::destroyBlocs
- * @param bomb
+ * destroyBlocs()
+ * Select and destroy the blocks who are in the scope
+ * @param bomb : pointer of the explosing bomb
  */
-void G_Game::destroyBlocs(Bomb* bomb){
+void G_Game::destroyBlocs(Bomb* bomb)
+{
     QPoint position = bomb->getPosition();
     Map* theMap = this->game->getMap();
     MapBloc* bloc = nullptr;
     int puissance = bomb->getRange();
 
-    for(int x = 0; x <= puissance; x++){
-        if(position.x()+x < 30 && position.x()+x >= 0){
+    // right
+    for(int x = 0; x <= puissance; x++)
+    {
+        if(position.x()+x < NB_BLOCS_X && position.x()+x >= 0)
+        {
             bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
-            if(bloc->getType() == 1){
+            if(bloc->getType() == MapBloc::INDESTRUCTIBLE)
+            {
                 break;
-            } else if (bloc->getType() != 3){
+            } else if (bloc->getType() != MapBloc::BACKGROUND)
+            {
                 bloc->explode();
-                bomb->addDestroyedBlock(1,x);
+                bomb->addDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY,x);
 
                 if(bomb->getType() != Bomb::SUPERBOMB)
                     break;
             }
-            bomb->addDestroyedBlock(1,x);
+            bomb->addDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY,x);
         }
     }
-    // gauche
-    for(int x = -1; x >= -puissance; x--){
-        if(position.x()+x < 30 && position.x()+x >= 0){
+
+    // left
+    for(int x = -1; x >= -puissance; x--)
+    {
+        if(position.x()+x < NB_BLOCS_X && position.x()+x >= 0)
+        {
             bloc = theMap->getMapBloc(QPoint(position.x()+x,position.y()));
-            if(bloc->getType() == 1){
+            if(bloc->getType() == MapBloc::INDESTRUCTIBLE)
+            {
                 break;
-            } else if (bloc->getType() != 3){
+            } else if (bloc->getType() != MapBloc::BACKGROUND)
+            {
                 bloc->explode();
-                bomb->addDestroyedBlock(0,x);
+                bomb->addDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY,x);
 
-                if(bomb->getType() != 1)
+                if(bomb->getType() != Bomb::SUPERBOMB)
                     break;
             }
-            bomb->addDestroyedBlock(0,x);
+            bomb->addDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY,x);
         }
     }
 
-    // bas
-    for(int y = 1; y <= puissance; y++){
-        if(position.y()+y < 30 && position.y()+y >= 0){
+    // bottom
+    for(int y = 1; y <= puissance; y++)
+    {
+        if(position.y()+y < NB_BLOCS_Y && position.y()+y >= 0)
+        {
             bloc = theMap->getMapBloc(QPoint(position.x(),position.y()+y));
-
-            if(bloc->getType() == 1){
+            if(bloc->getType() == MapBloc::INDESTRUCTIBLE)
+            {
                 break;
-            } else if (bloc->getType() != 3){
+            } else if (bloc->getType() != MapBloc::BACKGROUND){
                 bloc->explode();
-                bomb->addDestroyedBlock(2,-y);
+                bomb->addDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY,-y);
 
-                if(bomb->getType() != 1)
+                if(bomb->getType() != Bomb::SUPERBOMB)
                     break;
             }
-            bomb->addDestroyedBlock(2,-y);
+            bomb->addDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY,-y);
         }
     }
 
-    // haut
-    for(int y = 1; y <= puissance; y++ ){
-        if(position.y()-y < 30 && position.y()-y >= 0){
+    // top
+    for(int y = 1; y <= puissance; y++ )
+    {
+        if(position.y()-y < NB_BLOCS_Y && position.y()-y >= 0)
+        {
             bloc = theMap->getMapBloc(QPoint(position.x(),position.y()-y));
-            if(bloc->getType() == 1){
+            if(bloc->getType() == MapBloc::INDESTRUCTIBLE)
+            {
                 break;
-            } else if (bloc->getType() != 3){
+            } else if (bloc->getType() != MapBloc::BACKGROUND)
+            {
                 bloc->explode();
-                bomb->addDestroyedBlock(3,y);
+                bomb->addDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY,y);
 
-                if(bomb->getType() != 1)
+                if(bomb->getType() != Bomb::SUPERBOMB)
                     break;
             }
-            bomb->addDestroyedBlock(3,y);
+            bomb->addDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY,y);
         }
     }
 }
 /**
- * @brief G_Game::checkPlayerExplosion
- * @param player1
- * @param player2
- * @param x
- * @param y
+ * checkPlayerExplosion
+ * Detect if the player stay in the wrong place.
+ * @param player1 : pointer of player1
+ * @param player2 : pointer of player2
+ * @param x : value x of the explosion
+ * @param y : value y of the explosion
  */
 void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int y)
 {
-    if(player1->getPosition().rx()/30 == x && player1->getPosition().ry()/30 == y && !gameEnd && !player1->getInvincible()){
+    if(player1->getPosition().rx()/NB_BLOCS_X == x && player1->getPosition().ry()/NB_BLOCS_Y == y && !gameEnd && !player1->getInvincible())
+    {
         player1->die();
         gameEnd = true;
 
     }
-    if(player2->getPosition().rx()/30 == x && player2->getPosition().ry()/30 == y && !gameEnd && !player2->getInvincible()){
+    if(player2->getPosition().rx()/NB_BLOCS_X == x && player2->getPosition().ry()/NB_BLOCS_Y == y && !gameEnd && !player2->getInvincible())
+    {
         player2->die();
         gameEnd = true;
     }
 }
 /**
- * @brief G_Game::beAwesome
- * Display a gift
+ * beAwesome
+ * be awesome
  */
 void G_Game::beAwesome()
 {

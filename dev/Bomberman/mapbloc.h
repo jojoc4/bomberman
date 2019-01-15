@@ -32,10 +32,10 @@ public:
         UNDEFINED = 0,
         INDESTRUCTIBLE=1,
         DESTRUCTIBLE=2,
-        FOND=3,
-        AMELIORATION_NOMBRE=4,
+        BACKGROUND=3,
+        UPGRADE_NUMBER=4,
         BONUS=5,
-        AMELIORATION_PUISSANCE=6
+        UPGRADE_POWER=6
     };
 
 private:

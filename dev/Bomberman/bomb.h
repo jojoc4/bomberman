@@ -54,8 +54,6 @@ public:
     {
         BOMB = 0,
         SUPERBOMB=1
-
-
     };
 
     enum Direction: short

@@ -35,17 +35,17 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
         p->setDirection(newDirection);
         p->setPosition(newPos);
         switch (mb->getType()) {
-        case MapBloc::AMELIORATION_NOMBRE :
+        case MapBloc::UPGRADE_NUMBER :
             p->receiveBomb(1);
-            mb->setType(MapBloc::FOND);
+            mb->setType(MapBloc::BACKGROUND);
             break;
         case MapBloc::BONUS:
             p->giveBonus();
-            mb->setType(MapBloc::FOND);
+            mb->setType(MapBloc::BACKGROUND);
             break;
-        case MapBloc::AMELIORATION_PUISSANCE:
+        case MapBloc::UPGRADE_POWER:
             p->setPuissance(p->getPuissance()+1);
-            mb->setType(MapBloc::FOND);
+            mb->setType(MapBloc::BACKGROUND);
             break;
         default:
             break;

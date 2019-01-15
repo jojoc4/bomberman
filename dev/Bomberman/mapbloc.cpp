@@ -55,11 +55,11 @@ void MapBloc::explode(){
     if(r<=bonus){
         setType(BlocType::BONUS);
     }else if(r<=bonus+rangeImprovment){
-        setType(BlocType::AMELIORATION_PUISSANCE);
+        setType(BlocType::UPGRADE_POWER);
     }else if(r<=bonus+rangeImprovment+numberImprovment){
-        setType(BlocType::AMELIORATION_NOMBRE);
+        setType(BlocType::UPGRADE_NUMBER);
     }else{
-        setType(BlocType::FOND);
+        setType(BlocType::BACKGROUND);
     }
 }
 /**
