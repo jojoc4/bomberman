@@ -572,7 +572,12 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
 
         bombs.push_back(theBomb);
 
-        QPixmap texture(bombTexture.copy(32, 0, 16, 16));
+        QPixmap texture;
+        if(theBomb->getType() == Bomb::BOMB){
+            texture = bombTexture.copy(32, 0, 16, 16);
+        } else {
+            texture = bombTexture.copy(80, 0, 16, 16);
+        }
         QGraphicsPixmapItem *item = this->scene->addPixmap(texture);
         item->setPos(blockPos.x()*30 + 8, blockPos.y()*30 + 8);
         theBomb->setPtrItemOnScene(item);
@@ -614,7 +619,7 @@ void G_Game::updateBombAnimation(Bomb* bomb){
         destroyBlocs(bomb);
     }
     int valCounter = bomb->getValCounterBomb();
-    if(bomb->getType() == 0){
+    if(bomb->getType() == Bomb::BOMB){
 
         switch(valCounter){
         case 10 :
@@ -669,7 +674,7 @@ void G_Game::updateBombAnimation(Bomb* bomb){
         }
         case 40 :
         {
-            QRect square(16, 0, 16, 16);
+            QRect square(64, 0, 16, 16);
             setTextureBomb(bomb,square);
             bomb->resetCounter();
             break;
