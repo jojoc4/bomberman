@@ -8,11 +8,14 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("Choix des cartes"));
 
+
+
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
     QVBoxLayout* vboxRight = new QVBoxLayout();
 
     game = ptrGame;
+    errorOnOpenMaps = false;
 
     listMaps = new QListWidget();
     listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
@@ -122,7 +125,8 @@ void G_MapChooser::displayListMap()
 void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
 {
     getMap(item->text());
-    displayThumbnailsMap();
+
+        displayThumbnailsMap();
 }
 
 /**
@@ -138,6 +142,9 @@ void G_MapChooser::validateMap()
  */
 void G_MapChooser::displayThumbnailsMap()
 {
+    if(errorOnOpenMaps){
+        return;
+    }
     this->previewMapScene->setBackgroundBrush(Qt::gray);
     this->previewMapScene->clear();
 
@@ -204,9 +211,11 @@ void G_MapChooser::getMap(QString name)
     try
     {
         game->getMap()->readFromFile(directory->absolutePath() + "/" + name);
+        errorOnOpenMaps = false;
         displayThumbnailsMap();
     } catch(const char* error)
     {
         QMessageBox::critical(this, tr("Erreur - ouverture de carte"), tr("Fichier de carte non valide"), QMessageBox::Ok);
+        errorOnOpenMaps = true;
     }
 }

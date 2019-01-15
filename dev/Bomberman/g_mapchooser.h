@@ -50,6 +50,8 @@ private :
     QGraphicsScene* previewMapScene;
     QPixmap allBlocks;
     Game* game;
+
+    bool errorOnOpenMaps;
 };
 
 #endif

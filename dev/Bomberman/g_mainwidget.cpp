@@ -12,8 +12,6 @@ G_MainWidget::G_MainWidget(QWidget *parent) : QWidget(parent)
     game = nullptr;
     homescreen = new G_HomeScreen(this);
 
-
-    //game->resize(100,100);
     layout = new QStackedLayout(this);
     layout->addWidget(homescreen);
     layout->setCurrentWidget(homescreen);
@@ -28,8 +26,10 @@ void G_MainWidget::changeWidget(int index){
             //break;
         case 2 :
             createGame();
-            //break;1
+           // break;
     }
+    if(index == 2)
+        emit(startGame());
     layout->setCurrentIndex(index);
 }
 
@@ -47,7 +47,7 @@ void G_MainWidget::createMapScreen()
 {
     if(mapchooser != nullptr)
         deleteG_MapChooser();
-    mapchooser = new G_MapChooser(gamePtr, this);
+    mapchooser = new G_MapChooser(gamePtr,this);
     connect(mapchooser,SIGNAL(openNextWidget(int)),this,SLOT(changeWidget(int)));
 
     layout->addWidget(mapchooser);
@@ -58,12 +58,10 @@ void G_MainWidget::createGame()
     if(game != nullptr)
         deleteG_Game();
 
-    game = new G_Game(gamePtr, this);
+    game = new G_Game(gamePtr,this);
     layout->addWidget(game);
     connect(this, &G_MainWidget::startGame, game, &G_Game::startGame);
     connect(game, &G_Game::gameOver, this, &G_MainWidget::finishGame);
-
-    emit(startGame());
 }
 
 void G_MainWidget::deleteG_Game(){
