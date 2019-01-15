@@ -21,7 +21,9 @@ Game::~Game()
 
 
 /**
-* @brief Game::canMove make the changes in the player if it is a special bloc
+* @brief Game::canMove make the changes in the player and in the map if it is a special bloc
+* @param newPos
+* @param newDirection
 * @param bloc
 * @param nbPlayer
 * @return faslse if impossible move, else true

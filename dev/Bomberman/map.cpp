@@ -22,7 +22,8 @@ Map::Map()
 /**
  * @brief Map::~Map
  */
-Map::~Map(){
+Map::~Map()
+{
     for(int i = 0; i<30; i++){
         for(int j = 0; j<30; j++){
             delete t[i][j];
@@ -37,7 +38,8 @@ Map::~Map(){
  * @brief read the map form a file
  * @param p (pathe to the map)
  */
-void Map::readFromFile(QString path){
+void Map::readFromFile(QString path)
+{
     ifstream file(path.toStdString(), ios::in);
 
     if(file){
@@ -83,7 +85,8 @@ void Map::readFromFile(QString path){
  * @param p (QPoint line column)
  * @return specified Mapbloc
  */
-MapBloc* Map::getMapBloc(QPoint bloc) const{
+MapBloc* Map::getMapBloc(QPoint bloc) const
+{
     return t[bloc.x()][bloc.y()];
 }
 
