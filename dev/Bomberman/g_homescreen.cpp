@@ -20,7 +20,7 @@ G_HomeScreen::G_HomeScreen(QWidget *parent)
     connect(radio_network, SIGNAL(clicked(bool)) , this, SLOT(validateChoice()));
 
     QPushButton *btn_lancer = new QPushButton(tr("&Lancer le jeu"));
-    QPushButton *btn_aide = new QPushButton(tr("&Aide"));
+    QPushButton *btn_aide = new QPushButton(tr("&Aide / A propos"));
     QPushButton *btn_quitter = new QPushButton(tr("&Quitter"));
     QVBoxLayout *vbox_buttons = new QVBoxLayout(this);
     vbox_buttons->addWidget(groupBox_radio);
