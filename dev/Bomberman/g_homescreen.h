@@ -16,7 +16,7 @@ class G_HomeScreen : public QWidget
     Q_OBJECT
 
 public:
-    G_HomeScreen(QWidget *parent = 0);
+    G_HomeScreen(QWidget *parent = nullptr);
 
     ~G_HomeScreen();
 
@@ -30,7 +30,7 @@ private :
     G_Help* helpWindow;
 
 private slots:
-    void validateChoice(void);
+    void validateChoice();
     void openHelp();
 
     void openMapChooser();

@@ -1,5 +1,15 @@
 #include "g_help.h"
 
+#define TEXTURE_BLOCS_X 30
+#define TEXTURE_BLOCS_Y 30
+
+#define TEXTURE_DESTR_X 0
+#define TEXTURE_INDE_X 30
+#define TEXTURE_ASCOPE_X 90
+#define TEXTURE_ANUMBER 60
+#define TEXTURE_BONUS 120
+
+
 G_Help::G_Help(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("Aide"));
@@ -8,11 +18,11 @@ G_Help::G_Help(QWidget *parent) : QWidget(parent)
     this->setLayout(vbox);
     QPixmap allBlocks =  QPixmap(QString(":/resources/img/Blocs.png"));
 
-    QPixmap destructible(allBlocks.copy(QRect(0, 0, 30, 30)));
-    QPixmap indestructible(allBlocks.copy(QRect(30, 0, 30, 30)));
-    QPixmap aScope(allBlocks.copy(QRect(90, 0, 30, 30)));
-    QPixmap aNumber(allBlocks.copy(QRect(60, 0, 30, 30)));
-    QPixmap bonus(allBlocks.copy(QRect(120, 0, 30, 30)));
+    QPixmap destructible(allBlocks.copy(QRect(TEXTURE_DESTR_X, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
+    QPixmap indestructible(allBlocks.copy(QRect(TEXTURE_INDE_X, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
+    QPixmap aScope(allBlocks.copy(QRect(TEXTURE_ASCOPE_X, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
+    QPixmap aNumber(allBlocks.copy(QRect(TEXTURE_ANUMBER, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
+    QPixmap bonus(allBlocks.copy(QRect(TEXTURE_BONUS, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
 
     vbox->addWidget(new QLabel(tr("Bienvenue dans bomberman\n")));
     vbox->addWidget(new QLabel(tr("Le but du jeu est de tuer le deuxième\njoueur par l'explosion d'une bombe.")));

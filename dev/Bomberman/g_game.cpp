@@ -71,6 +71,11 @@
 
 #define NB_CYCLE_DISPLAY 2
 
+/**
+ * @brief G_Game::G_Game
+ * @param theGame :pointer of the game
+ * @param parent : pointer of the parent which launch this widget
+ */
 G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0),
                                                  counterAnimP2(0), p1Moving(false), p1MovingDir(-1), nbTouchesP1(0),
                                                  p2Moving(false), p2MovingDir(-1), nbTouchesP2(0)
@@ -104,7 +109,7 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(fal
     this->hLayout->addWidget(container);
     this->hLayout->addLayout(vLayout);
 
-    this->setLayout(hLayout); //fuck
+    this->setLayout(hLayout);
 
     this->container->setFocusPolicy( Qt::NoFocus );
 
@@ -126,6 +131,10 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(fal
     gameEnd = false;
 }
 
+/**
+ * @brief G_Game::~G_Game
+ * Destroy all the components of the game
+ */
 G_Game::~G_Game()
 {
     //don't forget to kill the timer
@@ -139,6 +148,10 @@ G_Game::~G_Game()
     delete hLayout;
 }
 
+/**
+ * @brief G_Game::startGame
+ * Start the game and invoke all the method
+ */
 void G_Game::startGame()
 {
     //create blocks for the map and display them
@@ -151,6 +164,10 @@ void G_Game::startGame()
     gameEnd = false;
 }
 
+/**
+ * @brief G_Game::keyPressEvent
+ * @param event contains the pressed key
+ */
 void G_Game::keyPressEvent(QKeyEvent* event)
 {
     switch(event->key())
@@ -214,6 +231,11 @@ void G_Game::keyPressEvent(QKeyEvent* event)
     }
 }
 
+/**
+ * @brief G_Game::keyReleaseEvent
+ * Called when someone press the specific keys
+ * @param event captured key pressed
+ */
 void G_Game::keyReleaseEvent(QKeyEvent *event)
 {
     //player 1
@@ -246,11 +268,17 @@ void G_Game::timerEvent(QTimerEvent*)
     this->refreshDisplay();
 }
 
+
+/**
+ * timerPlayers()
+ * Manage the improvment
+ */
 void G_Game::timerPlayers(){
     textSupP1 = "";
     textSupP2 = "";
     Player* p = game->getPlayer(false);
-    if(p->getAutoDrop()){
+    if(p->getAutoDrop())
+    {
         textSupP1 = "Bonus: pose automatique";
         p->incrementCounter();
         //drop a bomb each second
@@ -259,15 +287,18 @@ void G_Game::timerPlayers(){
             QPoint pos = p->getPosition();
             dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
         }
-    }else if(p->getInvincible()){
+    }else if(p->getInvincible())
+    {
         textSupP1 = "Bonus: invincible";
         p->incrementCounter();
         if(p->getCounter()>=250){
             p->setInvincible(false);
         }
-    }else if(p->getVisible()){
+    }else if(p->getVisible())
+    {
         textSupP1 = "Bonus: Invisible";
-    }else if(p->getSuperBomb()){
+    }else if(p->getSuperBomb())
+    {
         textSupP1 = "Bonus: super bombe";
         p->incrementCounter();
         if(p->getCounter()>=250){
@@ -277,32 +308,42 @@ void G_Game::timerPlayers(){
 
     //same for player 2
     p = game->getPlayer(true);
-    if(p->getAutoDrop()){
+    if(p->getAutoDrop())
+    {
         textSupP2 = "Bonus: pose automatique";
         p->incrementCounter();
         //drop a bomb each second
-        if(p->getCounter()>=50){
+        if(p->getCounter()>=50)
+        {
             p->setCounter(0);
             QPoint pos = p->getPosition();
             dropBomb(QPoint(pos.x()/30, pos.y()/30), p);
         }
-    }else if(p->getInvincible()){
+    }else if(p->getInvincible())
+    {
         textSupP2 = "Bonus: invincible";
         p->incrementCounter();
         if(p->getCounter()>=250){
             p->setInvincible(false);
         }
-    }else if(p->getVisible()){
+    }else if(p->getVisible())
+    {
         textSupP2 = "Bonus: Invisible";
-    }else if(p->getSuperBomb()){
+    }else if(p->getSuperBomb())
+    {
         textSupP2 = "Bonus: super bombe";
         p->incrementCounter();
-        if(p->getCounter()>=250){
+        if(p->getCounter()>=250)
+        {
             p->setSuperBomb(false);
         }
     }
 }
 
+/**
+ * refreshDisplay()
+ * Refresh the game display
+ */
 void G_Game::refreshDisplay()
 {
     this->updateDisplayMap();
@@ -319,10 +360,12 @@ void G_Game::refreshDisplay()
     this->textPlayer2->setText(QString("Joueur 2:\nNombre de bombes: %1\n"
                                        "Puissance des bombes: %2\n%3").arg(p2->getNbBomb()).arg(p2->getPuissance()).arg(textSupP2));
 
-    if(gameEnd){
+    if(gameEnd)
+    {
 
         QString msg;
-        if(game->getPlayer(false)->isDead()){
+        if(game->getPlayer(false)->isDead())
+        {
             msg = tr("Le joueur 1 a perdu !");
         } else {
             msg = tr("Le joueur 2 a perdu !");
@@ -579,8 +622,9 @@ void G_Game::updateDisplayPlayers()
     }
 }
 /**
- * @brief G_Game::drawPlayer
- * @param which
+ * @brief G_Game::drawPlayer()
+ * Display the player
+ * @param which : player
  */
 void G_Game::drawPlayer(bool which)
 {

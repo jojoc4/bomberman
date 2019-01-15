@@ -2,6 +2,7 @@
 
 /**
  * @brief Game::Game
+ * Constructor
  */
 Game::Game()
 {
@@ -11,6 +12,7 @@ Game::Game()
 }
 /**
  * @brief Game::~Game
+ * Destructor
  */
 Game::~Game()
 {
@@ -22,19 +24,22 @@ Game::~Game()
 
 /**
 * @brief Game::canMove make the changes in the player and in the map if it is a special bloc
-* @param newPos
-* @param newDirection
-* @param bloc
-* @param nbPlayer
-* @return faslse if impossible move, else true
+* @param newPos : new position of the player
+* @param newDirection : direction of the player
+* @param bloc : bloc where the player is staying at the moment
+* @param nbPlayer : which player
+* @return false if impossible move, else true
 */
-bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
+bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer)
+{
     MapBloc* mb = map->getMapBloc(bloc);
-    if(mb->getTraversable()){
+    if(mb->getTraversable())
+    {
         Player* p = getPlayer(nbPlayer);
         p->setDirection(newDirection);
         p->setPosition(newPos);
-        switch (mb->getType()) {
+        switch (mb->getType())
+        {
         case MapBloc::UPGRADE_NUMBER :
             p->receiveBomb(1);
             mb->setType(MapBloc::BACKGROUND);
@@ -51,7 +56,9 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
             break;
         }
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
 }

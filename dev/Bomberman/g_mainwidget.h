@@ -21,6 +21,12 @@ public:
     explicit G_MainWidget(QWidget *parent = nullptr);
     QStackedLayout* layout;
 
+    enum Widget : short
+    {
+        G_MAPCHOOSER = 1,
+        G_GAME=2
+    };
+
 signals :
     void startGame();
 

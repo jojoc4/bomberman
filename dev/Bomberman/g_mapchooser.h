@@ -10,6 +10,7 @@
 #include <QtWidgets>
 #include "map.h"
 #include "game.h"
+#include "g_mapchooser.h"
 
 class G_MapChooser : public QWidget
 {
@@ -36,7 +37,6 @@ private :
 
     void displayThumbnailsMap();
     void displayListMap();
-    void resizeEvent(QResizeEvent *);
 
     void getMap(QString name);
 

@@ -39,7 +39,7 @@ public:
     int getCptInvisibility() const;
     int getCounter() const;
 
-    void setPuissance(int puissance);
+    void setPuissance(int power);
     void receiveBomb(int nb);
     void dropBomb();
     void setPosition(QPoint np);
@@ -57,7 +57,7 @@ public:
     void die();
 
 
-    QGraphicsItem* getPtrItemOnScene();
+    QGraphicsItem* getPtrItemOnScene() const;
     void setPtrItemOnScene(QGraphicsItem *item);
 
 private :

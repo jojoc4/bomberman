@@ -11,10 +11,12 @@ using namespace std;
 Map::Map()
 {
     t = new MapBloc**[30];
-    for(int i = 0; i< 30; i++){
+    for(int i = 0; i< 30; i++)
+    {
         t[i] = new MapBloc*[30];
 
-        for(int j = 0; j < 30; j++){
+        for(int j = 0; j < 30; j++)
+        {
             t[i][j] = nullptr;
         }
     }
@@ -24,8 +26,10 @@ Map::Map()
  */
 Map::~Map()
 {
-    for(int i = 0; i<30; i++){
-        for(int j = 0; j<30; j++){
+    for(int i = 0; i<30; i++)
+    {
+        for(int j = 0; j<30; j++)
+        {
             delete t[i][j];
             t[i][j] = nullptr;
         }
@@ -42,11 +46,14 @@ void Map::readFromFile(QString path)
 {
     ifstream file(path.toStdString(), ios::in);
 
-    if(file){
-        for(int i = 0; i<30; i++){
+    if(file)
+    {
+        for(int i = 0; i<30; i++)
+        {
             std::string line;
             getline(file, line);
-            for(int j = 0; j<30; j++){
+            for(int j = 0; j<30; j++)
+            {
                 switch(line[j]){
                     case 'I':
                         t[j][i] = new MapBloc(1);

@@ -1,14 +1,33 @@
 #include "g_mapchooser.h"
 
+#define TEXTURE_BLOCS_X 30
+#define TEXTURE_BLOCS_Y 30
+
+#define SCENE_XY 300
+
+#define SCALED_IMAGE 10
+
+#define TEXTURE_DESTR_X 0
+#define TEXTURE_BOTH_Y 0
+#define TEXTURE_INDE_X 30
+#define TEXTURE_ASCOPE_X 90
+#define TEXTURE_ANUMBER 60
+#define TEXTURE_BONUS 120
+
+#define WIDGET_GAME 2
+
+#define NB_BLOCS_X 30
+#define NB_BLOCS_Y 30
+
 /**
- * @brief Constructor G_MapChooser
- * @param ptrGame Game*
+ * @brief G_MapChooser::G_MapChooser
+ * Constructor
+ * @param ptrGame pointer of the game
+ * @param parent pointer of the parent
  */
 G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("Choix des cartes"));
-
-
 
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
@@ -31,7 +50,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 
     // QGraphicsView
     previewMap = new QGraphicsView();
-    previewMap->resize(300,300);
+    previewMap->resize(SCENE_XY,SCENE_XY);
     previewMapScene = new QGraphicsScene(previewMap);
     previewMapScene->setSceneRect(previewMap->rect());
     previewMap->setScene(previewMapScene);
@@ -62,6 +81,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
 
 /**
  * @brief G_MapChooser::~G_MapChooser
+ * Delete this object
  */
 G_MapChooser::~G_MapChooser()
 {
@@ -71,7 +91,6 @@ G_MapChooser::~G_MapChooser()
 /**
  * @brief G_MapChooser::browseFolderMaps : SLOT
  * Choose a folder with some maps
- *
  */
 void G_MapChooser::browseFolderMaps()
 {
@@ -98,7 +117,8 @@ void G_MapChooser::displayListMap()
         {
             QMessageBox::critical(this, tr("Erreur "), tr("Aucune carte ne se trouve dans le dossier"), QMessageBox::Ok);
             btnValidate->setEnabled(false);
-        } else
+        }
+        else
         {
             btnValidate->setEnabled(true);
             for ( const auto& i : mapsList  )
@@ -110,7 +130,8 @@ void G_MapChooser::displayListMap()
             QListWidgetItem * item = listMaps->item(0);
             getMap(item->text());
         }
-    } else
+    }
+    else
     {
         QMessageBox::critical(this, tr("Erreur "), tr("Le dossier spécifié n'existe pas"), QMessageBox::Ok);
     }
@@ -125,8 +146,7 @@ void G_MapChooser::displayListMap()
 void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
 {
     getMap(item->text());
-
-        displayThumbnailsMap();
+    displayThumbnailsMap();
 }
 
 /**
@@ -134,7 +154,7 @@ void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
  */
 void G_MapChooser::validateMap()
 {
-    emit(openNextWidget(2));
+    emit(openNextWidget(WIDGET_GAME));
 }
 
 /**
@@ -148,9 +168,9 @@ void G_MapChooser::displayThumbnailsMap()
     this->previewMapScene->setBackgroundBrush(Qt::gray);
     this->previewMapScene->clear();
 
-    for(int i = 0; i < 30; i++)
+    for(int i = 0; i < NB_BLOCS_X; i++)
     {
-        for(int j = 0; j < 30; j++)
+        for(int j = 0; j < NB_BLOCS_Y; j++)
         {
             QPoint bloc(i, j);
 
@@ -163,14 +183,17 @@ void G_MapChooser::displayThumbnailsMap()
 
             int type = monBloc->getType();
 
-            qreal sizeX = this->previewMapScene->width()/30;
-            qreal sizeY = this->previewMapScene->height()/30;
+            qreal sizeX = this->previewMapScene->width()/NB_BLOCS_X;
+            qreal sizeY = this->previewMapScene->height()/NB_BLOCS_Y;
 
             switch(type){
             case MapBloc::INDESTRUCTIBLE:
             {
-                QPixmap blocImage(allBlocks.copy(QRect(30, 0, 30, 30)));
-                QPixmap blockImageScaled = blocImage.scaled(10,10,Qt::KeepAspectRatio);
+                QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_INDE_X,
+                                                       TEXTURE_BOTH_Y,
+                                                       TEXTURE_BLOCS_X,
+                                                       TEXTURE_BLOCS_Y)));
+                QPixmap blockImageScaled = blocImage.scaled(SCALED_IMAGE,SCALED_IMAGE,Qt::KeepAspectRatio);
 
                 QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
                 item->setPos(i*sizeX, j*sizeY);
@@ -180,8 +203,11 @@ void G_MapChooser::displayThumbnailsMap()
             }
             case MapBloc::DESTRUCTIBLE:
             {
-                QPixmap blocImage(allBlocks.copy(QRect(0, 0, 30, 30)));
-                QPixmap blockImageScaled = blocImage.scaled(10,10,Qt::KeepAspectRatio);
+                QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_DESTR_X,
+                                                       TEXTURE_BOTH_Y,
+                                                       NB_BLOCS_X,
+                                                       NB_BLOCS_Y)));
+                QPixmap blockImageScaled = blocImage.scaled(SCALED_IMAGE,SCALED_IMAGE,Qt::KeepAspectRatio);
                 QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
                 item->setPos(i*sizeX, j*sizeY);
 
@@ -193,18 +219,10 @@ void G_MapChooser::displayThumbnailsMap()
         }
     }
 }
-
 /**
- *
- */
-void G_MapChooser::resizeEvent(QResizeEvent *)
-{
-        //displayThumbnailsMap();
-}
-
-/**
- *
- *
+ * @brief G_MapChooser::getMap
+ * Try to read a specified map file. If it fails, it throws an exception
+ * @param name : fileName
  */
 void G_MapChooser::getMap(QString name)
 {

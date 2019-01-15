@@ -32,7 +32,6 @@ public:
     int getStepExplosion() const;
     bool getExploded() const;
     QList<QGraphicsPixmapItem*>* getItemsExplosion();
-    bool getExplosionOver() const;
     int getNbDestroyedBlock(int id) const;
 
     void addDestroyedBlock(int id, int value);
@@ -45,8 +44,6 @@ public:
     void setExploded();
 
     void addFireExplosion(QGraphicsPixmapItem*);
-
-    void setExplosionOver();
 
     void explode();
 
