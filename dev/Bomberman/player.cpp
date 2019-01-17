@@ -10,6 +10,7 @@ Player::Player() : dead(false), nbBombe(1), puissance(1), direction(0), superBom
 {
     position = QPoint(0,0);
 }
+
 /**
  * @brief Player::giveBonus
  * Give a bonus in term of luck
@@ -51,6 +52,7 @@ QPoint Player::getPosition() const
 {
     return position;
 }
+
 /**
  * @brief Player::isDead
  * @return is the player dead
@@ -59,6 +61,7 @@ bool Player::isDead() const
 {
     return dead;
 }
+
 /**
  * @brief Player::getNbBomb
  * @return nb of bomb owned by the player
@@ -77,7 +80,6 @@ int Player::getPuissance() const
     return puissance;
 }
 
-
 /**
  * @brief Player::getDirection
  * @return direction of the player
@@ -95,6 +97,7 @@ void Player::setPuissance(int power)
 {
     this->puissance=power;
 }
+
 /**
  * @brief Player::receiveBomb
  * Increase the number of available bomb
@@ -104,6 +107,7 @@ void Player::receiveBomb(int nb)
 {
     nbBombe += nb;
 }
+
 /**
  * @brief Player::dropBomb
  * Drop the bomb and decrement
@@ -139,6 +143,7 @@ void Player::setPtrItemOnScene(QGraphicsItem *item)
 {
     ptrItemOnScene= item;
 }
+
 /**
  * @brief Player::setDirection
  * @param d
@@ -168,6 +173,7 @@ bool Player::getSuperBomb() const
 {
     return superBomb;
 }
+
 /**
  * @brief Player::getInvincible
  * @return boolean if the player cannot be kill
@@ -176,6 +182,7 @@ bool Player::getInvincible() const
 {
     return invincible;
 }
+
 /**
  * @brief Player::getAutoDrop
  * @return
@@ -184,6 +191,7 @@ bool Player::getAutoDrop() const
 {
     return autoDrop;
 }
+
 /**
  * @brief Player::getCounter
  * @return counter
@@ -192,6 +200,7 @@ int Player::getCounter() const
 {
     return counter;
 }
+
 /**
  * @brief Player::setVisible
  * @param s : boolean if the player use visible improvement or not
@@ -200,6 +209,7 @@ void Player::setVisible(bool s)
 {
     visible = s;
 }
+
 /**
  * @brief Player::setSuperBomb
  * @param s : number of superbomb
@@ -208,6 +218,7 @@ void Player::setSuperBomb(bool s)
 {
     superBomb = s;
 }
+
 /**
  * @brief Player::setInvincible
  * @param s boolean if the player is invincible

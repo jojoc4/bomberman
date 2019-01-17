@@ -94,7 +94,7 @@ private:
     void timerPlayers();
     void checkPlayerExplosion(Player* player1, Player* player2 , int x, int y);
 
-    private slots:
+private slots:
     void beAwesome();
 };
 

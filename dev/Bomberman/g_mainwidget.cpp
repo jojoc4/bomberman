@@ -23,10 +23,8 @@ void G_MainWidget::changeWidget(int index){
     switch(index){
         case 1 :
             createMapScreen();
-            //break;
         case 2 :
             createGame();
-           // break;
     }
     if(index == 2)
         emit(startGame());
