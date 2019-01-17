@@ -1,5 +1,8 @@
 #include "player.h"
 
+#define INVIS 5
+#define INVINC 1
+#define SB 1
 
 /**
  * @brief Player::Player
@@ -24,18 +27,15 @@ void Player::giveBonus()
     counter=0;
 
     int r = (qrand() % ((10 + 1) - 1) + 1);
-    ///chance out of ten to have
-    int invis=5;
-    int invinc=1;
-    int sb=1;
 
-    if(r<=invis)
+
+    if(r<=INVIS)
     {
         visible=true;
-    }else if(r<=invis+invinc)
+    }else if(r<=INVIS+INVINC)
     {
         invincible=true;
-    }else if(r<=invis+invinc+sb)
+    }else if(r<=INVIS+INVINC+SB)
     {
         superBomb=true;
     }else
