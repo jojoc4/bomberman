@@ -22,7 +22,6 @@ Bomb::Bomb()
     nbCycle = 0;
     stepExplosion = 0;
     isExploded = false;
-    isExplosionOver = false;
 }
 
 /**
@@ -40,7 +39,6 @@ Bomb::Bomb(int type, int range, QPoint position, Player* pOwner)
     nbCycle = 0;
     stepExplosion = 0;
     isExploded = false;
-    isExplosionOver = false;
     owner = pOwner;
 }
 /**
