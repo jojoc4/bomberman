@@ -94,7 +94,7 @@ void Map::readFromFile(QString path)
 
 /**
  * @brief get a specifique mapbloc
- * @param p (QPoint line column)
+ * @param bloc (QPoint line column)
  * @return specified Mapbloc
  */
 MapBloc* Map::getMapBloc(QPoint bloc) const
