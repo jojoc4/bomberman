@@ -94,8 +94,12 @@ void G_MapChooser::browseFolderMaps()
                                                     directory->absolutePath(),
                                                     QFileDialog::ShowDirsOnly
                                                     | QFileDialog::DontResolveSymlinks);
-    directory = new QDir(dir);
-    displayListMap();
+
+    if(dir != "")
+    {
+        directory = new QDir(dir);
+        displayListMap();
+    }
 }
 
 /**
