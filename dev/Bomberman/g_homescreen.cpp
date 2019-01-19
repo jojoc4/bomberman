@@ -7,7 +7,7 @@
  * @param parent : pointer of the parent who create this widget
  */
 G_HomeScreen::G_HomeScreen(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), helpWindow(nullptr)
 {
     setWindowTitle(tr("Accueil"));
 

@@ -26,7 +26,7 @@ G_Help::G_Help(QWidget *parent) : QWidget(parent)
 
     vbox->addWidget(new QLabel(tr("Bienvenue dans bomberman\n")));
     vbox->addWidget(new QLabel(tr("Le but du jeu est de tuer le deuxième\njoueur par l'explosion d'une bombe.")));
-    vbox->addWidget(new QLabel(tr("Voici les différent type de bloc:")));
+    vbox->addWidget(new QLabel(tr("Voici les différents types de bloc:")));
 
     QHBoxLayout* hb1 = new QHBoxLayout(this);
     QLabel* p1 = new QLabel();
@@ -60,21 +60,20 @@ G_Help::G_Help(QWidget *parent) : QWidget(parent)
     QLabel* p5 = new QLabel();
     p5->setPixmap(bonus);
     hb5->addWidget(p5);
-    hb5->addWidget(new QLabel(tr("Donne un des bonus suivant:")));
+    hb5->addWidget(new QLabel(tr("Donne un des bonus suivants:")));
     vbox->addLayout(hb5);
 
-    vbox->addWidget(new QLabel(tr("invisibilité: vous rend invisible 1 seconde sur deux")));
+    vbox->addWidget(new QLabel(tr("invisibilité: vous rend invisible 2 secondes, puis visible 1/2 seconde, etc...")));
     vbox->addWidget(new QLabel(tr("invincibilité: vous rend invincible quelques secondes")));
-    vbox->addWidget(new QLabel(tr("Super bombe: vos bombes explose tout sur leurs passage")));
+    vbox->addWidget(new QLabel(tr("Super bombe: vos bombes explosent tout sur leur passage")));
     vbox->addWidget(new QLabel(tr("pose automatique: une bombe est automatiquement posée sur chaque case où vous passez\n")));
     vbox->addWidget(new QLabel(tr("Raccourcis clavier")));
     vbox->addWidget(new QLabel(tr("Joueur 1 :")));
     vbox->addWidget(new QLabel(tr("WASD: se déplacer")));
-    vbox->addWidget(new QLabel(tr("Barre d'espace : poser une bombes")));
+    vbox->addWidget(new QLabel(tr("Barre d'espace : poser une bombe")));
     vbox->addWidget(new QLabel(tr("Joueur 2")));
     vbox->addWidget(new QLabel(tr("Flèches : se déplacer")));
-    vbox->addWidget(new QLabel(tr("Enter : poser une bombes")));
+    vbox->addWidget(new QLabel(tr("Enter : poser une bombe")));
     vbox->addWidget(new QLabel("\n\n"));
     vbox->addWidget(new QLabel("Projet p2 de Jonatan Baumgartner, Julien Chappuis et Téo Schaffner"));
-
 }

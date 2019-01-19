@@ -4,12 +4,11 @@
 #include "g_game.h"
 #include "game.h"
 
-G_MainWidget::G_MainWidget(QWidget *parent) : QWidget(parent)
+G_MainWidget::G_MainWidget(QWidget *parent)
+    : QWidget(parent), mapchooser(nullptr), game(nullptr)
 {
     gamePtr = new Game();
 
-    mapchooser = nullptr;
-    game = nullptr;
     homescreen = new G_HomeScreen(this);
 
     layout = new QStackedLayout(this);

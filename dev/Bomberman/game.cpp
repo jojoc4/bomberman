@@ -21,7 +21,6 @@ Game::~Game()
     delete map;
 }
 
-
 /**
 * @brief Game::canMove make the changes in the player and in the map if it is a special bloc
 * @param newPos : new position of the player
@@ -40,20 +39,18 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer)
         p->setPosition(newPos);
         switch (mb->getType())
         {
-        case MapBloc::UPGRADE_NUMBER :
-            p->receiveBomb(1);
-            mb->setType(MapBloc::BACKGROUND);
-            break;
-        case MapBloc::BONUS:
-            p->giveBonus();
-            mb->setType(MapBloc::BACKGROUND);
-            break;
-        case MapBloc::UPGRADE_POWER:
-            p->setPuissance(p->getPuissance()+1);
-            mb->setType(MapBloc::BACKGROUND);
-            break;
-        default:
-            break;
+            case MapBloc::UPGRADE_NUMBER :
+                p->receiveBomb(1);
+                mb->setType(MapBloc::BACKGROUND);
+                break;
+            case MapBloc::BONUS:
+                p->giveBonus();
+                mb->setType(MapBloc::BACKGROUND);
+                break;
+            case MapBloc::UPGRADE_POWER:
+                p->setPuissance(p->getPuissance()+1);
+                mb->setType(MapBloc::BACKGROUND);
+                break;
         }
         return true;
     }

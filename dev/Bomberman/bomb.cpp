@@ -2,45 +2,27 @@
 #include "bomb.h"
 
 #define LEFT_EXPLOSION_BLOC_ARRAY 0
-
 #define TOP_EXPLOSION_BLOC_ARRAY 3
-
 
 /**
  * Bomb()
  * bomb default constructor
  */
 Bomb::Bomb()
-{
-    this->type=BOMB;
-    this->range=0;
-    this->position=QPoint(0,0);
-    ptrItemOnScene=nullptr;
-    owner = nullptr;
-
-    counter = 0;
-    nbCycle = 0;
-    stepExplosion = 0;
-    isExploded = false;
-}
+    : type(BOMB), range(0), counter(0), nbCycle(0), stepExplosion(0), isExploded(false),
+      owner(nullptr), position(QPoint(0,0)), ptrItemOnScene(nullptr)
+{}
 
 /**
  * Bomb(int type, int range, QPoint position, Player* pOwner)
  * bomb constructor
  * @param type, range, position, and owner
  */
-Bomb::Bomb(int type, int range, QPoint position, Player* pOwner)
-{
-    this->type=type;
-    this->range=range;
-    this->position=position;
-    ptrItemOnScene=nullptr;
-    counter = 0;
-    nbCycle = 0;
-    stepExplosion = 0;
-    isExploded = false;
-    owner = pOwner;
-}
+Bomb::Bomb(int pType, int pRange, QPoint pPosition, Player* pOwner)
+    : type(pType), range(pRange), counter(0), nbCycle(0), stepExplosion(0), isExploded(false),
+      owner(pOwner), position(pPosition), ptrItemOnScene(nullptr)
+{}
+
 /**
  * ~Bomb
  * Destroy the bomb
@@ -49,6 +31,7 @@ Bomb::~Bomb()
 {
 
 }
+
 /**
  * explode()
  * Destroy the bomb after explosion
@@ -102,6 +85,7 @@ QPoint Bomb::getPosition() const
 {
     return position;
 }
+
 /**
  * QGraphicsPixmapItem* getPtrItemOnScene()
  * @return QGraphicsPixmapItem*
@@ -139,6 +123,7 @@ int Bomb::getNbCycle() const
 {
     return nbCycle;
 }
+
 /**
  * postStepExplosion()
  * increment the step for the animation of explosion
@@ -147,6 +132,7 @@ void Bomb::postStepExplosion()
 {
     stepExplosion++;
 }
+
 /**
  * int getStepExplosion()
  * get the value of stepExplosion
@@ -185,6 +171,7 @@ void Bomb::resetNbCycle()
 {
     nbCycle = 0;
 }
+
 /**
  * setExploded()
  * Set the status of the bomb exploded
@@ -193,6 +180,7 @@ void Bomb::setExploded()
 {
     isExploded = true;
 }
+
 /**
  * bool getExploded()
  * @return boolean if the bomb has exploded or not
@@ -201,6 +189,7 @@ bool Bomb::getExploded() const
 {
     return isExploded;
 }
+
 /**
  * getOwner()
  * getter

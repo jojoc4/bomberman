@@ -3,13 +3,16 @@
 #define INVIS 5
 #define INVINC 1
 #define SB 1
+#define MAX_INVISIBLE_COUNTER 2000
+#define MAX_VISIBLE_COUNTER 500
 
 /**
  * @brief Player::Player
  * Constructor
  */
-Player::Player() : dead(false), nbBombe(1), puissance(1), direction(0), superBomb(false), visible(false),
-                    invincible(false), autoDrop(false), visibleState(false), cptInvisibility(0), ptrItemOnScene(nullptr)
+Player::Player()
+    : dead(false), nbBombe(1), puissance(1), direction(0), superBomb(false), visible(false),
+      invincible(false), autoDrop(false), visibleState(false), cptInvisibility(0), ptrItemOnScene(nullptr)
 {
     position = QPoint(0,0);
 }
@@ -153,7 +156,6 @@ void Player::setDirection(short d)
 {
     if(d>=0 && d<4)
         this->direction = d;
-    /** @todo **/
 }
 
 /**
@@ -254,7 +256,6 @@ int Player::getCptInvisibility() const
     return this->cptInvisibility;
 }
 
-
 /**
  * @brief Player::setVisibleState
  * @param state
@@ -273,7 +274,7 @@ void Player::incrementCptInvisibility(int nb)
     cptInvisibility += nb;
     if(this->visibleState)
     {
-        if(cptInvisibility >= 500)
+        if(cptInvisibility >= MAX_VISIBLE_COUNTER)
         {
             this->visibleState = false;
             cptInvisibility = 0;
@@ -281,7 +282,7 @@ void Player::incrementCptInvisibility(int nb)
     }
     else
     {
-        if(cptInvisibility >= 2000)
+        if(cptInvisibility >= MAX_INVISIBLE_COUNTER)
         {
             this->visibleState = true;
             cptInvisibility = 0;

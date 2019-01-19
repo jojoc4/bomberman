@@ -73,7 +73,6 @@ private:
 
     bool isExploded;
 
-
     Player* owner;
 
     QPoint position;

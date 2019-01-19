@@ -42,9 +42,9 @@ private:
     void deleteG_MapChooser();
 
     QStackedLayout* layout;
-    G_Game* game;
     G_HomeScreen* homescreen;
     G_MapChooser* mapchooser;
+    G_Game* game;
 
     Game* gamePtr;
 };

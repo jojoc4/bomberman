@@ -76,11 +76,10 @@
  * @param theGame :pointer of the game
  * @param parent : pointer of the parent which launch this widget
  */
-G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0),
+G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), game(theGame), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0),
                                                  counterAnimP2(0), p1Moving(false), p1MovingDir(-1), nbTouchesP1(0),
                                                  p2Moving(false), p2MovingDir(-1), nbTouchesP2(0)
 {
-    this->game = theGame;
     Player *p1 = game->getPlayer(false);
     this->textPlayer1 = new QLabel(QString("Joueur 1:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2\n ").arg(p1->getNbBomb()).arg(p1->getPuissance()));
@@ -172,62 +171,62 @@ void G_Game::keyPressEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
-    //Player 1
-    case Qt::Key_W :
-        p1MovingDir = Player::UP;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_A :
-        p1MovingDir = Player::LEFT;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_S :
-        p1MovingDir = Player::DOWN;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_D :
-        p1MovingDir = Player::RIGHT;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_Space :
-    {
-        Player* player = game->getPlayer(false);
-        QPoint pos = player->getPosition();
-        dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
-        break;
-    }
-        //Player 2
-    case Qt::Key_Up :
-        p2MovingDir = Player::UP;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Left :
-        p2MovingDir = Player::LEFT;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Down :
-        p2MovingDir = Player::DOWN;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Right :
-        p2MovingDir = Player::RIGHT;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Return :
-    {
-        Player* player = game->getPlayer(true);
-        QPoint pos = player->getPosition();
-        dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
-        break;
-    }
+        //Player 1
+        case Qt::Key_W :
+            p1MovingDir = Player::UP;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_A :
+            p1MovingDir = Player::LEFT;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_S :
+            p1MovingDir = Player::DOWN;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_D :
+            p1MovingDir = Player::RIGHT;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_Space :
+        {
+            Player* player = game->getPlayer(false);
+            QPoint pos = player->getPosition();
+            dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
+            break;
+        }
+            //Player 2
+        case Qt::Key_Up :
+            p2MovingDir = Player::UP;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Left :
+            p2MovingDir = Player::LEFT;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Down :
+            p2MovingDir = Player::DOWN;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Right :
+            p2MovingDir = Player::RIGHT;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Return :
+        {
+            Player* player = game->getPlayer(true);
+            QPoint pos = player->getPosition();
+            dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
+            break;
+        }
     }
 }
 
@@ -345,11 +344,11 @@ void G_Game::timerPlayers(){
  */
 void G_Game::refreshDisplay()
 {
-    this->updateDisplayMap();
-    this->updateDisplayPlayers();
-
     if(bombs.size() > 0)
         this->updateDisplayBombs();
+
+    this->updateDisplayMap();
+    this->updateDisplayPlayers();
 
     Player *p1 = game->getPlayer(false);
     Player *p2 = game->getPlayer(true);
@@ -467,7 +466,7 @@ void G_Game::updateDisplayMap()
                     QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(2*TEXTURE_BLOCS_X,
                                                                                               0, TEXTURE_BLOCS_X,
                                                                                               TEXTURE_BLOCS_Y))));
-                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                    item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }
                 break;
@@ -485,7 +484,7 @@ void G_Game::updateDisplayMap()
                     QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(4*TEXTURE_BLOCS_X,
                                                                                               0, TEXTURE_BLOCS_X,
                                                                                               TEXTURE_BLOCS_Y))));
-                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                    item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }
                 break;
@@ -502,7 +501,7 @@ void G_Game::updateDisplayMap()
                     QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(3*TEXTURE_BLOCS_X,
                                                                                               0, TEXTURE_BLOCS_X,
                                                                                               TEXTURE_BLOCS_Y))));
-                    item->setPos((i/30)*sizeX, (i%30)*sizeY);
+                    item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
                     bloc->setPtrItemOnScene(item);
                 }
                 break;
@@ -622,7 +621,7 @@ void G_Game::updateDisplayPlayers()
 
 /**
  * @brief G_Game::drawPlayer()
- * Display the player
+ * Draws the player's texture on the scene
  * @param which : player
  */
 void G_Game::drawPlayer(bool which)
@@ -854,20 +853,20 @@ void G_Game::dislayExplosionBomb(Bomb *bomb)
     QRect vertical(stepExplosion*TEXTURE_FIRE_SIZE_X,TEXTURE_FIRE_HORIZONTAL,TEXTURE_FIRE_SIZE_X,TEXUTRE_FIRE_SIZE_Y);
     QRect horizontal(stepExplosion*TEXTURE_FIRE_SIZE_X,TEXTURE_FIRE_VERTICAL,TEXTURE_FIRE_SIZE_X,TEXUTRE_FIRE_SIZE_Y);
 
-    for(int i = bomb->getNbDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY)+1; i < 0; i++)
+    for(int i = bomb->getNbDestroyedBlock(LEFT_EXPLOSION_BLOC_ARRAY)+1; i < 0; ++i)
     {
         drawFlameExplosion(horizontal,bomb,i,0);
     }
-    for(int i = bomb->getNbDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY)-1; i > 0; i--)
+    for(int i = bomb->getNbDestroyedBlock(RIGHT_EXPLOSION_BLOC_ARRAY)-1; i > 0; --i)
     {
         drawFlameExplosion(horizontal,bomb,i,0);
     }
 
-    for(int i = -bomb->getNbDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY)-1; i > 0; i--)
+    for(int i = -bomb->getNbDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY)-1; i > 0; --i)
     {
         drawFlameExplosion(vertical,bomb,0,i);
     }
-    for(int i = bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY)-1; i > 0; i--)
+    for(int i = bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY)-1; i > 0; --i)
     {
         drawFlameExplosion(vertical,bomb,0,-i);
     }
@@ -925,7 +924,7 @@ void G_Game::destroyBlocs(Bomb* bomb)
     int puissance = bomb->getRange();
 
     // right
-    for(int x = 0; x <= puissance; x++)
+    for(int x = 0; x <= puissance; ++x)
     {
         if(position.x()+x < NB_BLOCS_X && position.x()+x >= 0)
         {
@@ -946,7 +945,7 @@ void G_Game::destroyBlocs(Bomb* bomb)
     }
 
     // left
-    for(int x = -1; x >= -puissance; x--)
+    for(int x = -1; x >= -puissance; --x)
     {
         if(position.x()+x < NB_BLOCS_X && position.x()+x >= 0)
         {
@@ -967,7 +966,7 @@ void G_Game::destroyBlocs(Bomb* bomb)
     }
 
     // bottom
-    for(int y = 1; y <= puissance; y++)
+    for(int y = 1; y <= puissance; ++y)
     {
         if(position.y()+y < NB_BLOCS_Y && position.y()+y >= 0)
         {
@@ -987,7 +986,7 @@ void G_Game::destroyBlocs(Bomb* bomb)
     }
 
     // top
-    for(int y = 1; y <= puissance; y++ )
+    for(int y = 1; y <= puissance; ++y)
     {
         if(position.y()-y < NB_BLOCS_Y && position.y()-y >= 0)
         {
@@ -1033,7 +1032,7 @@ void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int 
 
 /**
  * beAwesome
- * be awesome
+ * adds awesomeness to your game!
  */
 void G_Game::beAwesome()
 {

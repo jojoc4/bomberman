@@ -25,16 +25,14 @@
  * @param ptrGame pointer of the game
  * @param parent pointer of the parent
  */
-G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
+G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent)
+    : QWidget(parent), game(ptrGame), errorOnOpenMaps(false)
 {
     setWindowTitle(tr("Choix des cartes"));
 
     QHBoxLayout* hbox = new QHBoxLayout(this);
     QVBoxLayout* vboxLeft = new QVBoxLayout();
     QVBoxLayout* vboxRight = new QVBoxLayout();
-
-    game = ptrGame;
-    errorOnOpenMaps = false;
 
     listMaps = new QListWidget();
     listMaps->setSelectionMode( QAbstractItemView::SingleSelection ); // sélection que d'un seul element
@@ -84,9 +82,7 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent) : QWidget(parent)
  * Delete this object
  */
 G_MapChooser::~G_MapChooser()
-{
-
-}
+{}
 
 /**
  * @brief G_MapChooser::browseFolderMaps : SLOT
@@ -135,7 +131,6 @@ void G_MapChooser::displayListMap()
     {
         QMessageBox::critical(this, tr("Erreur "), tr("Le dossier spécifié n'existe pas"), QMessageBox::Ok);
     }
-
 }
 
 /**
@@ -151,6 +146,7 @@ void G_MapChooser::updateThumbnailsMap(QListWidgetItem *item)
 
 /**
  * @brief G_MapChooser::validateMap
+ * selects the map and continues to the game screen
  */
 void G_MapChooser::validateMap()
 {
@@ -158,7 +154,8 @@ void G_MapChooser::validateMap()
 }
 
 /**
- *
+ * @brief G_MapChooser::displayThumbnailsMap
+ * Displays a thumbnail of the map
  */
 void G_MapChooser::displayThumbnailsMap()
 {
@@ -168,9 +165,9 @@ void G_MapChooser::displayThumbnailsMap()
     this->previewMapScene->setBackgroundBrush(Qt::gray);
     this->previewMapScene->clear();
 
-    for(int i = 0; i < NB_BLOCS_X; i++)
+    for(int i = 0; i < NB_BLOCS_X; ++i)
     {
-        for(int j = 0; j < NB_BLOCS_Y; j++)
+        for(int j = 0; j < NB_BLOCS_Y; ++j)
         {
             QPoint bloc(i, j);
 
@@ -187,38 +184,39 @@ void G_MapChooser::displayThumbnailsMap()
             qreal sizeY = this->previewMapScene->height()/NB_BLOCS_Y;
 
             switch(type){
-            case MapBloc::INDESTRUCTIBLE:
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_INDE_X,
-                                                       TEXTURE_BOTH_Y,
-                                                       TEXTURE_BLOCS_X,
-                                                       TEXTURE_BLOCS_Y)));
-                QPixmap blockImageScaled = blocImage.scaled(SCALED_IMAGE,SCALED_IMAGE,Qt::KeepAspectRatio);
+                case MapBloc::INDESTRUCTIBLE:
+                {
+                    QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_INDE_X,
+                                                           TEXTURE_BOTH_Y,
+                                                           TEXTURE_BLOCS_X,
+                                                           TEXTURE_BLOCS_Y)));
+                    QPixmap blockImageScaled = blocImage.scaled(SCALED_IMAGE,SCALED_IMAGE,Qt::KeepAspectRatio);
 
-                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
-                item->setPos(i*sizeX, j*sizeY);
+                    QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
+                    item->setPos(i*sizeX, j*sizeY);
 
-                monBloc->setPtrItemOnScene(item);
-                break;
-            }
-            case MapBloc::DESTRUCTIBLE:
-            {
-                QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_DESTR_X,
-                                                       TEXTURE_BOTH_Y,
-                                                       NB_BLOCS_X,
-                                                       NB_BLOCS_Y)));
-                QPixmap blockImageScaled = blocImage.scaled(SCALED_IMAGE,SCALED_IMAGE,Qt::KeepAspectRatio);
-                QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
-                item->setPos(i*sizeX, j*sizeY);
+                    monBloc->setPtrItemOnScene(item);
+                    break;
+                }
+                case MapBloc::DESTRUCTIBLE:
+                {
+                    QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_DESTR_X,
+                                                           TEXTURE_BOTH_Y,
+                                                           NB_BLOCS_X,
+                                                           NB_BLOCS_Y)));
+                    QPixmap blockImageScaled = blocImage.scaled(SCALED_IMAGE,SCALED_IMAGE,Qt::KeepAspectRatio);
+                    QGraphicsPixmapItem *item = this->previewMapScene->addPixmap(blockImageScaled);
+                    item->setPos(i*sizeX, j*sizeY);
 
-                monBloc->setPtrItemOnScene(item);
+                    monBloc->setPtrItemOnScene(item);
 
-                break;
-            }
+                    break;
+                }
             }
         }
     }
 }
+
 /**
  * @brief G_MapChooser::getMap
  * Try to read a specified map file. If it fails, it throws an exception
