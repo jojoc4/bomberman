@@ -1,4 +1,7 @@
+#include "map.h"
+#include "game.h"
 #include "g_mapchooser.h"
+#include "mapbloc.h"
 
 #define TEXTURE_BLOCS_X 30
 #define TEXTURE_BLOCS_Y 30

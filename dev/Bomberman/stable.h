@@ -35,9 +35,6 @@
     #include <QLabel>
     #include <QLayout>
 
-//m
-    #include <QMainWindow>
-
 //p
     #include <QPoint>
     #include <QPixmap>

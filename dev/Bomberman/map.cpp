@@ -1,4 +1,5 @@
 #include "map.h"
+#include "mapbloc.h"
 #include <fstream>
 #include <iostream>
 

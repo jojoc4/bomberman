@@ -1,6 +1,9 @@
 #include "g_game.h"
 #include "bomb.h"
 #include "map.h"
+#include "player.h"
+#include "game.h"
+#include "mapbloc.h"
 #include <QDebug>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
@@ -9,8 +12,6 @@
 #include <QGraphicsView>
 #include <QLayout>
 #include <QAction>
-#include "player.h"
-#include "game.h"
 
 #define MAIN_TIMER_MS 20
 
@@ -545,7 +546,7 @@ void G_Game::updateDisplayPlayers()
 {
     //Player 1
     Player* ptrP1 = game->getPlayer(false);
-    QGraphicsPixmapItem *p1 = static_cast<QGraphicsPixmapItem*>(ptrP1->getPtrItemOnScene());
+    QGraphicsPixmapItem *p1 = ptrP1->getPtrItemOnScene();
     QPoint p1Pos = ptrP1->getPosition();
 
     switch(p1MovingDir)
@@ -582,7 +583,7 @@ void G_Game::updateDisplayPlayers()
 
     //Player 2
     Player* ptrP2 = game->getPlayer(true);
-    QGraphicsPixmapItem *p2 = static_cast<QGraphicsPixmapItem*>(ptrP2->getPtrItemOnScene());
+    QGraphicsPixmapItem *p2 = ptrP2->getPtrItemOnScene();
     QPoint p2Pos = ptrP2->getPosition();
 
     switch(p2MovingDir)

@@ -1,5 +1,5 @@
 #include "g_homescreen.h"
-
+#include "g_help.h"
 
 /**
  * @brief G_HomeScreen::G_HomeScreen

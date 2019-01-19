@@ -8,9 +8,9 @@
 #define G_MAPCHOOSER_H
 
 #include <QtWidgets>
-#include "map.h"
-#include "game.h"
-#include "g_mapchooser.h"
+
+class Map;
+class Game;
 
 class G_MapChooser : public QWidget
 {

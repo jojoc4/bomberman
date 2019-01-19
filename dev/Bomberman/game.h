@@ -9,9 +9,6 @@
 
 #include <QPoint>
 
-#include "map.h"
-#include "player.h"
-
 class Player;
 class Map;
 

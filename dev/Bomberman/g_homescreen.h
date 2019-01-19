@@ -9,7 +9,8 @@
 
 #include <QDialog>
 #include <QtWidgets>
-#include "g_help.h"
+
+class G_Help;
 
 class G_HomeScreen : public QWidget
 {

@@ -1,4 +1,7 @@
 #include "game.h"
+#include "map.h"
+#include "player.h"
+#include "mapbloc.h"
 
 /**
  * @brief Game::Game

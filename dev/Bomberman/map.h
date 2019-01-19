@@ -7,9 +7,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "mapbloc.h"
 #include <QString>
 #include <QPoint>
+
+class MapBloc;
 
 class Map
 {

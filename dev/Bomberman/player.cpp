@@ -133,7 +133,7 @@ void Player::setPosition(QPoint np)
  * @brief Player::getPtrItemOnScene
  * @return pointer of the pixmap
  */
-QGraphicsItem* Player::getPtrItemOnScene() const
+QGraphicsPixmapItem* Player::getPtrItemOnScene() const
 {
     return ptrItemOnScene;
 }
@@ -142,9 +142,9 @@ QGraphicsItem* Player::getPtrItemOnScene() const
  * @brief Player::setPtrItemOnScene
  * @param item to add to the scene
  */
-void Player::setPtrItemOnScene(QGraphicsItem *item)
+void Player::setPtrItemOnScene(QGraphicsPixmapItem *item)
 {
-    ptrItemOnScene= item;
+    ptrItemOnScene = item;
 }
 
 /**

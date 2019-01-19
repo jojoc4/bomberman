@@ -57,8 +57,8 @@ public:
     void die();
 
 
-    QGraphicsItem* getPtrItemOnScene() const;
-    void setPtrItemOnScene(QGraphicsItem *item);
+    QGraphicsPixmapItem* getPtrItemOnScene() const;
+    void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
 private :
     QPoint position;
@@ -74,7 +74,7 @@ private :
     int cptInvisibility;
     int counter;
 
-    QGraphicsItem *ptrItemOnScene;
+    QGraphicsPixmapItem *ptrItemOnScene;
 
 };
 
