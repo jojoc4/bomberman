@@ -68,6 +68,7 @@ private:
     bool p2Moving;
     short p2MovingDir;
     short nbTouchesP2;
+
     QVector<Bomb*> bombs;
 
     bool gameEnd;

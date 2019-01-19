@@ -77,9 +77,9 @@
  * @param theGame :pointer of the game
  * @param parent : pointer of the parent which launch this widget
  */
-G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), game(theGame), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0),
-                                                 counterAnimP2(0), p1Moving(false), p1MovingDir(-1), nbTouchesP1(0),
-                                                 p2Moving(false), p2MovingDir(-1), nbTouchesP2(0)
+G_Game::G_Game(Game *theGame, QWidget *parent)
+    : QWidget(parent), game(theGame), iAmAwesome(false), timeKeeper(-1), counterAnimP1(0), counterAnimP2(0), p1Moving(false),
+      p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1), nbTouchesP2(0), gameEnd(false)
 {
     Player *p1 = game->getPlayer(false);
     this->textPlayer1 = new QLabel(QString("Joueur 1:\nNombre de bombes: %1\n"
@@ -127,8 +127,6 @@ G_Game::G_Game(Game *theGame, QWidget *parent) : QWidget(parent), game(theGame),
     awesomeAct->setShortcut(QKeySequence("Ctrl+H"));
     addAction(awesomeAct);
     connect(awesomeAct, SIGNAL(triggered(bool)), this, SLOT(beAwesome()));
-
-    gameEnd = false;
 }
 
 /**
