@@ -72,7 +72,7 @@ private:
     int nbDestroyedBlock[4] = {0,0,0,0};
 
     bool isExploded;
-    bool isExplosionOver;
+
 
     Player* owner;
 

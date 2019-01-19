@@ -19,7 +19,7 @@ class G_MainWidget : public QWidget
     Q_OBJECT
 public:
     explicit G_MainWidget(QWidget *parent = nullptr);
-    QStackedLayout* layout;
+
 
     enum Widget : short
     {
@@ -41,6 +41,7 @@ private:
     void deleteG_Game();
     void deleteG_MapChooser();
 
+    QStackedLayout* layout;
     G_Game* game;
     G_HomeScreen* homescreen;
     G_MapChooser* mapchooser;

@@ -1,4 +1,8 @@
 #include "mapbloc.h"
+//chance out of 10 to obtain this type of block after explosion
+#define BONUSS 2
+#define RANGEI 2
+#define NUMBERI 2
 
 /**
  * @brief MapBloc::MapBloc
@@ -61,21 +65,19 @@ void MapBloc::setType(int type)
 void MapBloc::explode()
 {
     ///chance out of ten to have
-    int bonus=2;
-    int rangeImprovment=2;
-    int numberImprovment=2;
+
 
     int r = (qrand() % ((10 + 1) - 1) + 1);
-    if(r<=bonus)
+    if(r<=BONUSS)
     {
         setType(BlocType::BONUS);
     }
-    else if(r<=bonus+rangeImprovment)
+    else if(r<=BONUSS+RANGEI)
     {
         setType(BlocType::UPGRADE_POWER);
     }
 
-    else if(r<=bonus+rangeImprovment+numberImprovment)
+    else if(r<=BONUSS+RANGEI+NUMBERI)
     {
         setType(BlocType::UPGRADE_NUMBER);
     }
