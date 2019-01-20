@@ -2,49 +2,44 @@
 * widget to choose the map we want to play
 *
 * @author	Julien Chappuis
-* @version	0.1
+* @version	1.0
 */
 #ifndef G_MAPCHOOSER_H
 #define G_MAPCHOOSER_H
 
 #include <QtWidgets>
-#include "map.h"
-#include "game.h"
+
+class Map;
+class Game;
 
 class G_MapChooser : public QWidget
 {
     Q_OBJECT
 public:
-    explicit G_MapChooser(Game* ptrGame, QWidget *parent = nullptr);
+    explicit G_MapChooser(Game* ptrGame, QWidget *parent = nullptr, QString startPath = "");
+    ~G_MapChooser();
+
+    QString getDirectoryPath() const;
 
 protected :
-
 
 signals:
     void openNextWidget(int);
     void startGame();
 
 private slots :
-
     void browseFolderMaps();
     void validateMap();
     void updateThumbnailsMap(QListWidgetItem* item);
 
 private :
-
     void displayThumbnailsMap();
     void displayListMap();
 
-
     void getMap(QString name);
-
-    void resizeEvent(QResizeEvent *);
-
-
 
     QListWidget* listMaps;
     QDir* directory;
-    QString filePath;
 
     QPushButton* btnValidate;
 
@@ -52,6 +47,8 @@ private :
     QGraphicsScene* previewMapScene;
     QPixmap allBlocks;
     Game* game;
+
+    bool errorOnOpenMaps;
 };
 
 #endif

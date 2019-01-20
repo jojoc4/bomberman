@@ -8,27 +8,46 @@
 #define G_MAINWIDGET_H
 
 #include <QtWidgets>
-#include "g_homescreen.h"
-#include "g_mapchooser.h"
-#include "g_game.h"
-#include "game.h"
+
+class G_Game;
+class G_HomeScreen;
+class G_MapChooser;
+class Game;
 
 class G_MainWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit G_MainWidget(Game* g, QWidget *parent = nullptr);
-    QStackedLayout* layout;
+    explicit G_MainWidget(QWidget *parent = nullptr);
+
+    enum Widget : short
+    {
+        G_MAPCHOOSER = 1,
+        G_GAME=2
+    };
+
+signals :
+    void startGame();
 
 public slots:
     void changeWidget(int index);
+    void finishGame();
 
 private:
-    G_Game* game;
+    void createMapScreen();
+    void createGame();
+
+    void deleteG_Game();
+    void deleteG_MapChooser();
+
+    QStackedLayout* layout;
     G_HomeScreen* homescreen;
     G_MapChooser* mapchooser;
+    G_Game* game;
 
     Game* gamePtr;
+
+    QString mapDirPath;
 };
 
 #endif

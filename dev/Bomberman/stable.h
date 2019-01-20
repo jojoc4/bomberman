@@ -2,7 +2,7 @@
 * precompiled classes
 *
 * @author	Jonatan Baumgartner
-* @version	08.12.18/1
+* @version	20.01.19/2
 */
 #ifndef STABLE_H
 #define STABLE_H
@@ -24,6 +24,7 @@
     #include <QGraphicsPixmapItem>
     #include <QGraphicsView>
     #include <QGraphicsItem>
+    #include <QGraphicsScene>
 
 //i
     #include <iostream>
@@ -34,9 +35,6 @@
 //l
     #include <QLabel>
     #include <QLayout>
-
-//m
-    #include <QMainWindow>
 
 //p
     #include <QPoint>

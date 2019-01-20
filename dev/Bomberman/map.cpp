@@ -1,24 +1,39 @@
 #include "map.h"
+#include "mapbloc.h"
 #include <fstream>
 #include <iostream>
 
-using namespace std;
+#define NB_BLOCS_X 30
+#define NB_BLOCS_Y 30
 
+using namespace std;
 
 /**
  * @brief Map constructor
  */
 Map::Map()
 {
-    t = new MapBloc**[30];
-    for(int i = 0; i< 30; i++){
-        t[i] = new MapBloc*[30];
+    t = new MapBloc**[NB_BLOCS_X];
+    for(int i = 0; i< NB_BLOCS_X; ++i)
+    {
+        t[i] = new MapBloc*[NB_BLOCS_Y];
+
+        for(int j = 0; j < NB_BLOCS_Y; ++j)
+        {
+            t[i][j] = nullptr;
+        }
     }
 }
 
-Map::~Map(){
-    for(int i = 0; i<30; i++){
-        for(int j = 0; j<30; j++){
+/**
+ * @brief Map::~Map
+ */
+Map::~Map()
+{
+    for(int i = 0; i<NB_BLOCS_X; ++i)
+    {
+        for(int j = 0; j<NB_BLOCS_Y; ++j)
+        {
             delete t[i][j];
             t[i][j] = nullptr;
         }
@@ -28,33 +43,38 @@ Map::~Map(){
 }
 
 /**
- * @brief read the map form a file
+ * @brief Map::readFromFile(QString path)
+ * read the map from a file
  * @param p (pathe to the map)
  */
-void Map::readFromFile(QString path){
+void Map::readFromFile(QString path)
+{
     ifstream file(path.toStdString(), ios::in);
 
-    if(file){
-        for(int i = 0; i<30; i++){
+    if(file)
+    {
+        for(int i = 0; i<NB_BLOCS_X; ++i)
+        {
             std::string line;
             getline(file, line);
-            for(int j = 0; j<30; j++){
+            for(int j = 0; j<NB_BLOCS_Y; ++j)
+            {
                 switch(line[j]){
                     case 'I':
-                        t[j][i] = new MapBloc(1);
+                        t[j][i] = new MapBloc(MapBloc::INDESTRUCTIBLE);
                     break;
                     case 'D':
-                        t[j][i] = new MapBloc(2);
+                        t[j][i] = new MapBloc(MapBloc::DESTRUCTIBLE);
                     break;
                     case 'F':
-                        t[j][i] = new MapBloc(3);
+                        t[j][i] = new MapBloc(MapBloc::BACKGROUND);
                     break;
                     case '1':
-                        t[j][i] = new MapBloc(3);
+                        t[j][i] = new MapBloc(MapBloc::BACKGROUND);
                         j1 = QPoint(j, i);
                     break;
                     case '2':
-                        t[j][i] = new MapBloc(3);
+                        t[j][i] = new MapBloc(MapBloc::BACKGROUND);
                         j2 = QPoint(j, i);
                     break;
                     default:
@@ -74,10 +94,11 @@ void Map::readFromFile(QString path){
 
 /**
  * @brief get a specifique mapbloc
- * @param p (QPoint line column)
+ * @param bloc (QPoint line column)
  * @return specified Mapbloc
  */
-MapBloc* Map::getMapBloc(QPoint bloc){
+MapBloc* Map::getMapBloc(QPoint bloc) const
+{
     return t[bloc.x()][bloc.y()];
 }
 

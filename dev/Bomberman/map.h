@@ -7,9 +7,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "mapbloc.h"
 #include <QString>
 #include <QPoint>
+
+class MapBloc;
 
 class Map
 {
@@ -18,7 +19,7 @@ public:
     virtual ~Map();
     void readFromFile(QString path);
 
-    MapBloc* getMapBloc(QPoint bloc);
+    MapBloc* getMapBloc(QPoint bloc) const;
     QPoint getPlayerSpawn(bool nbPlayer) const;
 
 private:

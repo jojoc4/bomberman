@@ -26,22 +26,39 @@ public:
 
     Player();
 
-    void moveThread();
-    void manualMove();
-
     QPoint getPosition() const;
     bool isDead() const;
     int getNbBomb() const;
     int getPuissance() const;
     short getDirection() const;
+    bool getVisible() const;
+    bool getSuperBomb() const;
+    bool getInvincible() const;
+    bool getAutoDrop() const;
+    bool getVisibleState() const;
+    int getCptInvisibility() const;
+    int getCounter() const;
 
-    void setPuissance(int puissance);
-    void setNbBomb(int nbBombe);
+    void setPuissance(int power);
+    void receiveBomb(int nb);
+    void dropBomb();
     void setPosition(QPoint np);
     void setDirection(short d);
+    void setVisible(bool s);
+    void setSuperBomb(bool s);
+    void setInvincible(bool s);
+    void setAutoDrop(bool s);
+    void setVisibleState(bool state);
+    void incrementCptInvisibility(int nb);
+    void setCounter(int c);
+    void incrementCounter();
 
-    QGraphicsItem* getPtrItemOnScene();
-    void setPtrItemOnScene(QGraphicsItem *item);
+    void giveBonus();
+    void die();
+
+
+    QGraphicsPixmapItem* getPtrItemOnScene() const;
+    void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
 private :
     QPoint position;
@@ -49,8 +66,15 @@ private :
     int nbBombe;
     int puissance;
     short direction;
+    bool superBomb;
+    bool visible;
+    bool invincible;
+    bool autoDrop;
+    bool visibleState;
+    int cptInvisibility;
+    int counter;
 
-    QGraphicsItem *ptrItemOnScene;
+    QGraphicsPixmapItem *ptrItemOnScene;
 
 };
 

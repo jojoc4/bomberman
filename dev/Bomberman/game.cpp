@@ -1,12 +1,22 @@
 #include "game.h"
+#include "map.h"
+#include "player.h"
+#include "mapbloc.h"
 
+/**
+ * @brief Game::Game
+ * Constructor
+ */
 Game::Game()
 {
     player1 = new Player();
     player2 = new Player();
     map = new Map();
 }
-
+/**
+ * @brief Game::~Game
+ * Destructor
+ */
 Game::~Game()
 {
     delete player1;
@@ -15,48 +25,42 @@ Game::~Game()
 }
 
 /**
- * @brief Game::keyoardThread method not implemented
- */
-void Game::keyoardThread()
-{
-
-}
-/**
- * @brief Game::start method not implemented
- */
-void Game::start()
-{
-
-}
-
-/**
-* @brief Game::canMove make the changes in the player if it is a special bloc
-* @param bloc
-* @param nbPlayer
-* @return faslse if impossible move, else true
+* @brief Game::canMove make the changes in the player and in the map if it is a special bloc
+* @param newPos : new position of the player
+* @param newDirection : direction of the player
+* @param bloc : bloc where the player is staying at the moment
+* @param nbPlayer : which player
+* @return false if impossible move, else true
 */
-bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
+bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer)
+{
     MapBloc* mb = map->getMapBloc(bloc);
-    if(mb->getTraversable()){
+    if(mb->getTraversable())
+    {
         Player* p = getPlayer(nbPlayer);
         p->setDirection(newDirection);
         p->setPosition(newPos);
-        switch (mb->getType()) {
-        case 4:
-            p->setNbBomb(p->getNbBomb()+1);
-            break;
-        case 5:
-            //TODO bonus
-            break;
-        case 6:
-            p->setPuissance(p->getPuissance()+1);
-            break;
-        default:
-            break;
+        switch (mb->getType())
+        {
+            case MapBloc::UPGRADE_NUMBER :
+                p->receiveBomb(1);
+                mb->setType(MapBloc::BACKGROUND);
+                break;
+            case MapBloc::BONUS:
+                p->giveBonus();
+                mb->setType(MapBloc::BACKGROUND);
+                break;
+            case MapBloc::UPGRADE_POWER:
+                p->setPuissance(p->getPuissance()+1);
+                mb->setType(MapBloc::BACKGROUND);
+                break;
         }
         return true;
     }
-    return false;
+    else
+    {
+        return false;
+    }
 }
 
 /**
@@ -64,15 +68,18 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer){
  * @param nbPlayer (0 or false is player1 and 1 or true is player2)
  * @return pointer on the selected player
  */
-Player* Game::getPlayer(bool nbPlayer)
+Player* Game::getPlayer(bool nbPlayer) const
 {
     if(!nbPlayer)
         return this->player1;
     else
         return this->player2;
 }
-
-Map* Game::getMap()
+/**
+ * @brief Game::getMap
+ * @return
+ */
+Map* Game::getMap() const
 {
     return this->map;
 }
