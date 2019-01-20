@@ -2,7 +2,7 @@
 *  home windows where we choose gaming mode and start a game
 *
 * @author	Julien Chappuis
-* @version	0.1
+* @version	1.0
 */
 #ifndef G_HOMESCREEN_H
 #define G_HOMESCREEN_H

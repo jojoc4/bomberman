@@ -2,7 +2,7 @@
 * contains all the bombs caracteristics and the explosion mechanisme
 *
 * @author	Jonatan Baumgartner
-* @version	1
+* @version	1.0
 */
 #ifndef BOMB_H
 #define BOMB_H

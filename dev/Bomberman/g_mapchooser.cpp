@@ -28,7 +28,7 @@
  * @param ptrGame pointer of the game
  * @param parent pointer of the parent
  */
-G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent)
+G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent, QString startPath)
     : QWidget(parent), game(ptrGame), errorOnOpenMaps(false)
 {
     setWindowTitle(tr("Choix des cartes"));
@@ -67,8 +67,15 @@ G_MapChooser::G_MapChooser(Game* ptrGame, QWidget *parent)
     this->allBlocks = QPixmap(QString(":/resources/img/Blocs.png"));
 
     // Loading of the map
-    directory = new QDir(QCoreApplication::applicationDirPath());
-    directory->cd("maps");
+    if(startPath == "")
+    {
+        directory = new QDir(QCoreApplication::applicationDirPath());
+        directory->cd("maps");
+    }
+    else
+    {
+        directory = new QDir(startPath);
+    }
 
     displayListMap();
 
@@ -241,4 +248,9 @@ void G_MapChooser::getMap(QString name)
         QMessageBox::critical(this, tr("Erreur - ouverture de carte"), tr("Fichier de carte non valide"), QMessageBox::Ok);
         errorOnOpenMaps = true;
     }
+}
+
+QString G_MapChooser::getDirectoryPath() const
+{
+    return this->directory->absolutePath();
 }

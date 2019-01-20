@@ -5,7 +5,7 @@
 #include "game.h"
 
 G_MainWidget::G_MainWidget(QWidget *parent)
-    : QWidget(parent), mapchooser(nullptr), game(nullptr)
+    : QWidget(parent), mapchooser(nullptr), game(nullptr), mapDirPath(QString(""))
 {
     gamePtr = new Game();
 
@@ -24,6 +24,7 @@ void G_MainWidget::changeWidget(int index){
             createMapScreen();
         case 2 :
             createGame();
+            mapDirPath = mapchooser->getDirectoryPath();
     }
     if(index == 2)
         emit(startGame());
@@ -44,7 +45,7 @@ void G_MainWidget::createMapScreen()
 {
     if(mapchooser != nullptr)
         deleteG_MapChooser();
-    mapchooser = new G_MapChooser(gamePtr,this);
+    mapchooser = new G_MapChooser(gamePtr, this, mapDirPath);
     connect(mapchooser,SIGNAL(openNextWidget(int)),this,SLOT(changeWidget(int)));
 
     layout->addWidget(mapchooser);
@@ -62,8 +63,8 @@ void G_MainWidget::createGame()
 }
 
 void G_MainWidget::deleteG_Game(){
-    delete game;
     layout->removeWidget(game);
+    delete game;
     game = nullptr;
 }
 

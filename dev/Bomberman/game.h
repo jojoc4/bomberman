@@ -2,7 +2,7 @@
 * contains all the game elements
 *
 * @author	Julien Chappuis
-* @version	0.1
+* @version	1.0
 */
 #ifndef GAME_H
 #define GAME_H

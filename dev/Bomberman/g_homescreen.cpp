@@ -45,9 +45,7 @@ G_HomeScreen::G_HomeScreen(QWidget *parent)
  * Keep clean the memory after the end
  */
 G_HomeScreen::~G_HomeScreen()
-{
-
-}
+{}
 
 /**
  * @brief G_HomeScreen::validateChoice

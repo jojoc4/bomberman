@@ -20,7 +20,6 @@ class G_MainWidget : public QWidget
 public:
     explicit G_MainWidget(QWidget *parent = nullptr);
 
-
     enum Widget : short
     {
         G_MAPCHOOSER = 1,
@@ -47,6 +46,8 @@ private:
     G_Game* game;
 
     Game* gamePtr;
+
+    QString mapDirPath;
 };
 
 #endif
