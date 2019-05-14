@@ -32,28 +32,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         g_homescreen.cpp \
-    bomb.cpp \
-    mapbloc.cpp \
-    map.cpp \
-    g_game.cpp \
-    game.cpp \
-    player.cpp \
-    g_mapchooser.cpp \
-    g_help.cpp \
-    g_mainwidget.cpp
+        bomb.cpp \
+        mapbloc.cpp \
+        map.cpp \
+        g_game.cpp \
+        game.cpp \
+        player.cpp \
+        g_mapchooser.cpp \
+        g_help.cpp \
+        g_mainwidget.cpp
 
 HEADERS += \
+        stable.h \
         g_homescreen.h \
-    bomb.h \
-    mapbloc.h \
-    map.h \
-    g_game.h \
-    game.h \
-    player.h \
-    g_mapchooser.h \
-    stable.h \
-    g_help.h \
-    g_mainwidget.h
+        bomb.h \
+        mapbloc.h \
+        map.h \
+        g_game.h \
+        game.h \
+        player.h \
+        g_mapchooser.h \
+        g_help.h \
+        g_mainwidget.h \
+        priorityqueue.h
 
 RESOURCES += \
-    ressources.qrc
+        ressources.qrc

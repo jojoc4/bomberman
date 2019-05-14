@@ -29,6 +29,9 @@ MapBloc::MapBloc(int pType)
     {
         this->traversable = true;
     }
+
+    this->seen = false;
+    this->visited = false;
 }
 
 /**

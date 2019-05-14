@@ -43,6 +43,13 @@ private:
     bool traversable = false;
 
     QGraphicsPixmapItem *ptrItemOnScene = nullptr;
+
+    //DIJKSTRA PATHFINDING
+    bool seen;
+    bool visited;
+    QList<MapBloc*> neighbours;
 };
+
+
 
 #endif
