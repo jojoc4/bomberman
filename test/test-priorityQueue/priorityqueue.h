@@ -5,6 +5,16 @@
 #include <iostream>
 
 template <typename T>
+class PriorityQueue;
+
+/*
+ * NODES
+ */
+
+/**
+ * class PriorityQueueNode : used by PriorityQueue as the elements it contains. This is useful as it contains the priority of each node.
+ */
+template <typename T>
 class PriorityQueueNode
 {
     public:
@@ -19,10 +29,37 @@ class PriorityQueueNode
             this->content = nullptr; //not deleted because it can still be used somewhere else in the program
         }
 
+        int getPriority() const { return priority; }
+
+        T* getContent() const { return content; }
+
+        bool operator> (const PriorityQueueNode<T> &other)
+        {
+            return this.priority > other.priority;
+        }
+        bool operator>= (const PriorityQueueNode<T> &other)
+        {
+            return this.priority >= other.priority;
+        }
+        bool operator< (const PriorityQueueNode<T> &other)
+        {
+            return this.priority < other.priority;
+        }
+        bool operator<= (const PriorityQueueNode<T> &other)
+        {
+            return this.priority <= other.priority;
+        }
+
+    private:
+        T* content;
+        int priority;
+
         void setPriority(int p)
         {
             if(p > 0)
+            {
                 priority = p;
+            }
         }
 
         void incPriority()
@@ -35,50 +72,17 @@ class PriorityQueueNode
             --priority;
         }
 
-        int getPriority() const
-        {
-            return priority;
-        }
-
-        T* getContent() const
-        {
-            return content;
-        }
-
-        friend bool operator> (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2);
-        friend bool operator>= (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2);
-
-        friend bool operator< (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2);
-        friend bool operator<= (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2);
-
-
-    private:
-        T* content;
-        int priority;
+        friend void PriorityQueue<T>::setPriorityAt(int, int);
 };
 
-template <typename T>
-bool operator> (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2)
-{
-    return n1.priority > n2.priority;
-}
-template <typename T>
-bool operator>= (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2)
-{
-    return n1.priority >= n2.priority;
-}
-template <typename T>
-bool operator< (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2)
-{
-    return n1.priority < n2.priority;
-}
-template <typename T>
-bool operator<= (const PriorityQueueNode<T> &n1, const PriorityQueueNode<T> &n2)
-{
-    return n1.priority <= n2.priority;
-}
 
+/*
+ * MINIMUM PRIORITY QUEUE
+ */
 
+/**
+ * class PriorityQueue : used to implement Dijkstra's pathfinding algorithm. This is useful when building the shortest-path graph
+ */
 template <typename T>
 class PriorityQueue
 {
@@ -98,6 +102,10 @@ class PriorityQueue
             delete this->elems;
         }
 
+        /**
+         * @brief tasMin : returns the element with the minimum priority without deleting it from the queue
+         * @return the element with the minimum priority
+         */
         T* tasMin()
         {
             if(!elems->isEmpty() && elems->size() > 1)
@@ -106,6 +114,10 @@ class PriorityQueue
                 return nullptr;
         }
 
+        /**
+         * @brief extraireMin : takes the elements with minimum priority and returns it
+         * @return the element with the minimum priority
+         */
         T* extraireMin()
         {
             T* temp = nullptr;
@@ -113,26 +125,30 @@ class PriorityQueue
             if(!estVide()){
                 temp = elems->takeAt(1)->getContent();
                 --taille;
-                rendreMinimier();
             }
 
             return temp;
         }
 
         /**
-         * FOR TESTING ONLY! WILL BE REMOVED LATER!
+         * FOR TESTING ONLY! WILL BE REMOVED LATER AS THIS IS DANGEROUS!
          * @brief tasAt
          * @param index
          * @return
          */
-        PriorityQueueNode<T>* tasAt(int index)
+        PriorityQueueNode<T>* at(int index) const
         {
             if(!elems->isEmpty() && index > 0 && index < elems->size()){
-                return elems->value(index);
+                return elems->at(index);
             }else
                 return nullptr;
         }
 
+        /**
+         * @brief inserer : inserts an element in the queue and sorts it by the priority
+         * @param elem : the element to insert
+         * @param priority : the element's priority
+         */
         void inserer(T* elem, int priority = 1)
         {
             this->elems->push_back(new PriorityQueueNode<T>(elem, priority));
@@ -146,19 +162,23 @@ class PriorityQueue
             return (elems->isEmpty() || elems->size() < 2);
         }
 
-        int getTaille() const
-        {
-            return this->taille;
-        }
+        int getTaille() const { return taille; }
 
-    protected:
+        void setPriorityAt(int index, int priority)
+        {
+            //check index validity, then check new priority : can only change it if new one is smaller than old one. Sort at the end.
+            if(!elems->isEmpty() && index > 0 && index < elems->size() && elems->at(index)->priority > priority){
+                elems->at(index)->setPriority(priority);
+                rendreMinimier();
+            }
+        }
 
     private:
         QList<PriorityQueueNode<T>*> *elems;
         int taille;
 
         /**
-         * @brief rendreMinimier : sorting the list. algorithm similar to the insertion sort
+         * @brief rendreMinimier : sorts the list. Insertion sort algorithm
          */
         void rendreMinimier()
         {
@@ -173,12 +193,7 @@ class PriorityQueue
          */
         void insertionPass(int index)
         {
-            /*
-             * conditions for swapping:
-             * index > 1
-             * elems[index] < elems[index-1]
-             */
-            while(index > 1 && elems->value(index)->getPriority() < elems->value(index-1)->getPriority()){
+            while(index > 1 && elems->at(index)->getPriority() < elems->at(index-1)->getPriority()){
                 elems->swap(index, index-1);
                 --index;
             }

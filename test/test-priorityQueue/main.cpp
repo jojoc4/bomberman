@@ -1,15 +1,17 @@
 #include <QApplication>
 #include "priorityqueue.h"
 #include "mapbloc.h"
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 void afficher(PriorityQueue<int> &fp)
 {
     int taille = fp.getTaille();
     for(int i=1; i < taille; ++i)
     {
-        std::cout << *(fp.tasAt(i)->getContent()) << " (" << fp.tasAt(i)->getPriority() << ") - " ;
+        std::cout << *(fp.at(i)->getContent()) << " (" << fp.at(i)->getPriority() << ") - " ;
     }
 
     std::cout << std::endl;
@@ -61,7 +63,7 @@ void afficher(PriorityQueue<MapBloc> &fp)
     for(int i=1; i < taille; ++i)
     {
         //MapBloc
-        std::cout << fp.tasAt(i)->getContent()->getNom() << " (" << fp.tasAt(i)->getPriority() << ") - " ;
+        std::cout << fp.at(i)->getContent()->getNom() << " (" << fp.at(i)->getPriority() << ") - " ;
     }
 
     std::cout << std::endl;
@@ -89,10 +91,15 @@ void testMapBloc(){
     fp.inserer(b5, 3);
     afficher(fp);
     fp.inserer(b6, 1);
+    afficher(fp);
+
+    fp.setPriorityAt(5, 1);
 
     afficher(fp);
 
+    high_resolution_clock::time_point t1 = high_resolution_clock::now();
     cout << endl << "Mini : " << fp.extraireMin()->getNom() << endl;
+    high_resolution_clock::time_point t2 = high_resolution_clock::now();
 
     afficher(fp);
 
@@ -107,6 +114,9 @@ void testMapBloc(){
     delete b5;
     delete b6;
     delete b7;
+
+    auto duration = duration_cast<nanoseconds>( t2 - t1 ).count();
+    cout << endl << "temps : " << duration << endl;
 }
 
 
