@@ -42,7 +42,7 @@ void testInt(){
     afficher(fp);
     fp.inserer(&nb6, nb6);
     afficher(fp);
-    fp.inserer(&nb7, nb7);
+    fp.inserer(&nb7, -nb7);
     afficher(fp);
     fp.inserer(&nb8, nb8);
 
@@ -110,7 +110,7 @@ void testMapBloc(){
     fp.inserer(b5, 3);
     //afficher(fp);
     //show(fp, 1, 0);
-    fp.inserer(b6, 1);
+    fp.inserer(b6, -8);
     //afficher(fp);
     show(fp, 1, 0);
     cout << endl << endl;

@@ -3,7 +3,6 @@
 
 #include <QList>
 #include <iostream>
-#include <boost/heap/priority_queue.hpp>
 
 template <typename T>
 class PriorityQueue;
@@ -19,10 +18,10 @@ template <typename T>
 class PriorityQueueNode
 {
     public:
-        PriorityQueueNode(T* content, int priority = 1)
+        PriorityQueueNode(T* content, int priority = INT_MAX)
         {
             this->content = content;
-            this->priority = priority;
+            this->priority = (priority > 0) ? priority : INT_MAX;
         }
 
         virtual ~PriorityQueueNode()
@@ -34,41 +33,21 @@ class PriorityQueueNode
 
         T* getContent() const { return content; }
 
-        bool operator> (const PriorityQueueNode<T> &other)
-        {
-            return this.priority > other.priority;
-        }
-        bool operator>= (const PriorityQueueNode<T> &other)
-        {
-            return this.priority >= other.priority;
-        }
-        bool operator< (const PriorityQueueNode<T> &other)
-        {
-            return this.priority < other.priority;
-        }
-        bool operator<= (const PriorityQueueNode<T> &other)
-        {
-            return this.priority <= other.priority;
-        }
-
     private:
         T* content;
         int priority;
 
         void setPriority(int p)
         {
-            if(p > 0 && p < priority)
-            {
-                priority = p;
-            }
+            priority = (p > 0 && p < priority) ? p : priority;
         }
 
         void decPriority()
         {
-            --priority;
+            if(priority > 1)
+                --priority;
         }
 
-        //friend void PriorityQueue<T>::setPriorityAt(int, int);
         friend class PriorityQueue<T>;
 };
 
@@ -156,15 +135,8 @@ class PriorityQueue
          */
         int inserer(T* elem, int p = 1)
         {
-            /*
-            this->elems->push_back(new PriorityQueueNode<T>(elem, priority));
-
-            //sort the list (one pass on inserted element is enough, since we're only adding one element at a time)
-            insertionPass(taille++);
-            */
-
-            //check priority validity
-            p = (p < 1) ? 1 : p;
+            //check priority validity, set default value if invalid (least priority)
+            p = (p < 1) ? INT_MAX : p;
 
             elems->push_back(new PriorityQueueNode<T>(elem, p));
             return minimierPass(taille++);
