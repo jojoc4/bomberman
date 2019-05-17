@@ -13,6 +13,7 @@ using namespace std;
  */
 Map::Map()
 {
+    priorityQueue = new PriorityQueue<MapBloc>();
     t = new MapBloc**[NB_BLOCS_X];
     for(int i = 0; i< NB_BLOCS_X; ++i)
     {
@@ -30,6 +31,7 @@ Map::Map()
  */
 Map::~Map()
 {
+    delete priorityQueue;
     for(int i = 0; i<NB_BLOCS_X; ++i)
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)

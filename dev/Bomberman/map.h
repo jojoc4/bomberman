@@ -9,6 +9,7 @@
 
 #include <QString>
 #include <QPoint>
+#include "priorityqueue.h"
 
 class MapBloc;
 
@@ -26,6 +27,8 @@ private:
     MapBloc*** t;
     QPoint j1;
     QPoint j2;
+
+    PriorityQueue<MapBloc> *priorityQueue;
 };
 
 #endif
