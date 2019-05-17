@@ -59,6 +59,7 @@ void testInt(){
 
 void afficher(PriorityQueue<MapBloc> &fp)
 {
+
     int taille = fp.getTaille();
     for(int i=1; i < taille; ++i)
     {
@@ -68,6 +69,20 @@ void afficher(PriorityQueue<MapBloc> &fp)
 
     std::cout << std::endl;
 }
+
+void show(PriorityQueue<MapBloc> &fp, int i, int profondeur)
+{
+    if(fp.at(i)==nullptr){
+        return;
+    }else{
+        show(fp, (i*2)+1, profondeur+1);
+        for(int i=0; i<profondeur; ++i)
+            cout << "\t";
+        std::cout << fp.at(i)->getContent()->getNom() << " (" << fp.at(i)->getPriority() << ")" << std::endl ;
+        show(fp, (i*2), profondeur+1);
+    }
+}
+
 
 void testMapBloc(){
     PriorityQueue<MapBloc> fp;
@@ -81,31 +96,45 @@ void testMapBloc(){
     MapBloc *b7 = new MapBloc("bloc 7");
 
     fp.inserer(b1, 1);
-    afficher(fp);
+    //afficher(fp);
+    //show(fp, 1, 0);
     fp.inserer(b2, 2);
-    afficher(fp);
+    //afficher(fp);
+    //show(fp, 1, 0);
     fp.inserer(b3, 3);
-    afficher(fp);
+    //afficher(fp);
+    //show(fp, 1, 0);
     fp.inserer(b4, 4);
-    afficher(fp);
+    //afficher(fp);
+    //show(fp, 1, 0);
     fp.inserer(b5, 3);
-    afficher(fp);
+    //afficher(fp);
+    //show(fp, 1, 0);
     fp.inserer(b6, 1);
-    afficher(fp);
+    //afficher(fp);
+    show(fp, 1, 0);
+    cout << endl << endl;
 
-    fp.setPriorityAt(5, 1);
+    int ind = 5;
+    cout << "moved from " << ind << " to " << fp.setPriorityAt(ind, 1) << endl << endl;
 
-    afficher(fp);
+    //afficher(fp);
+    show(fp, 1, 0);
+    cout << endl << endl;
 
     high_resolution_clock::time_point t1 = high_resolution_clock::now();
     cout << endl << "Mini : " << fp.extraireMin()->getNom() << endl;
     high_resolution_clock::time_point t2 = high_resolution_clock::now();
 
-    afficher(fp);
+    //afficher(fp);
+    cout << endl << endl;
+    show(fp, 1, 0);
+    cout << endl << endl;
 
     fp.inserer(b7, 2);
 
-    afficher(fp);
+    //afficher(fp);
+    show(fp, 1, 0);
 
     delete b1;
     delete b2;
