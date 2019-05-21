@@ -10,7 +10,7 @@ services:
 # Try to compile our sample hello world app
 compile:
   tags:
-  - debian-docker
+  - ubuntu-docker
 
   script:
   # Compile our app
