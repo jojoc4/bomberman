@@ -136,6 +136,18 @@ class PriorityQueue
 
         int getTaille() const { return taille; }
 
+        int searchElem(T* elem)
+        {
+            int i=1;
+            for(PriorityQueueNode<T>* n : elems)
+            {
+                if(n->getContent() == elem)
+                    return i;
+            }
+
+            return 0;
+        }
+
         /**
          * @brief inserer : inserts an element in the queue and sorts it by the priority
          * @param elem : the element to insert
@@ -147,8 +159,19 @@ class PriorityQueue
             //check priority validity, set default value if invalid (least priority)
             p = (p < 1) ? INT_MAX : p;
 
-            elems->push_back(new PriorityQueueNode<T>(elem, p));
-            return minimierPass(taille++);
+            //only insert element in list if not already there. Update priority otherwise
+            int pos = searchElem(elem);
+            if(pos == 0)
+            {
+                elems->push_back(new PriorityQueueNode<T>(elem, p));
+                taille++;
+            }
+            else
+            {
+                elems->at(pos)->setPriority(p);
+            }
+
+            return minimierPass(taille-1);
         }
 
         int setPriorityAt(int index, int priority)
