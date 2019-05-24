@@ -2,6 +2,7 @@
 #include "mapbloc.h"
 #include <fstream>
 #include <iostream>
+#include <qiterator.h>
 
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
@@ -137,6 +138,8 @@ void Map::buildGraph()
             MapBloc *bloc = t[j][i];
 
             bloc->resetNeighbours();
+            bloc->setSeen(false);
+            bloc->setVisited(false);
 
             if(bloc->AIUsable())
             {
@@ -172,9 +175,52 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
     mutex->lock();
 
-    //Dijkstra's algorithm here BETWEEN lock and unlock
+    //Dijkstra's algorithm :
+
+    //Set all blocks as not-visited and not-seen
+    for(int i = 0; i<NB_BLOCS_X; ++i)
+    {
+        for(int j = 0; j<NB_BLOCS_Y; ++j)
+        {
+            t[j][i]->setSeen(false);
+            t[j][i]->setVisited(false);
+        }
+    }
+
+    //Add first node (where the player currently is, his starting place)
+    PriorityQueueNode<MapBloc>* currentNode = queue->at(queue->insert(from, 0));
+    currentNode->getContent()->setSeen(true);
+
+    //Run through the graph to build the shortest-path tree
+    do
+    {
+        //Add neighbours to the priority queue
+        for(int i=0; i<currentNode->getContent()->getNeighbours()->size(); ++i)
+        {
+            //Only add if it has not already been visited
+            MapBloc* b = currentNode->getContent()->getNeighbours()->at(i);
+            if(!b->hasBeenVisited())
+            {
+                //The case where the Block is already in the queue is managed by function insert
+                queue->insert(b, currentNode, currentNode->getPriority() + 1);
+                b->setSeen(true);
+            }
+        }
+
+        currentNode = queue->takeMin();
+        currentNode->getContent()->setVisited(true);
+    }while(!destination->hasBeenVisited() && !queue->isEmpty());
+
+    //create path from destination to departure
+    do
+    {
+        path->push_front(currentNode->getContent());
+        currentNode = currentNode->getFatherNode();
+    }while(currentNode->getContent() != from);
 
     mutex->unlock();
+
+    currentNode = nullptr;
 
     return path;
 }

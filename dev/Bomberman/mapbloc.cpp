@@ -157,3 +157,23 @@ QList<MapBloc*>* MapBloc::getNeighbours()
 {
     return &neighbours;
 }
+
+bool MapBloc::hasBeenSeen() const
+{
+    return seen;
+}
+
+bool MapBloc::hasBeenVisited() const
+{
+    return visited;
+}
+
+void MapBloc::setSeen(bool seen)
+{
+    this->seen = seen;
+}
+
+void MapBloc::setVisited(bool visited)
+{
+    this->visited = visited;
+}

@@ -26,9 +26,15 @@ public:
     void setType(int type);
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
-    void addNeighbour(MapBloc*);
+    void addNeighbour(MapBloc* bloc);
     void resetNeighbours();
     QList<MapBloc*>* getNeighbours();
+
+    void setSeen(bool seen);
+    void setVisited(bool visited);
+
+    bool hasBeenSeen() const;
+    bool hasBeenVisited() const;
 
     void explode();
 
