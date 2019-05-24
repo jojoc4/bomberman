@@ -2,7 +2,6 @@
 #include "mapbloc.h"
 #include <fstream>
 #include <iostream>
-#include <qiterator.h>
 
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
@@ -25,7 +24,8 @@ Map::Map()
         }
     }
 
-    mutex = new QMutex(QMutex::NonRecursive);
+    //mutex = new QMutex(QMutex::NonRecursive);
+    lock = new QReadWriteLock(QReadWriteLock::NonRecursive);
 }
 
 /**
@@ -33,6 +33,7 @@ Map::Map()
  */
 Map::~Map()
 {
+    lock->lockForWrite();
     for(int i = 0; i<NB_BLOCS_X; ++i)
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)
@@ -43,6 +44,10 @@ Map::~Map()
         t[i]=nullptr;
     }
     t=nullptr;
+    lock->unlock();
+
+    delete lock;
+    lock = nullptr;
 }
 
 /**
@@ -56,7 +61,8 @@ void Map::readFromFile(QString path)
 
     if(file)
     {
-        mutex->lock();
+        //mutex->lock();
+        lock->lockForWrite();
         for(int i = 0; i<NB_BLOCS_X; ++i)
         {
             std::string line;
@@ -88,7 +94,8 @@ void Map::readFromFile(QString path)
 
             }
         }
-        mutex->unlock();
+        //mutex->unlock();
+        lock->unlock();
 
         file.close();
     }else{
@@ -104,9 +111,11 @@ void Map::readFromFile(QString path)
  */
 MapBloc* Map::getMapBloc(QPoint bloc) const
 {
-    mutex->lock();
+    //mutex->lock();
+    lock->lockForRead();
     MapBloc* b = t[bloc.x()][bloc.y()];
-    mutex->unlock();
+    lock->unlock();
+    //mutex->unlock();
 
     return b;
 }
@@ -130,7 +139,8 @@ QPoint Map::getPlayerSpawn(bool nbPlayer) const
  */
 void Map::buildGraph()
 {
-    mutex->lock();
+    //mutex->lock();
+    lock->lockForWrite();
     for(int i = 0; i<NB_BLOCS_X; ++i)
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)
@@ -159,7 +169,8 @@ void Map::buildGraph()
             }
         }
     }
-    mutex->unlock();
+    //mutex->unlock();
+    lock->unlock();
 }
 
 /**
@@ -173,7 +184,8 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
     QList<MapBloc*>* path = new QList<MapBloc*>();
     PriorityQueue<MapBloc>* queue = new PriorityQueue<MapBloc>();
 
-    mutex->lock();
+    //mutex->lock();
+    lock->lockForRead();
 
     //Dijkstra's algorithm :
 
@@ -218,7 +230,8 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
         currentNode = currentNode->getFatherNode();
     }while(currentNode->getContent() != from);
 
-    mutex->unlock();
+    //mutex->unlock();
+    lock->unlock();
 
     currentNode = nullptr;
 

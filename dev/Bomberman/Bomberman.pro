@@ -39,7 +39,8 @@ SOURCES += \
     player.cpp \
     g_mapchooser.cpp \
     g_help.cpp \
-    g_mainwidget.cpp
+    g_mainwidget.cpp \
+    ai_player.cpp
 
 HEADERS += \
     stable.h \
@@ -53,7 +54,8 @@ HEADERS += \
     g_mapchooser.h \
     g_help.h \
     g_mainwidget.h \
-    priorityqueue.h
+    priorityqueue.h \
+    ai_player.h
 
 RESOURCES += \
     ressources.qrc

@@ -10,6 +10,7 @@
 #include <QString>
 #include <QPoint>
 #include <QMutex>
+#include <QReadWriteLock>
 #include "priorityqueue.h"
 
 class MapBloc;
@@ -33,7 +34,8 @@ private:
     QPoint j1;
     QPoint j2;
 
-    QMutex* mutex;
+    //QMutex* mutex;
+    QReadWriteLock* lock;
 };
 
 #endif

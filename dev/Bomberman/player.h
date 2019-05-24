@@ -56,7 +56,6 @@ public:
     void giveBonus();
     void die();
 
-
     QGraphicsPixmapItem* getPtrItemOnScene() const;
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
@@ -75,7 +74,6 @@ private :
     int counter;
 
     QGraphicsPixmapItem *ptrItemOnScene;
-
 };
 
 #endif
