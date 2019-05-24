@@ -13,7 +13,6 @@ using namespace std;
  */
 Map::Map()
 {
-    priorityQueue = new PriorityQueue<MapBloc>();
     t = new MapBloc**[NB_BLOCS_X];
     for(int i = 0; i< NB_BLOCS_X; ++i)
     {
@@ -24,6 +23,8 @@ Map::Map()
             t[i][j] = nullptr;
         }
     }
+
+    mutex = new QMutex(QMutex::NonRecursive);
 }
 
 /**
@@ -31,7 +32,6 @@ Map::Map()
  */
 Map::~Map()
 {
-    delete priorityQueue;
     for(int i = 0; i<NB_BLOCS_X; ++i)
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)
@@ -55,6 +55,7 @@ void Map::readFromFile(QString path)
 
     if(file)
     {
+        mutex->lock();
         for(int i = 0; i<NB_BLOCS_X; ++i)
         {
             std::string line;
@@ -86,6 +87,7 @@ void Map::readFromFile(QString path)
 
             }
         }
+        mutex->unlock();
 
         file.close();
     }else{
@@ -101,7 +103,11 @@ void Map::readFromFile(QString path)
  */
 MapBloc* Map::getMapBloc(QPoint bloc) const
 {
-    return t[bloc.x()][bloc.y()];
+    mutex->lock();
+    MapBloc* b = t[bloc.x()][bloc.y()];
+    mutex->unlock();
+
+    return b;
 }
 
 /**
@@ -115,4 +121,60 @@ QPoint Map::getPlayerSpawn(bool nbPlayer) const
         return j1;
     else
         return j2;
+}
+
+/**
+ * @brief Map::buildGraph
+ * Creates the graph for Dijkstra's pathfinding, using adjacency lists in every bloc
+ */
+void Map::buildGraph()
+{
+    mutex->lock();
+    for(int i = 0; i<NB_BLOCS_X; ++i)
+    {
+        for(int j = 0; j<NB_BLOCS_Y; ++j)
+        {
+            MapBloc *bloc = t[j][i];
+
+            bloc->resetNeighbours();
+
+            if(bloc->AIUsable())
+            {
+                if(t[j][i-1]->AIUsable()){
+                    bloc->addNeighbour(t[j][i-1]);
+                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i-1 << ")";
+                }if(t[j][i+1]->AIUsable()){
+                    bloc->addNeighbour(t[j][i+1]);
+                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i+1 << ")";
+                }if(t[j-1][i]->AIUsable()){
+                    bloc->addNeighbour(t[j-1][i]);
+                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j-1 << ";" << i << ")";
+                }if(t[j+1][i]->AIUsable()){
+                    bloc->addNeighbour(t[j+1][i]);
+                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j+1 << ";" << i << ")";
+                }
+            }
+        }
+    }
+    mutex->unlock();
+}
+
+/**
+ * @brief Map::getShortestPath
+ * @param from MapBloc pointer to the departure
+ * @param destination MapBloc pointer to the destination
+ * @return QList of MapBloc pointers representing the path to follow
+ */
+QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
+{
+    QList<MapBloc*>* path = new QList<MapBloc*>();
+    PriorityQueue<MapBloc>* queue = new PriorityQueue<MapBloc>();
+
+    mutex->lock();
+
+    //Dijkstra's algorithm here BETWEEN lock and unlock
+
+    mutex->unlock();
+
+    return path;
 }

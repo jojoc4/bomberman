@@ -106,6 +106,14 @@ bool MapBloc::getTraversable() const
     return this->traversable;
 }
 
+bool MapBloc::AIUsable() const
+{
+    if(type == BACKGROUND || type == UPGRADE_NUMBER || type == UPGRADE_POWER)
+        return true;
+    else
+        return false;
+}
+
 /**
  * @brief MapBloc::getPtrItemOnScene
  * @return
@@ -122,4 +130,30 @@ QGraphicsPixmapItem* MapBloc::getPtrItemOnScene() const
 void MapBloc::setPtrItemOnScene(QGraphicsPixmapItem *item)
 {
     ptrItemOnScene= item;
+}
+
+
+void MapBloc::addNeighbour(MapBloc* bloc)
+{
+    bool alreadyThere = false;
+    for(MapBloc* m : neighbours)
+    {
+        if(m == bloc){
+            alreadyThere = true;
+            break;
+        }
+    }
+
+    if(!alreadyThere)
+        neighbours.push_back(bloc);
+}
+
+void MapBloc::resetNeighbours()
+{
+    neighbours.clear();
+}
+
+QList<MapBloc*>* MapBloc::getNeighbours()
+{
+    return &neighbours;
 }

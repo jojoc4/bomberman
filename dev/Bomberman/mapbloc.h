@@ -20,10 +20,15 @@ public:
 
     int getType() const;
     bool getTraversable() const;
+    bool AIUsable() const;
     QGraphicsPixmapItem* getPtrItemOnScene() const;
 
     void setType(int type);
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
+
+    void addNeighbour(MapBloc*);
+    void resetNeighbours();
+    QList<MapBloc*>* getNeighbours();
 
     void explode();
 

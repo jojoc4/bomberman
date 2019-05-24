@@ -152,6 +152,8 @@ G_Game::~G_Game()
  */
 void G_Game::startGame()
 {
+    //Build the graph for Dijkstra pathfinding
+    this->game->getMap()->buildGraph();
     //create blocks for the map and display them
     this->createDisplayMap();
     //create players, give them their textures and display them
@@ -1004,6 +1006,8 @@ void G_Game::destroyBlocs(Bomb* bomb)
             bomb->addDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY,y);
         }
     }
+
+    theMap->buildGraph();
 }
 
 /**
