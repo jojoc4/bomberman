@@ -2,10 +2,9 @@
 #define PRIORITYQUEUE_H
 
 #include <QList>
-#include <iostream>
 
 template <typename T>
-class PriorityQueue;
+class PriorityQueue; //implementation further down. Needed it here for the Node.
 
 /*
  * NODES
@@ -18,10 +17,11 @@ template <typename T>
 class PriorityQueueNode
 {
     public:
-        PriorityQueueNode(T* content, int priority = INT_MAX)
+        PriorityQueueNode(T* content, PriorityQueueNode<T>* fatherNode = nullptr, int priority = 1)
         {
             this->content = content;
-            this->priority = (priority > 0) ? priority : INT_MAX;
+            this->fatherNode = fatherNode;
+            this->priority = (priority > 0) ? priority : getFatherPriority() +1;
         }
 
         virtual ~PriorityQueueNode()
@@ -33,8 +33,16 @@ class PriorityQueueNode
 
         T* getContent() const { return content; }
 
+        PriorityQueueNode* getFatherNode() const { return fatherNode; }
+
+        int getFatherPriority() const
+        {
+            return (fatherNode == nullptr) ? 0 : fatherNode->getPriority();
+        }
+
     private:
         T* content;
+        PriorityQueueNode<T>* fatherNode;
         int priority;
 
         void setPriority(int p)
@@ -47,6 +55,7 @@ class PriorityQueueNode
             if(priority > 1)
                 --priority;
         }
+
 
         friend class PriorityQueue<T>;
 };

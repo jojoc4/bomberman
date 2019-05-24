@@ -17,10 +17,11 @@ template <typename T>
 class PriorityQueueNode
 {
     public:
-        PriorityQueueNode(T* content, int priority = 1)
+        PriorityQueueNode(T* content, PriorityQueueNode<T>* fatherNode = nullptr, int priority = 1)
         {
             this->content = content;
-            this->priority = priority;
+            this->fatherNode = fatherNode;
+            this->priority = (priority > 0) ? priority : getFatherPriority() +1;
         }
 
         virtual ~PriorityQueueNode()
@@ -32,46 +33,31 @@ class PriorityQueueNode
 
         T* getContent() const { return content; }
 
-        bool operator> (const PriorityQueueNode<T> &other)
+        PriorityQueueNode* getFatherNode() const { return fatherNode; }
+
+        int getFatherPriority() const
         {
-            return this.priority > other.priority;
-        }
-        bool operator>= (const PriorityQueueNode<T> &other)
-        {
-            return this.priority >= other.priority;
-        }
-        bool operator< (const PriorityQueueNode<T> &other)
-        {
-            return this.priority < other.priority;
-        }
-        bool operator<= (const PriorityQueueNode<T> &other)
-        {
-            return this.priority <= other.priority;
+            return (fatherNode == nullptr) ? 0 : fatherNode->getPriority();
         }
 
     private:
         T* content;
+        PriorityQueueNode<T>* fatherNode;
         int priority;
 
         void setPriority(int p)
         {
-            if(p > 0)
-            {
-                priority = p;
-            }
-        }
-
-        void incPriority()
-        {
-            ++priority;
+            priority = (p > 0 && p < priority) ? p : priority;
         }
 
         void decPriority()
         {
-            --priority;
+            if(priority > 1)
+                --priority;
         }
 
-        friend void PriorityQueue<T>::setPriorityAt(int, int);
+
+        friend class PriorityQueue<T>;
 };
 
 
@@ -108,7 +94,7 @@ class PriorityQueue
         T* tasMin()
         {
             if(!elems->isEmpty() && elems->size() > 1)
-                return this->elems->at(1);
+                return this->elems->at(1)->getContent();
             else
                 return nullptr;
         }
@@ -123,7 +109,7 @@ class PriorityQueue
 
             if(!estVide()){
                 temp = elems->takeAt(1)->getContent();
-                --taille;
+                rendreMinimier(1, (--taille)-1);
             }
 
             return temp;
@@ -137,23 +123,10 @@ class PriorityQueue
          */
         PriorityQueueNode<T>* at(int index) const
         {
-            if(!elems->isEmpty() && index > 0 && index < elems->size()){
+            if(!elems->isEmpty() && index > 0 && index < elems->size())
                 return elems->at(index);
-            }else
+            else
                 return nullptr;
-        }
-
-        /**
-         * @brief inserer : inserts an element in the queue and sorts it by the priority
-         * @param elem : the element to insert
-         * @param priority : the element's priority
-         */
-        void inserer(T* elem, int priority = 1)
-        {
-            this->elems->push_back(new PriorityQueueNode<T>(elem, priority));
-
-            //sort the list (one pass is enough, since we're adding one element at a time
-            insertionPass(taille++);
         }
 
         bool estVide() const
@@ -163,27 +136,72 @@ class PriorityQueue
 
         int getTaille() const { return taille; }
 
-        void setPriorityAt(int index, int priority)
+        /**
+         * @brief inserer : inserts an element in the queue and sorts it by the priority
+         * @param elem : the element to insert
+         * @param priority : the element's priority
+         * @return index of the element in the queue
+         */
+        int inserer(T* elem, int p = 1)
         {
-            //check index validity, then check new priority : can only change it if new one is smaller than old one. Sort at the end.
-            if(!elems->isEmpty() && index > 0 && index < elems->size() && elems->at(index)->priority > priority){
+            //check priority validity, set default value if invalid (least priority)
+            p = (p < 1) ? INT_MAX : p;
+
+            elems->push_back(new PriorityQueueNode<T>(elem, p));
+            return minimierPass(taille++);
+        }
+
+        int setPriorityAt(int index, int priority)
+        {
+            //check index validity
+            if(!elems->isEmpty() && index > 0 && index < elems->size()){
                 elems->at(index)->setPriority(priority);
-                rendreMinimier();
+                index = rendreMinimier(1, index, index);
             }
+
+            return index;
         }
 
     private:
+        //QList is an array, but we use it as a binary tree for our min-heap.
         QList<PriorityQueueNode<T>*> *elems;
         int taille;
 
         /**
-         * @brief rendreMinimier : sorts the list. Insertion sort algorithm
+         * @brief minimierPass
+         * @param index : index of the inserted element
+         * @return final index of the element
          */
-        void rendreMinimier()
+        int minimierPass(int index)
         {
-            for(int i=2; i<taille; ++i){
-                insertionPass(i);
+            while(index > 1 && elems->at(index/2)->priority > elems->at(index)->priority)
+            {
+                elems->swap(index, index/2);
+                index /= 2;
             }
+
+            return index;
+        }
+
+        /**
+         * @brief rendreMinimier : makes the tree a min-heap
+         * @param left
+         * @param right
+         */
+        int rendreMinimier(int left, int right, int itemToTrack = 0)
+        {
+            int index = right;
+            while(index > 1)// && elems->at(index/2)->priority > elems->at(index)->priority)
+            {
+                if(elems->at(index/2)->priority > elems->at(index)->priority)
+                {
+                    elems->swap(index, index/2);
+                    itemToTrack = (index == itemToTrack) ? index/2 : itemToTrack;
+
+                }
+                --index;
+            }
+            return itemToTrack;
         }
 
         /**
@@ -192,9 +210,21 @@ class PriorityQueue
          */
         void insertionPass(int index)
         {
-            while(index > 1 && elems->at(index)->getPriority() < elems->at(index-1)->getPriority()){
+            while(index > 1 && elems->at(index)->getPriority() < elems->at(index-1)->getPriority())
+            {
                 elems->swap(index, index-1);
                 --index;
+            }
+        }
+
+        /**
+         * @brief rendreMinimier : sorts the list, using the insertion sort algorithm
+         */
+        void rendreMinimier()
+        {
+            for(int i=2; i<taille; ++i)
+            {
+                insertionPass(i);
             }
         }
 };
