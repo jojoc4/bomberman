@@ -154,6 +154,7 @@ class PriorityQueue
         }
 
     private:
+        //QList is an array, but we use it as a binary tree for our min-heap.
         QList<PriorityQueueNode<T>*> *elems;
         int taille;
 
