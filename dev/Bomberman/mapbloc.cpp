@@ -177,3 +177,12 @@ void MapBloc::setVisited(bool visited)
 {
     this->visited = visited;
 }
+
+
+void MapBloc::setPosition(QPoint pos){
+    this->position = pos;
+}
+
+QPoint MapBloc::getPosition(){
+    return this->position;
+}

@@ -38,6 +38,9 @@ public:
 
     void explode();
 
+    void setPosition(QPoint);
+    QPoint getPosition();
+
     enum BlocType: short
     {
         UNDEFINED = 0,
@@ -54,6 +57,8 @@ private:
     bool traversable = false;
 
     QGraphicsPixmapItem *ptrItemOnScene = nullptr;
+
+    QPoint position;
 
     //DIJKSTRA PATHFINDING
     bool seen;

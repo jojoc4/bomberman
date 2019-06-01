@@ -10,6 +10,7 @@
 #include <QPoint>
 
 class Player;
+class AI_Player;
 class Map;
 
 class Game
@@ -26,7 +27,7 @@ public:
 private:
     int type;
     Player* player1;
-    Player* player2;
+    AI_Player* player2;
     Map* map;
 };
 

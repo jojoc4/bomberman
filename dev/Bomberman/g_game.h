@@ -19,6 +19,7 @@ class QAction;
 class Bomb;
 class Player;
 class MapBloc;
+class AI_Player;
 
 class G_Game : public QWidget
 {
@@ -73,6 +74,8 @@ private:
 
     bool gameEnd;
 
+    AI_Player* aiPlayer;
+
     void refreshDisplay();
 
     void createDisplayMap();
@@ -94,6 +97,8 @@ private:
 
     void timerPlayers();
     void checkPlayerExplosion(Player* player1, Player* player2 , int x, int y);
+
+    void movePlayerAi();
 
 private slots:
     void beAwesome();

@@ -8,6 +8,8 @@
 
 using namespace std;
 
+#include <QDebug>
+
 /**
  * @brief Map constructor
  */
@@ -91,7 +93,7 @@ void Map::readFromFile(QString path)
                         throw "Map read error";
                     break;
                 }
-
+            t[j][i]->setPosition(QPoint(j,i));
             }
         }
         //mutex->unlock();
@@ -166,6 +168,7 @@ void Map::buildGraph()
                     bloc->addNeighbour(t[j+1][i]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j+1 << ";" << i << ")";
                 }
+                //qDebug() << bloc << bloc->getPosition() << *(bloc->getNeighbours());
             }
         }
     }
@@ -207,8 +210,10 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
     do
     {
         //Add neighbours to the priority queue
+
         for(int i=0; i<currentNode->getContent()->getNeighbours()->size(); ++i)
         {
+
             //Only add if it has not already been visited
             MapBloc* b = currentNode->getContent()->getNeighbours()->at(i);
             if(!b->hasBeenVisited())
@@ -221,8 +226,8 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
         currentNode = queue->takeMin();
         currentNode->getContent()->setVisited(true);
-    }while(!destination->hasBeenVisited() && !queue->isEmpty());
-
+        //qDebug() << "noeud : " << currentNode->getContent()->getPosition();
+    }while(!destination->hasBeenVisited());// || !queue->isEmpty());
     //create path from destination to departure
     do
     {
@@ -235,5 +240,6 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
     currentNode = nullptr;
 
+    //qDebug() << path;
     return path;
 }

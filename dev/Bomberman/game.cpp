@@ -2,15 +2,17 @@
 #include "map.h"
 #include "player.h"
 #include "mapbloc.h"
-
+#include "ai_player.h"
 /**
  * @brief Game::Game
  * Constructor
  */
 Game::Game()
 {
+
+
     player1 = new Player();
-    player2 = new Player();
+    player2 = new AI_Player(this,player1,QPoint(13,13));
     map = new Map();
 }
 /**
