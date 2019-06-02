@@ -14,7 +14,7 @@
 #include <QLayout>
 #include <QAction>
 
-#define MAIN_TIMER_MS 20
+#define MAIN_TIMER_MS 40
 
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
@@ -176,6 +176,7 @@ void G_Game::movePlayerAi(){
     default:
         key_release = nullptr;
     }
+    aiPlayer->init();
     aiPlayer->isOnNextPosition();
     if(key_release != nullptr){
         QApplication::sendEvent(this, key_release);

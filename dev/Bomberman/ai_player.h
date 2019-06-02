@@ -25,6 +25,9 @@ private:
 
     QPoint positionToReach;
     int index = 0;
+
+    MapBloc* previousBloc1;
+    MapBloc* previousBloc2;
 };
 
 #endif // AI_PLAYER_H

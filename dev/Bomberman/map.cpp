@@ -204,6 +204,8 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
     //Add first node (where the player currently is, his starting place)
     PriorityQueueNode<MapBloc>* currentNode = queue->at(queue->insert(from, 0));
+
+    qDebug() << "bug";
     currentNode->getContent()->setSeen(true);
 
     //Run through the graph to build the shortest-path tree
@@ -226,14 +228,19 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
         currentNode = queue->takeMin();
         currentNode->getContent()->setVisited(true);
+
+
         //qDebug() << "noeud : " << currentNode->getContent()->getPosition();
     }while(!destination->hasBeenVisited());// || !queue->isEmpty());
     //create path from destination to departure
     do
     {
+        qDebug() << " apres bug1";
         path->push_front(currentNode->getContent());
+        qDebug() << " apres bug2";
         currentNode = currentNode->getFatherNode();
-    }while(currentNode->getContent() != from);
+        qDebug() << " apres bug3" << currentNode;
+    }while(currentNode != nullptr && currentNode->getContent() != from);
 
     //mutex->unlock();
     lock->unlock();
