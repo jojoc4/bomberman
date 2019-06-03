@@ -74,24 +74,24 @@ void Map::readFromFile(QString path)
                 switch(line[j]){
                     case 'I':
                         t[j][i] = new MapBloc(MapBloc::INDESTRUCTIBLE);
-                    break;
+                        break;
                     case 'D':
                         t[j][i] = new MapBloc(MapBloc::DESTRUCTIBLE);
-                    break;
+                        break;
                     case 'F':
                         t[j][i] = new MapBloc(MapBloc::BACKGROUND);
-                    break;
+                        break;
                     case '1':
                         t[j][i] = new MapBloc(MapBloc::BACKGROUND);
-                        j1 = QPoint(j, i);
-                    break;
+                        p1 = QPoint(j, i);
+                        break;
                     case '2':
                         t[j][i] = new MapBloc(MapBloc::BACKGROUND);
-                        j2 = QPoint(j, i);
-                    break;
+                        p2 = QPoint(j, i);
+                        break;
                     default:
                         throw "Map read error";
-                    break;
+                        break;
                 }
             t[j][i]->setPosition(QPoint(j,i));
             }
@@ -130,9 +130,9 @@ MapBloc* Map::getMapBloc(QPoint bloc) const
 QPoint Map::getPlayerSpawn(bool nbPlayer) const
 {
     if(!nbPlayer)
-        return j1;
+        return p1;
     else
-        return j2;
+        return p2;
 }
 
 /**
@@ -205,17 +205,15 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
     //Add first node (where the player currently is, his starting place)
     PriorityQueueNode<MapBloc>* currentNode = queue->at(queue->insert(from, 0));
 
-    qDebug() << "bug";
+    //qDebug() << "bug";
     currentNode->getContent()->setSeen(true);
 
     //Run through the graph to build the shortest-path tree
     do
     {
         //Add neighbours to the priority queue
-
         for(int i=0; i<currentNode->getContent()->getNeighbours()->size(); ++i)
         {
-
             //Only add if it has not already been visited
             MapBloc* b = currentNode->getContent()->getNeighbours()->at(i);
             if(!b->hasBeenVisited())
@@ -229,17 +227,18 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
         currentNode = queue->takeMin();
         currentNode->getContent()->setVisited(true);
 
-
         //qDebug() << "noeud : " << currentNode->getContent()->getPosition();
     }while(!destination->hasBeenVisited());// || !queue->isEmpty());
+
     //create path from destination to departure
     do
     {
-        qDebug() << " apres bug1";
+        //qDebug() << currentNode->getContent()->getPosition();
+        //qDebug() << " apres bug1";
         path->push_front(currentNode->getContent());
-        qDebug() << " apres bug2";
+        //qDebug() << " apres bug2";
         currentNode = currentNode->getFatherNode();
-        qDebug() << " apres bug3" << currentNode;
+        //qDebug() << " apres bug3" << currentNode;
     }while(currentNode != nullptr && currentNode->getContent() != from);
 
     //mutex->unlock();
@@ -247,6 +246,6 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
     currentNode = nullptr;
 
-    //qDebug() << path;
+    qDebug() << "Built!";
     return path;
 }

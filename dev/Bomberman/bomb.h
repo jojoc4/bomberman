@@ -79,9 +79,6 @@ private:
     QGraphicsPixmapItem *ptrItemOnScene;
 
     QList<QGraphicsPixmapItem*> bombExplosionElement;
-
-
-
 };
 
 #endif

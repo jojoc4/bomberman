@@ -2,32 +2,38 @@
 #define AI_PLAYER_H
 
 #include "player.h"
+#include <QWidget>
 #include <QList>
 
 class Game;
 class MapBloc;
+class QKeyEvent;
 
 class AI_Player : public Player
 {
 public:
     AI_Player(Game* p_game, Player* p_opponent, QPoint pos);
-
+    virtual ~AI_Player();
 
     bool isOnNextPosition();
-    QPoint getNextPosition();
+    QPoint getNextPosition() const;
 
     void init();
+
+    virtual void act(QWidget* widget);
 
 private:
     Game* game;
     Player* opponent;
     QList<MapBloc*>* path;
-
     QPoint positionToReach;
-    int index = 0;
+    bool reached;
 
-    MapBloc* previousBloc1;
-    MapBloc* previousBloc2;
+    MapBloc* previousBlocP1;
+    MapBloc* previousBlocP2;
+
+    QKeyEvent* nextMovement();
 };
+
 
 #endif // AI_PLAYER_H

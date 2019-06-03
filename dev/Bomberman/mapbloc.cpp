@@ -9,7 +9,7 @@
  * Constructor
  */
 MapBloc::MapBloc()
-    : type(BlocType::UNDEFINED), traversable(false), ptrItemOnScene(nullptr)
+    : type(BlocType::UNDEFINED), traversable(false), ptrItemOnScene(nullptr), seen(false), visited(false)
 {}
 
 /**
@@ -18,7 +18,7 @@ MapBloc::MapBloc()
  * @param type (type of bloc, see the wiki)
  */
 MapBloc::MapBloc(int pType)
-    : type(pType), ptrItemOnScene(nullptr)
+    : type(pType), ptrItemOnScene(nullptr), seen(false), visited(false)
 {
     this->type = type;
     if(this->type <= BlocType::DESTRUCTIBLE)
@@ -29,9 +29,6 @@ MapBloc::MapBloc(int pType)
     {
         this->traversable = true;
     }
-
-    this->seen = false;
-    this->visited = false;
 }
 
 /**
@@ -178,11 +175,12 @@ void MapBloc::setVisited(bool visited)
     this->visited = visited;
 }
 
-
-void MapBloc::setPosition(QPoint pos){
+void MapBloc::setPosition(QPoint pos)
+{
     this->position = pos;
 }
 
-QPoint MapBloc::getPosition(){
+QPoint MapBloc::getPosition() const
+{
     return this->position;
 }

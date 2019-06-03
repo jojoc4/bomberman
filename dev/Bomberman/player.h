@@ -25,6 +25,7 @@ public:
     };
 
     Player();
+    virtual ~Player();
 
     QPoint getPosition() const;
     bool isDead() const;
@@ -59,7 +60,9 @@ public:
     QGraphicsPixmapItem* getPtrItemOnScene() const;
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
-private :
+    virtual void act(QWidget* widget){}
+
+protected :
     QPoint position;
     bool dead;
     int nbBombe;

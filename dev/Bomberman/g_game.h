@@ -16,10 +16,12 @@ class QGraphicsScene;
 class QVBoxLayout;
 class QHBoxLayout;
 class QAction;
+class QThread;
 class Bomb;
 class Player;
 class MapBloc;
 class AI_Player;
+class AI_Action_Thread;
 
 class G_Game : public QWidget
 {
@@ -75,6 +77,8 @@ private:
     bool gameEnd;
 
     AI_Player* aiPlayer;
+    QThread aiPlayerActionsThread;
+    AI_Action_Thread* aiActionThread;
 
     void refreshDisplay();
 

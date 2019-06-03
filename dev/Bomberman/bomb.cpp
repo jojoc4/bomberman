@@ -1,5 +1,5 @@
 #include "bomb.h"
-#include "bomb.h"
+#include "managing_threads.h"
 
 #define LEFT_EXPLOSION_BLOC_ARRAY 0
 #define TOP_EXPLOSION_BLOC_ARRAY 3
@@ -28,9 +28,7 @@ Bomb::Bomb(int pType, int pRange, QPoint pPosition, Player* pOwner)
  * Destroy the bomb
  */
 Bomb::~Bomb()
-{
-
-}
+{}
 
 /**
  * explode()

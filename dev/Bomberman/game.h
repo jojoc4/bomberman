@@ -27,7 +27,7 @@ public:
 private:
     int type;
     Player* player1;
-    AI_Player* player2;
+    Player* player2;
     Map* map;
 };
 

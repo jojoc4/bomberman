@@ -31,8 +31,8 @@ public:
 
 private:
     MapBloc*** t;
-    QPoint j1;
-    QPoint j2;
+    QPoint p1;
+    QPoint p2;
 
     //QMutex* mutex;
     QReadWriteLock* lock;

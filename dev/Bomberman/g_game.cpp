@@ -5,6 +5,7 @@
 #include "game.h"
 #include "mapbloc.h"
 #include "ai_player.h"
+#include "managing_threads.h"
 #include <QDebug>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
@@ -14,7 +15,7 @@
 #include <QLayout>
 #include <QAction>
 
-#define MAIN_TIMER_MS 40
+#define MAIN_TIMER_MS 20
 
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
@@ -93,6 +94,9 @@ G_Game::G_Game(Game *theGame, QWidget *parent)
                                            "Puissance des bombes: %2\n ").arg(p2->getNbBomb()).arg(p2->getPuissance()));
     p2->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(true).x()*TEXTURE_BLOCS_X, this->game->getMap()->getPlayerSpawn(true).y()*TEXTURE_BLOCS_Y));
 
+    aiActionThread = new AI_Action_Thread();
+    aiActionThread->moveToThread(&aiPlayerActionsThread);
+
     this->vLayout = new QVBoxLayout();
     this->vLayout->setSpacing(0);
     this->vLayout->setContentsMargins(0,0,0,0);
@@ -129,8 +133,6 @@ G_Game::G_Game(Game *theGame, QWidget *parent)
     awesomeAct->setShortcut(QKeySequence("Ctrl+H"));
     addAction(awesomeAct);
     connect(awesomeAct, SIGNAL(triggered(bool)), this, SLOT(beAwesome()));
-
-
 }
 
 /**
@@ -142,6 +144,10 @@ G_Game::~G_Game()
     //don't forget to kill the timer
     if(timeKeeper != -1)
         killTimer(timeKeeper);
+
+    aiPlayerActionsThread.quit();
+    aiPlayerActionsThread.wait();
+    delete aiActionThread;
     delete textPlayer1;
     delete textPlayer2;
     delete scene;
@@ -151,7 +157,7 @@ G_Game::~G_Game()
 }
 
 void G_Game::movePlayerAi(){
-
+/*
     QPoint destination = this->aiPlayer->getNextPosition();
     QPoint actuel = this->aiPlayer->getPosition();
     QKeyEvent *key_press = nullptr;
@@ -197,7 +203,7 @@ void G_Game::movePlayerAi(){
     if(key_press != nullptr){
         QApplication::sendEvent(this, key_press);
     }
-
+*/
 }
 
 /**
@@ -208,9 +214,11 @@ void G_Game::startGame()
 {
     //Build the graph for Dijkstra pathfinding
     this->game->getMap()->buildGraph();
+
     //aiPlayer = new AI_Player(game,game->getPlayer(true),(QPoint(this->game->getMap()->getPlayerSpawn(false).x()*TEXTURE_BLOCS_X, this->game->getMap()->getPlayerSpawn(false).y()*TEXTURE_BLOCS_Y)));
     aiPlayer = static_cast<AI_Player*>(game->getPlayer(true));
     aiPlayer->init();
+
     //create blocks for the map and display them
     this->createDisplayMap();
     //create players, give them their textures and display them
@@ -218,9 +226,7 @@ void G_Game::startGame()
     //start the display timer
     this->timeKeeper = this->startTimer(MAIN_TIMER_MS, Qt::PreciseTimer);
 
-
     gameEnd = false;
-
 }
 
 /**
@@ -231,62 +237,62 @@ void G_Game::keyPressEvent(QKeyEvent* event)
 {
     switch(event->key())
     {
-    //Player 1
-    case Qt::Key_W :
-        p1MovingDir = Player::UP;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_A :
-        p1MovingDir = Player::LEFT;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_S :
-        p1MovingDir = Player::DOWN;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_D :
-        p1MovingDir = Player::RIGHT;
-        ++nbTouchesP1;
-        p1Moving = true;
-        break;
-    case Qt::Key_Space :
-    {
-        Player* player = game->getPlayer(false);
-        QPoint pos = player->getPosition();
-        dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
-        break;
-    }
+        //Player 1
+        case Qt::Key_W :
+            p1MovingDir = Player::UP;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_A :
+            p1MovingDir = Player::LEFT;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_S :
+            p1MovingDir = Player::DOWN;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_D :
+            p1MovingDir = Player::RIGHT;
+            ++nbTouchesP1;
+            p1Moving = true;
+            break;
+        case Qt::Key_Space :
+        {
+            Player* player = game->getPlayer(false);
+            QPoint pos = player->getPosition();
+            dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
+            break;
+        }
         //Player 2
-    case Qt::Key_Up :
-        p2MovingDir = Player::UP;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Left :
-        p2MovingDir = Player::LEFT;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Down :
-        p2MovingDir = Player::DOWN;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Right :
-        p2MovingDir = Player::RIGHT;
-        ++nbTouchesP2;
-        p2Moving = true;
-        break;
-    case Qt::Key_Return :
-    {
-        Player* player = game->getPlayer(true);
-        QPoint pos = player->getPosition();
-        dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
-        break;
-    }
+        case Qt::Key_Up :
+            p2MovingDir = Player::UP;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Left :
+            p2MovingDir = Player::LEFT;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Down :
+            p2MovingDir = Player::DOWN;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Right :
+            p2MovingDir = Player::RIGHT;
+            ++nbTouchesP2;
+            p2Moving = true;
+            break;
+        case Qt::Key_Return :
+        {
+            Player* player = game->getPlayer(true);
+            QPoint pos = player->getPosition();
+            dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
+            break;
+        }
     }
 }
 
@@ -300,8 +306,10 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
     //player 1
     if(event->key() == Qt::Key_W || event->key() == Qt::Key_A || event->key() == Qt::Key_S || event->key() == Qt::Key_D)
     {
-        if(--nbTouchesP1 == 0) //Only stop moving if the key was the last one pressed
+        --nbTouchesP1;
+        if(nbTouchesP1 < 1) //Only stop moving if the key was the last one pressed
         {
+            nbTouchesP1 = 0;
             p1MovingDir = -1;
             p1Moving = false;
         }
@@ -309,8 +317,10 @@ void G_Game::keyReleaseEvent(QKeyEvent *event)
     //player 2
     else if(event->key() == Qt::Key_Up || event->key() == Qt::Key_Left || event->key() == Qt::Key_Down || event->key() == Qt::Key_Right)
     {
-        if(--nbTouchesP2 == 0)
+        --nbTouchesP2;
+        if(nbTouchesP2 < 1)
         {
+            nbTouchesP2 = 0;
             p2MovingDir = -1;
             p2Moving = false;
         }
@@ -325,9 +335,8 @@ void G_Game::timerEvent(QTimerEvent*)
 {
     this->timerPlayers();
     this->refreshDisplay();
-    movePlayerAi();
-
-
+    //movePlayerAi();
+    this->aiActionThread->act(aiPlayer, this);
 }
 
 /**
@@ -459,26 +468,26 @@ void G_Game::createDisplayMap()
         int type = bloc->getType();
 
         switch(type){
-        case MapBloc::INDESTRUCTIBLE: //indestructible
-        {
-            QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_BLOCS_X, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
-            //Add and move the new block to the scene
-            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
+            case MapBloc::INDESTRUCTIBLE: //indestructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(TEXTURE_BLOCS_X, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y))); //only take the texture of the block (QPixmap.copy() returns a crop of the original Pixmap)
+                //Add and move the new block to the scene
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
 
-            //Keep track of the pointer to the block
-            bloc->setPtrItemOnScene(item);
-            break;
-        }
-        case MapBloc::DESTRUCTIBLE: //destructible
-        {
-            QPixmap blocImage(allBlocks.copy(QRect(0, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
-            QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
-            item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
+                //Keep track of the pointer to the block
+                bloc->setPtrItemOnScene(item);
+                break;
+            }
+            case MapBloc::DESTRUCTIBLE: //destructible
+            {
+                QPixmap blocImage(allBlocks.copy(QRect(0, 0, TEXTURE_BLOCS_X, TEXTURE_BLOCS_Y)));
+                QGraphicsPixmapItem *item = this->scene->addPixmap(blocImage);
+                item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
 
-            bloc->setPtrItemOnScene(item);
-            break;
-        }
+                bloc->setPtrItemOnScene(item);
+                break;
+            }
         }
     }
 
@@ -507,68 +516,68 @@ void G_Game::updateDisplayMap()
 
         switch(type)
         {
-        case MapBloc::BACKGROUND: //background
-        {
-            if(ptrItem != nullptr)
+            case MapBloc::BACKGROUND: //background
             {
-                scene->removeItem(ptrItem);
-                bloc->setPtrItemOnScene(nullptr);
+                if(ptrItem != nullptr)
+                {
+                    scene->removeItem(ptrItem);
+                    bloc->setPtrItemOnScene(nullptr);
+                }
+                break;
             }
-            break;
-        }
-        case MapBloc::UPGRADE_NUMBER: //upgrade nbre
-        {
-            if(ptrItem != nullptr)
+            case MapBloc::UPGRADE_NUMBER: //upgrade nbre
             {
-                ptrItem->setPixmap(allBlocks.copy(QRect(2*TEXTURE_BLOCS_X,
-                                                        0, TEXTURE_BLOCS_X,
-                                                        TEXTURE_BLOCS_Y)));
+                if(ptrItem != nullptr)
+                {
+                    ptrItem->setPixmap(allBlocks.copy(QRect(2*TEXTURE_BLOCS_X,
+                                                            0, TEXTURE_BLOCS_X,
+                                                            TEXTURE_BLOCS_Y)));
+                }
+                else
+                {
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(2*TEXTURE_BLOCS_X,
+                                                                                              0, TEXTURE_BLOCS_X,
+                                                                                              TEXTURE_BLOCS_Y))));
+                    item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
+                    bloc->setPtrItemOnScene(item);
+                }
+                break;
             }
-            else
+            case MapBloc::BONUS: //bonus
             {
-                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(2*TEXTURE_BLOCS_X,
-                                                                                          0, TEXTURE_BLOCS_X,
-                                                                                          TEXTURE_BLOCS_Y))));
-                item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
-                bloc->setPtrItemOnScene(item);
+                if(ptrItem != nullptr)
+                {
+                    ptrItem->setPixmap(allBlocks.copy(QRect(4*TEXTURE_BLOCS_X,
+                                                            0, TEXTURE_BLOCS_X,
+                                                            TEXTURE_BLOCS_Y)));
+                }
+                else
+                {
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(4*TEXTURE_BLOCS_X,
+                                                                                              0, TEXTURE_BLOCS_X,
+                                                                                              TEXTURE_BLOCS_Y))));
+                    item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
+                    bloc->setPtrItemOnScene(item);
+                }
+                break;
             }
-            break;
-        }
-        case MapBloc::BONUS: //bonus
-        {
-            if(ptrItem != nullptr)
+            case MapBloc::UPGRADE_POWER: //upgrade power
             {
-                ptrItem->setPixmap(allBlocks.copy(QRect(4*TEXTURE_BLOCS_X,
-                                                        0, TEXTURE_BLOCS_X,
-                                                        TEXTURE_BLOCS_Y)));
+                if(ptrItem != nullptr){
+                    ptrItem->setPixmap(allBlocks.copy(QRect(3*TEXTURE_BLOCS_X,
+                                                            0, TEXTURE_BLOCS_X,
+                                                            TEXTURE_BLOCS_Y)));
+                }
+                else
+                {
+                    QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(3*TEXTURE_BLOCS_X,
+                                                                                              0, TEXTURE_BLOCS_X,
+                                                                                              TEXTURE_BLOCS_Y))));
+                    item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
+                    bloc->setPtrItemOnScene(item);
+                }
+                break;
             }
-            else
-            {
-                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(4*TEXTURE_BLOCS_X,
-                                                                                          0, TEXTURE_BLOCS_X,
-                                                                                          TEXTURE_BLOCS_Y))));
-                item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
-                bloc->setPtrItemOnScene(item);
-            }
-            break;
-        }
-        case MapBloc::UPGRADE_POWER: //upgrade power
-        {
-            if(ptrItem != nullptr){
-                ptrItem->setPixmap(allBlocks.copy(QRect(3*TEXTURE_BLOCS_X,
-                                                        0, TEXTURE_BLOCS_X,
-                                                        TEXTURE_BLOCS_Y)));
-            }
-            else
-            {
-                QGraphicsPixmapItem *item = scene->addPixmap(QPixmap(allBlocks.copy(QRect(3*TEXTURE_BLOCS_X,
-                                                                                          0, TEXTURE_BLOCS_X,
-                                                                                          TEXTURE_BLOCS_Y))));
-                item->setPos((i/NB_BLOCS_X)*sizeX, (i%NB_BLOCS_Y)*sizeY);
-                bloc->setPtrItemOnScene(item);
-            }
-            break;
-        }
         }
     }
 }
@@ -613,17 +622,17 @@ void G_Game::updateDisplayPlayers()
 
     switch(p1MovingDir)
     {
-    case Player::UP :
-        this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()-2)/NB_BLOCS_Y), false);
-        break;
-    case Player::LEFT :
-        this->game->move(QPoint(p1Pos.x()-2, p1Pos.y()), Player::LEFT, QPoint((p1Pos.x()-2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), false);
-        break;
-    case Player::DOWN :
-        this->game->move(QPoint(p1Pos.x(), p1Pos.y()+2), Player::DOWN, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()+2)/NB_BLOCS_Y), false);
-        break;
-    case Player::RIGHT :
-        this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), false);
+        case Player::UP :
+            this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()-2)/NB_BLOCS_Y), false);
+            break;
+        case Player::LEFT :
+            this->game->move(QPoint(p1Pos.x()-2, p1Pos.y()), Player::LEFT, QPoint((p1Pos.x()-2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), false);
+            break;
+        case Player::DOWN :
+            this->game->move(QPoint(p1Pos.x(), p1Pos.y()+2), Player::DOWN, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()+2)/NB_BLOCS_Y), false);
+            break;
+        case Player::RIGHT :
+            this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), false);
     }
 
     if(!ptrP1->getVisible()) //Player is not invisible
@@ -650,17 +659,17 @@ void G_Game::updateDisplayPlayers()
 
     switch(p2MovingDir)
     {
-    case Player::UP :
-        this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()-2)/NB_BLOCS_Y), true);
-        break;
-    case Player::LEFT :
-        this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), true);
-        break;
-    case Player::DOWN :
-        this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()+2)/NB_BLOCS_Y), true);
-        break;
-    case Player::RIGHT :
-        this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), true);
+        case Player::UP :
+            this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()-2)/NB_BLOCS_Y), true);
+            break;
+        case Player::LEFT :
+            this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), true);
+            break;
+        case Player::DOWN :
+            this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()+2)/NB_BLOCS_Y), true);
+            break;
+        case Player::RIGHT :
+            this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), true);
     }
 
 
@@ -748,7 +757,7 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
             if(b->getPosition() == blockPos)
                 return;
         }
-        Bomb* theBomb = new Bomb(p->getSuperBomb(), p->getPuissance(), blockPos,p);
+        Bomb* theBomb = new Bomb(p->getSuperBomb(), p->getPuissance(), blockPos, p);
 
         bombs.push_back(theBomb);
 
@@ -807,63 +816,62 @@ void G_Game::updateBombAnimation(Bomb* bomb)
     if(bomb->getType() == Bomb::BOMB)
     {
         switch(valCounter){
-        case TIME_BLINKING_BOMB_1 :
-        {
-            QRect square(TEXTURE_BOMB_STEP_1_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
-            setTextureBomb(bomb,square);
-            break;
-        }
-        case TIME_BLINKING_BOMB_2 :
-        {
+            case TIME_BLINKING_BOMB_1 :
+            {
+                QRect square(TEXTURE_BOMB_STEP_1_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
+                setTextureBomb(bomb,square);
+                break;
+            }
+            case TIME_BLINKING_BOMB_2 :
+            {
 
-            QRect square(TEXTURE_BOMB_STEP_2_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
-            setTextureBomb(bomb,square);
-            break;
-        }
-        case TIME_BLINKING_BOMB_3 :
-        {
-            QRect square(TEXTURE_BOMB_STEP_3_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
-            setTextureBomb(bomb,square);
-            break;
-        }
-        case TIME_BLINKING_BOMB_4 :
-        {
-            QRect square(TEXTURE_BOMB_STEP_2_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
-            setTextureBomb(bomb,square);
-            bomb->resetCounter();
-            break;
-        }
-
+                QRect square(TEXTURE_BOMB_STEP_2_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
+                setTextureBomb(bomb,square);
+                break;
+            }
+            case TIME_BLINKING_BOMB_3 :
+            {
+                QRect square(TEXTURE_BOMB_STEP_3_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
+                setTextureBomb(bomb,square);
+                break;
+            }
+            case TIME_BLINKING_BOMB_4 :
+            {
+                QRect square(TEXTURE_BOMB_STEP_2_X, TEXTURE_BOMB_STEP_X_Y, TEXTURE_BOMB_X, TEXTURE_BOMB_Y);
+                setTextureBomb(bomb,square);
+                bomb->resetCounter();
+                break;
+            }
         }
     } else {
         switch(valCounter)
         {
-        case TIME_BLINKING_BOMB_1 :
-        {
-            QRect square(TEXTURE_SUPERBOMB_STEP_1_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
-            setTextureBomb(bomb,square);
-            break;
-        }
-        case TIME_BLINKING_BOMB_2 :
-        {
+            case TIME_BLINKING_BOMB_1 :
+            {
+                QRect square(TEXTURE_SUPERBOMB_STEP_1_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
+                setTextureBomb(bomb,square);
+                break;
+            }
+            case TIME_BLINKING_BOMB_2 :
+            {
 
-            QRect square(TEXTURE_SUPERBOMB_STEP_2_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
-            setTextureBomb(bomb,square);
-            break;
-        }
-        case TIME_BLINKING_BOMB_3 :
-        {
-            QRect square(TEXTURE_SUPERBOMB_STEP_3_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
-            setTextureBomb(bomb,square);
-            break;
-        }
-        case TIME_BLINKING_BOMB_4 :
-        {
-            QRect square(TEXTURE_SUPERBOMB_STEP_2_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
-            setTextureBomb(bomb,square);
-            bomb->resetCounter();
-            break;
-        }
+                QRect square(TEXTURE_SUPERBOMB_STEP_2_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
+                setTextureBomb(bomb,square);
+                break;
+            }
+            case TIME_BLINKING_BOMB_3 :
+            {
+                QRect square(TEXTURE_SUPERBOMB_STEP_3_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
+                setTextureBomb(bomb,square);
+                break;
+            }
+            case TIME_BLINKING_BOMB_4 :
+            {
+                QRect square(TEXTURE_SUPERBOMB_STEP_2_X, TEXTURE_SUPERBOMB_STEP_X_Y, TEXTURE_SUPERBOMB_X, TEXTURE_SUPERBOMB_Y);
+                setTextureBomb(bomb,square);
+                bomb->resetCounter();
+                break;
+            }
         }
     }
 }
@@ -1070,7 +1078,6 @@ void G_Game::destroyBlocs(Bomb* bomb)
     }
 
     theMap->buildGraph();
-
 }
 
 /**
@@ -1087,7 +1094,6 @@ void G_Game::checkPlayerExplosion(Player *player1, Player *player2 , int x, int 
     {
         player1->die();
         gameEnd = true;
-
     }
     if(player2->getPosition().rx()/NB_BLOCS_X == x && player2->getPosition().ry()/NB_BLOCS_Y == y && !gameEnd && !player2->getInvincible())
     {

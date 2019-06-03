@@ -39,7 +39,7 @@ public:
     void explode();
 
     void setPosition(QPoint);
-    QPoint getPosition();
+    QPoint getPosition() const;
 
     enum BlocType: short
     {
@@ -65,7 +65,5 @@ private:
     bool visited;
     QList<MapBloc*> neighbours;
 };
-
-
 
 #endif

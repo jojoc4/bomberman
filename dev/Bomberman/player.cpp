@@ -17,6 +17,11 @@ Player::Player()
     position = QPoint(0,0);
 }
 
+Player::~Player()
+{
+    ptrItemOnScene = nullptr;
+}
+
 /**
  * @brief Player::giveBonus
  * Give a bonus in term of luck
