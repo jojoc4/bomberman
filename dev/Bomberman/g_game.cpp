@@ -94,8 +94,8 @@ G_Game::G_Game(Game *theGame, QWidget *parent)
                                            "Puissance des bombes: %2\n ").arg(p2->getNbBomb()).arg(p2->getPuissance()));
     p2->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(true).x()*TEXTURE_BLOCS_X, this->game->getMap()->getPlayerSpawn(true).y()*TEXTURE_BLOCS_Y));
 
-    aiActionThread = new AI_Action_Thread();
-    aiActionThread->moveToThread(&aiPlayerActionsThread);
+    aiPlayer = static_cast<AI_Player*>(game->getPlayer(true));
+    aiPlayer->setGameWidget(this);
 
     this->vLayout = new QVBoxLayout();
     this->vLayout->setSpacing(0);
@@ -144,66 +144,12 @@ G_Game::~G_Game()
     //don't forget to kill the timer
     if(timeKeeper != -1)
         killTimer(timeKeeper);
-
-    aiPlayerActionsThread.quit();
-    aiPlayerActionsThread.wait();
-    delete aiActionThread;
     delete textPlayer1;
     delete textPlayer2;
     delete scene;
     delete container;
     delete vLayout;
     delete hLayout;
-}
-
-void G_Game::movePlayerAi(){
-/*
-    QPoint destination = this->aiPlayer->getNextPosition();
-    QPoint actuel = this->aiPlayer->getPosition();
-    QKeyEvent *key_press = nullptr;
-    QKeyEvent *key_release = nullptr;
-
-    qDebug() << "Joueur " << this->aiPlayer->getPosition().x() /30 << this->aiPlayer->getPosition().y()/30 ;
-    qDebug() << "case" << this->aiPlayer->getNextPosition();
-
-    switch(p2MovingDir){
-    case Player::UP:
-        key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Up, Qt::NoModifier);
-        break;
-    case Player::DOWN:
-        key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Down, Qt::NoModifier);
-        break;
-    case Player::LEFT:
-        key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Left, Qt::NoModifier);
-        break;
-    case Player::RIGHT:
-        key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Right, Qt::NoModifier);
-        break;
-    default:
-        key_release = nullptr;
-    }
-    aiPlayer->init();
-    aiPlayer->isOnNextPosition();
-    if(key_release != nullptr){
-        QApplication::sendEvent(this, key_release);
-    }
-    if(destination.x() < actuel.x()/30){
-        key_press = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Left, Qt::NoModifier);
-    }
-    if(destination.x() > actuel.x()/30){
-        key_press = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
-    }
-    if(destination.y() < actuel.y()/30){
-        key_press = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
-    }
-    if(destination.y() > actuel.y()/30){
-        key_press = new QKeyEvent(QKeyEvent::KeyPress,Qt::Key_Down, Qt::NoModifier);
-    }
-
-    if(key_press != nullptr){
-        QApplication::sendEvent(this, key_press);
-    }
-*/
 }
 
 /**
@@ -215,8 +161,8 @@ void G_Game::startGame()
     //Build the graph for Dijkstra pathfinding
     this->game->getMap()->buildGraph();
 
-    //aiPlayer = new AI_Player(game,game->getPlayer(true),(QPoint(this->game->getMap()->getPlayerSpawn(false).x()*TEXTURE_BLOCS_X, this->game->getMap()->getPlayerSpawn(false).y()*TEXTURE_BLOCS_Y)));
-    aiPlayer = static_cast<AI_Player*>(game->getPlayer(true));
+    //initialize the AI player
+    aiPlayer->togglePlaying();
     aiPlayer->init();
 
     //create blocks for the map and display them
@@ -226,7 +172,14 @@ void G_Game::startGame()
     //start the display timer
     this->timeKeeper = this->startTimer(MAIN_TIMER_MS, Qt::PreciseTimer);
 
+    aiPlayer->start();
+
     gameEnd = false;
+}
+
+void G_Game::receiveAIEvent(QKeyEvent *event)
+{
+    QApplication::sendEvent(this, event);
 }
 
 /**
@@ -335,8 +288,6 @@ void G_Game::timerEvent(QTimerEvent*)
 {
     this->timerPlayers();
     this->refreshDisplay();
-    //movePlayerAi();
-    this->aiActionThread->act(aiPlayer, this);
 }
 
 /**
@@ -912,6 +863,10 @@ void G_Game::dislayExplosionBomb(Bomb *bomb)
         bombs.removeOne(bomb);
         bomb->getOwner()->receiveBomb(1);
         delete bomb;
+
+        //A bomb has exploded, rebuild the graph because there could be new accessible blocks
+        game->getMap()->buildGraph();
+
         this->updateDisplayMap();
         return;
     }
@@ -1076,8 +1031,6 @@ void G_Game::destroyBlocs(Bomb* bomb)
             bomb->addDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY,y);
         }
     }
-
-    theMap->buildGraph();
 }
 
 /**

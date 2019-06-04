@@ -320,3 +320,4 @@ void Player::die()
 {
     dead = true;
 }
+

@@ -17,6 +17,7 @@ class QVBoxLayout;
 class QHBoxLayout;
 class QAction;
 class QThread;
+class QKeyEvent;
 class Bomb;
 class Player;
 class MapBloc;
@@ -35,6 +36,7 @@ signals:
 
 public slots:
     void startGame();
+    void receiveAIEvent(QKeyEvent *event);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
@@ -77,8 +79,6 @@ private:
     bool gameEnd;
 
     AI_Player* aiPlayer;
-    QThread aiPlayerActionsThread;
-    AI_Action_Thread* aiActionThread;
 
     void refreshDisplay();
 
@@ -101,8 +101,6 @@ private:
 
     void timerPlayers();
     void checkPlayerExplosion(Player* player1, Player* player2 , int x, int y);
-
-    void movePlayerAi();
 
 private slots:
     void beAwesome();

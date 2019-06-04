@@ -19,7 +19,8 @@ G_MainWidget::G_MainWidget(QWidget *parent)
 }
 
 void G_MainWidget::changeWidget(int index){
-    switch(index){
+    switch(index)
+    {
         case 1 :
             createMapScreen();
         case 2 :

@@ -174,6 +174,8 @@ void Map::buildGraph()
     }
     //mutex->unlock();
     lock->unlock();
+
+    qDebug() << "Built!";
 }
 
 /**
@@ -246,6 +248,5 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
 
     currentNode = nullptr;
 
-    qDebug() << "Built!";
     return path;
 }

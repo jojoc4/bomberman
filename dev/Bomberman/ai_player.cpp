@@ -2,10 +2,10 @@
 #include "mapbloc.h"
 #include "game.h"
 #include "map.h"
-#include "g_game.h"
 #include <QKeyEvent>
+#include <QMutex>
 
-#define ACTION_TIMER_MS 40 //Timer interval for the actions of the AI players.
+#define ACTION_INTERVAL_MS 20 //Timer interval for the actions of the AI players.
 
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
@@ -18,27 +18,60 @@
 #define PLAYER_OFFSET_Y TEXTURE_BLOCS_Y/2
 
 AI_Player::AI_Player(Game* p_game, Player* p_opponent, QPoint pos)
-    : Player(), game(p_game), opponent(p_opponent), previousBlocP1(nullptr), previousBlocP2(nullptr), reached(false)
+    : Player(), game(p_game), gameWidget(nullptr), opponent(p_opponent), reached(false),
+      playing(false), previousBlocP1(nullptr), previousBlocP2(nullptr)
 {
     this->setPosition(pos);
     this->path = new QList<MapBloc*>();
+    this->mutex = new QMutex(QMutex::NonRecursive);
+    this->pathMutex = new QMutex(QMutex::NonRecursive);
 }
 
 AI_Player::~AI_Player()
 {
+    delete mutex;
+    delete pathMutex;
+    mutex = nullptr;
+    pathMutex = nullptr;
+
     game = nullptr;
     opponent = nullptr;
+    gameWidget = nullptr;
+
     delete path;
     path = nullptr;
+
     previousBlocP1 = nullptr;
     previousBlocP2 = nullptr;
 }
 
+void AI_Player::togglePlaying()
+{
+    mutex->lock();
+    playing = !playing;
+    mutex->unlock();
+}
+
+bool AI_Player::isPlaying() const
+{
+    mutex->lock();
+    bool p = playing;
+    mutex->unlock();
+    return p;
+}
+
+void AI_Player::setGameWidget(QWidget* gameWidget)
+{
+    this->gameWidget = gameWidget;
+    connect(this, SIGNAL(AIEvent(QKeyEvent*)), this->gameWidget, SLOT(receiveAIEvent(QKeyEvent*)));
+}
+
 void AI_Player::init(){
     QPoint p1 = this->getPosition();
-    QPoint p2 = opponent->getPosition();
-
     MapBloc* blocP1 = game->getMap()->getMapBloc(QPoint(p1.x()/NB_BLOCS_X, p1.y()/NB_BLOCS_Y));
+
+    pathMutex->lock();
+    QPoint p2 = opponent->getPosition();
     MapBloc* blocP2 = game->getMap()->getMapBloc(QPoint(p2.x()/NB_BLOCS_X, p2.y()/NB_BLOCS_Y));
     /*
     qDebug() << "atteindre: " << getNextPosition();
@@ -54,16 +87,20 @@ void AI_Player::init(){
 
         reached = false;
     }
+    pathMutex->unlock();
 }
 
 QPoint AI_Player::getNextPosition() const {
+    pathMutex->lock();
     return positionToReach;
+    pathMutex->unlock();
 }
 
 bool AI_Player::isOnNextPosition(){
     bool condition = false;
 
-    if(QPoint(this->getPosition().x()/NB_BLOCS_X, this->getPosition().y()/NB_BLOCS_Y) == getNextPosition()){
+    pathMutex->lock();
+    if(QPoint(this->getPosition().x()/NB_BLOCS_X, this->getPosition().y()/NB_BLOCS_Y) == positionToReach){
         condition = true;
         if(!this->path->isEmpty()){
             positionToReach = QPoint(this->path->takeFirst()->getPosition());
@@ -72,11 +109,15 @@ bool AI_Player::isOnNextPosition(){
             reached = true;
         }
     }
+    pathMutex->unlock();
 
     return condition;
 }
 
-void AI_Player::act(QWidget* widget)
+/**
+ * @brief AI_Player::act : the method used by the AI to move and drop bombs
+ */
+void AI_Player::act()
 {
     QKeyEvent* key_release = nullptr;
     QKeyEvent* key_press = nullptr;
@@ -103,7 +144,7 @@ void AI_Player::act(QWidget* widget)
     }
 
     if(key_release != nullptr){
-        QApplication::sendEvent(widget, key_release);
+        emit AIEvent(key_release);
     }
 
     init();
@@ -112,26 +153,36 @@ void AI_Player::act(QWidget* widget)
         key_press = nextMovement();
 
     if(key_press != nullptr){
-        QApplication::sendEvent(widget, key_press);
+        emit AIEvent(key_press);
     }
 }
 
 QKeyEvent* AI_Player::nextMovement()
 {
-    QPoint destination = this->getNextPosition();
+    QKeyEvent* event = nullptr;
     QPoint actuel = this->getPosition();
 
-    if(destination.x() < actuel.x()/30)
-        return new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Left, Qt::NoModifier);
+    pathMutex->lock();
+    QPoint destination = this->positionToReach;
 
-    else if(destination.x() > actuel.x()/30)
-        return new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+    if(destination.x() < actuel.x()/NB_BLOCS_X)
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Left, Qt::NoModifier);
+    else if(destination.x() > actuel.x()/NB_BLOCS_X)
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
+    else if(destination.y() < actuel.y()/NB_BLOCS_Y)
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
+    else if(destination.y() > actuel.y()/NB_BLOCS_Y)
+        event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Down, Qt::NoModifier);
 
-    else if(destination.y() < actuel.y()/30)
-        return new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
+    pathMutex->unlock();
+    return event;
+}
 
-    else if(destination.y() > actuel.y()/30)
-        return new QKeyEvent(QKeyEvent::KeyPress,Qt::Key_Down, Qt::NoModifier);
-
-    return nullptr;
+void AI_Player::run()
+{
+    while(isPlaying())
+    {
+        act();
+        msleep(ACTION_INTERVAL_MS);
+    }
 }
