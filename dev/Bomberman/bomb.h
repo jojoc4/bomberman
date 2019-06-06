@@ -46,8 +46,6 @@ public:
 
     void addFireExplosion(QGraphicsPixmapItem*);
 
-    void explode();
-
     enum type : short
     {
         BOMB = 0,
