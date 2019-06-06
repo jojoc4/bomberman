@@ -55,8 +55,7 @@ HEADERS += \
     g_help.h \
     g_mainwidget.h \
     priorityqueue.h \
-    ai_player.h \
-    managing_threads.h
+    ai_player.h
 
 RESOURCES += \
     ressources.qrc

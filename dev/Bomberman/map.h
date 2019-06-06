@@ -15,8 +15,9 @@
 
 class MapBloc;
 
-class Map
+class Map : public QThread
 {
+    Q_OBJECT
 public:
     Map();
     virtual ~Map();
@@ -25,17 +26,20 @@ public:
     MapBloc* getMapBloc(QPoint bloc) const;
     QPoint getPlayerSpawn(bool nbPlayer) const;
 
-    void buildGraph();
-
     QList<MapBloc*>* getShortestPath(MapBloc* from, MapBloc* destination);
 
+protected:
+    virtual void run() override;
+
 private:
-    MapBloc*** t;
+    MapBloc*** tabMapBlocs;
     QPoint p1;
     QPoint p2;
 
     //QMutex* mutex;
     QReadWriteLock* lock;
+
+    void buildGraph();
 };
 
 #endif

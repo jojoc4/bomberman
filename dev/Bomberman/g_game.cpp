@@ -5,7 +5,6 @@
 #include "game.h"
 #include "mapbloc.h"
 #include "ai_player.h"
-#include "managing_threads.h"
 #include <QDebug>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
@@ -159,11 +158,12 @@ G_Game::~G_Game()
 void G_Game::startGame()
 {
     //Build the graph for Dijkstra pathfinding
-    this->game->getMap()->buildGraph();
+    this->game->getMap()->start();
+    this->game->getMap()->wait();
 
     //initialize the AI player
-    aiPlayer->togglePlaying();
     aiPlayer->init();
+    aiPlayer->togglePlaying();
 
     //create blocks for the map and display them
     this->createDisplayMap();
@@ -731,13 +731,14 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
  */
 void G_Game::updateDisplayBombs()
 {
+    bool bombExploded = false;
     for(Bomb* bomb:bombs)
     {
         if(bomb->getExploded())
         {
             if(bomb->getValCounterBomb() == TIME_BEFORE_EXPLOSION)
             {
-                dislayExplosionBomb(bomb);
+                bombExploded = dislayExplosionBomb(bomb);
                 bomb->resetCounter();
                 bomb->postStepExplosion();
             } else {
@@ -747,6 +748,9 @@ void G_Game::updateDisplayBombs()
             updateBombAnimation(bomb);
         }
     }
+
+    if(bombExploded)
+        game->getMap()->start();
 }
 
 /**
@@ -845,7 +849,7 @@ void G_Game::setTextureBomb(Bomb* bomb, QRect square)
  * Call the function to display the explosion and manage the step of explosion
  * @param bomb : pointer of the explosing bomb
  */
-void G_Game::dislayExplosionBomb(Bomb *bomb)
+bool G_Game::dislayExplosionBomb(Bomb *bomb)
 {
     // delete previous explosion flame
     QList<QGraphicsPixmapItem*>* listElement = bomb->getItemsExplosion();
@@ -864,11 +868,8 @@ void G_Game::dislayExplosionBomb(Bomb *bomb)
         bomb->getOwner()->receiveBomb(1);
         delete bomb;
 
-        //A bomb has exploded, rebuild the graph because there could be new accessible blocks
-        game->getMap()->buildGraph();
-
         this->updateDisplayMap();
-        return;
+        return true;
     }
     QRect center(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_CENTER, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
     QRect right(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_RIGHT, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);
@@ -907,6 +908,8 @@ void G_Game::dislayExplosionBomb(Bomb *bomb)
         drawFlameExplosion(bottom,bomb,0, -bomb->getNbDestroyedBlock(BOTTOM_EXPLOSION_BLOC_ARRAY));
     if(bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY) != 0)
         drawFlameExplosion(up,bomb,0, -bomb->getNbDestroyedBlock(TOP_EXPLOSION_BLOC_ARRAY));
+
+    return false;
 }
 
 /**

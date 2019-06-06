@@ -14,12 +14,13 @@
 class Map;
 class MapBloc;
 class Player;
-class Bomb
 
+
+class Bomb
 {
 public:
     Bomb();
-    Bomb(int type, int range, QPoint position, Player *pOwner);
+    Bomb(int type, int range, QPoint position, Player* pOwner);
     virtual ~Bomb();
 
     int getType() const;

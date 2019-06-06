@@ -15,14 +15,14 @@ using namespace std;
  */
 Map::Map()
 {
-    t = new MapBloc**[NB_BLOCS_X];
+    tabMapBlocs = new MapBloc**[NB_BLOCS_X];
     for(int i = 0; i< NB_BLOCS_X; ++i)
     {
-        t[i] = new MapBloc*[NB_BLOCS_Y];
+        tabMapBlocs[i] = new MapBloc*[NB_BLOCS_Y];
 
         for(int j = 0; j < NB_BLOCS_Y; ++j)
         {
-            t[i][j] = nullptr;
+            tabMapBlocs[i][j] = nullptr;
         }
     }
 
@@ -40,12 +40,12 @@ Map::~Map()
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)
         {
-            delete t[i][j];
-            t[i][j] = nullptr;
+            delete tabMapBlocs[i][j];
+            tabMapBlocs[i][j] = nullptr;
         }
-        t[i]=nullptr;
+        tabMapBlocs[i]=nullptr;
     }
-    t=nullptr;
+    tabMapBlocs=nullptr;
     lock->unlock();
 
     delete lock;
@@ -73,27 +73,27 @@ void Map::readFromFile(QString path)
             {
                 switch(line[j]){
                     case 'I':
-                        t[j][i] = new MapBloc(MapBloc::INDESTRUCTIBLE);
+                        tabMapBlocs[j][i] = new MapBloc(MapBloc::INDESTRUCTIBLE);
                         break;
                     case 'D':
-                        t[j][i] = new MapBloc(MapBloc::DESTRUCTIBLE);
+                        tabMapBlocs[j][i] = new MapBloc(MapBloc::DESTRUCTIBLE);
                         break;
                     case 'F':
-                        t[j][i] = new MapBloc(MapBloc::BACKGROUND);
+                        tabMapBlocs[j][i] = new MapBloc(MapBloc::BACKGROUND);
                         break;
                     case '1':
-                        t[j][i] = new MapBloc(MapBloc::BACKGROUND);
+                        tabMapBlocs[j][i] = new MapBloc(MapBloc::BACKGROUND);
                         p1 = QPoint(j, i);
                         break;
                     case '2':
-                        t[j][i] = new MapBloc(MapBloc::BACKGROUND);
+                        tabMapBlocs[j][i] = new MapBloc(MapBloc::BACKGROUND);
                         p2 = QPoint(j, i);
                         break;
                     default:
                         throw "Map read error";
                         break;
                 }
-            t[j][i]->setPosition(QPoint(j,i));
+            tabMapBlocs[j][i]->setPosition(QPoint(j,i));
             }
         }
         //mutex->unlock();
@@ -115,7 +115,7 @@ MapBloc* Map::getMapBloc(QPoint bloc) const
 {
     //mutex->lock();
     lock->lockForRead();
-    MapBloc* b = t[bloc.x()][bloc.y()];
+    MapBloc* b = tabMapBlocs[bloc.x()][bloc.y()];
     lock->unlock();
     //mutex->unlock();
 
@@ -147,7 +147,7 @@ void Map::buildGraph()
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)
         {
-            MapBloc *bloc = t[j][i];
+            MapBloc *bloc = tabMapBlocs[j][i];
 
             bloc->resetNeighbours();
             bloc->setSeen(false);
@@ -155,17 +155,17 @@ void Map::buildGraph()
 
             if(bloc->AIUsable())
             {
-                if(t[j][i-1]->AIUsable()){
-                    bloc->addNeighbour(t[j][i-1]);
+                if(tabMapBlocs[j][i-1]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j][i-1]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i-1 << ")";
-                }if(t[j][i+1]->AIUsable()){
-                    bloc->addNeighbour(t[j][i+1]);
+                }if(tabMapBlocs[j][i+1]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j][i+1]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i+1 << ")";
-                }if(t[j-1][i]->AIUsable()){
-                    bloc->addNeighbour(t[j-1][i]);
+                }if(tabMapBlocs[j-1][i]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j-1][i]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j-1 << ";" << i << ")";
-                }if(t[j+1][i]->AIUsable()){
-                    bloc->addNeighbour(t[j+1][i]);
+                }if(tabMapBlocs[j+1][i]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j+1][i]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j+1 << ";" << i << ")";
                 }
                 //qDebug() << bloc << bloc->getPosition() << *(bloc->getNeighbours());
@@ -199,8 +199,8 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
     {
         for(int j = 0; j<NB_BLOCS_Y; ++j)
         {
-            t[j][i]->setSeen(false);
-            t[j][i]->setVisited(false);
+            tabMapBlocs[j][i]->setSeen(false);
+            tabMapBlocs[j][i]->setVisited(false);
         }
     }
 
@@ -249,4 +249,9 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
     currentNode = nullptr;
 
     return path;
+}
+
+void Map::run()
+{
+    buildGraph();
 }

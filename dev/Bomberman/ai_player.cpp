@@ -30,10 +30,12 @@ AI_Player::AI_Player(Game* p_game, Player* p_opponent, QPoint pos)
 
 AI_Player::~AI_Player()
 {
-    delete mutex;
-    delete pathMutex;
-    mutex = nullptr;
-    pathMutex = nullptr;
+    mutex->lock();
+    if(playing)
+        playing = false;
+
+    this->terminate();
+    this->wait();
 
     game = nullptr;
     opponent = nullptr;
@@ -44,6 +46,12 @@ AI_Player::~AI_Player()
 
     previousBlocP1 = nullptr;
     previousBlocP2 = nullptr;
+
+    mutex->unlock();
+
+    delete mutex;
+    mutex = nullptr;
+    pathMutex = nullptr;
 }
 
 void AI_Player::togglePlaying()

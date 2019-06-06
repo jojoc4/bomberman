@@ -95,7 +95,7 @@ private:
     void updateDisplayBombs();
     void updateBombAnimation(Bomb* bomb);
 
-    void dislayExplosionBomb(Bomb* bomb);
+    bool dislayExplosionBomb(Bomb* bomb);
     void drawFlameExplosion(QRect location, Bomb *bomb, int x, int y);
     void destroyBlocs(Bomb* bomb);
 
