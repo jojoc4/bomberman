@@ -10,7 +10,9 @@
  */
 MapBloc::MapBloc()
     : type(BlocType::UNDEFINED), traversable(false), ptrItemOnScene(nullptr), seen(false), visited(false)
-{}
+{
+    basePriority = this->AIUsable();
+}
 
 /**
  * @brief MapBloc::MapBloc(int type)
@@ -29,6 +31,8 @@ MapBloc::MapBloc(int pType)
     {
         this->traversable = true;
     }
+
+    this->AIUsable();
 }
 
 /**
@@ -56,6 +60,8 @@ void MapBloc::setType(int type)
     {
         this->traversable = true;
     }
+
+    this->AIUsable();
 }
 
 /**
@@ -83,6 +89,8 @@ void MapBloc::explode()
     {
         setType(BlocType::BACKGROUND);
     }
+
+    this->AIUsable();
 }
 
 /**
@@ -103,12 +111,26 @@ bool MapBloc::getTraversable() const
     return this->traversable;
 }
 
-bool MapBloc::AIUsable() const
+int MapBloc::AIUsable()
 {
-    if(type == BACKGROUND || type == UPGRADE_NUMBER || type == UPGRADE_POWER)
-        return true;
-    else
-        return false;
+    switch(type)
+    {
+        case BACKGROUND:
+        case UPGRADE_NUMBER:
+        case UPGRADE_POWER:
+            basePriority = 1;
+            break;
+        case DESTRUCTIBLE:
+            basePriority = 3;
+            break;
+        case BONUS:
+            basePriority = 5;
+            break;
+        default:
+            basePriority = -1;
+    }
+
+    return basePriority;
 }
 
 /**
@@ -183,4 +205,9 @@ void MapBloc::setPosition(QPoint pos)
 QPoint MapBloc::getPosition() const
 {
     return this->position;
+}
+
+int MapBloc::getBasePriority() const
+{
+    return this->basePriority;
 }

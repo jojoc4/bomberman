@@ -20,7 +20,7 @@ public:
 
     int getType() const;
     bool getTraversable() const;
-    bool AIUsable() const;
+    int AIUsable();
     QGraphicsPixmapItem* getPtrItemOnScene() const;
 
     void setType(int type);
@@ -40,6 +40,8 @@ public:
 
     void setPosition(QPoint);
     QPoint getPosition() const;
+
+    int getBasePriority() const;
 
     enum BlocType: short
     {
@@ -63,6 +65,7 @@ private:
     //DIJKSTRA PATHFINDING
     bool seen;
     bool visited;
+    int basePriority;
     QList<MapBloc*> neighbours;
 };
 

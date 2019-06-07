@@ -27,7 +27,7 @@ Map::Map()
     }
 
     //mutex = new QMutex(QMutex::NonRecursive);
-    lock = new QReadWriteLock(QReadWriteLock::NonRecursive);
+    lock = new QReadWriteLock(QReadWriteLock::Recursive);
 }
 
 /**
@@ -153,19 +153,19 @@ void Map::buildGraph()
             bloc->setSeen(false);
             bloc->setVisited(false);
 
-            if(bloc->AIUsable())
+            if(bloc->AIUsable() > 0)
             {
-                if(tabMapBlocs[j][i-1]->AIUsable()){
-                    bloc->addNeighbour(tabMapBlocs[j][i-1]);
+                if(tabMapBlocs[j+1][i]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j+1][i]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i-1 << ")";
-                }if(tabMapBlocs[j][i+1]->AIUsable()){
-                    bloc->addNeighbour(tabMapBlocs[j][i+1]);
+                }if(tabMapBlocs[j][i-1]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j][i-1]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i+1 << ")";
                 }if(tabMapBlocs[j-1][i]->AIUsable()){
                     bloc->addNeighbour(tabMapBlocs[j-1][i]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j-1 << ";" << i << ")";
-                }if(tabMapBlocs[j+1][i]->AIUsable()){
-                    bloc->addNeighbour(tabMapBlocs[j+1][i]);
+                }if(tabMapBlocs[j][i+1]->AIUsable()){
+                    bloc->addNeighbour(tabMapBlocs[j][i+1]);
                     //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j+1 << ";" << i << ")";
                 }
                 //qDebug() << bloc << bloc->getPosition() << *(bloc->getNeighbours());
@@ -184,7 +184,7 @@ void Map::buildGraph()
  * @param destination MapBloc pointer to the destination
  * @return QList of MapBloc pointers representing the path to follow
  */
-QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
+QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination, bool useDestructibleBlocks)
 {
     QList<MapBloc*>* path = new QList<MapBloc*>();
     PriorityQueue<MapBloc>* queue = new PriorityQueue<MapBloc>();
@@ -216,13 +216,16 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
         //Add neighbours to the priority queue
         for(int i=0; i<currentNode->getContent()->getNeighbours()->size(); ++i)
         {
-            //Only add if it has not already been visited
-            MapBloc* b = currentNode->getContent()->getNeighbours()->at(i);
-            if(!b->hasBeenVisited())
+            if(useDestructibleBlocks || (!useDestructibleBlocks && currentNode->getContent()->getTraversable()) )
             {
-                //The case where the Block is already in the queue is managed by function insert
-                queue->insert(b, currentNode, currentNode->getPriority() + 1);
-                b->setSeen(true);
+                //Only add if it has not already been visited
+                MapBloc* b = currentNode->getContent()->getNeighbours()->at(i);
+                if(!b->hasBeenVisited())
+                {
+                    //The case where the Block is already in the queue is managed by function insert
+                    queue->insert(b, currentNode, currentNode->getPriority() + b->getBasePriority());
+                    b->setSeen(true);
+                }
             }
         }
 
@@ -247,6 +250,102 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination)
     lock->unlock();
 
     currentNode = nullptr;
+    delete queue;
+    queue = nullptr;
+
+    return path;
+}
+
+QList<MapBloc*>* Map::getPathToSafety(MapBloc* from)
+{
+    QList<MapBloc*>* path = new QList<MapBloc*>();
+
+    MapBloc* safeDestination = from;
+    int x = from->getPosition().x();
+    int y = from->getPosition().y();
+
+    bool top = true;
+    bool bottom = true;
+    bool left = true;
+    bool right = true;
+
+    int distance = 1;
+
+    lock->lockForRead();
+    do{
+        //TOP
+        if(top && tabMapBlocs[x][y-distance]->getTraversable()){
+            if(tabMapBlocs[x-1][y-distance]->getTraversable()){
+                safeDestination = tabMapBlocs[x-1][y-distance];
+                break;
+            }
+            if(tabMapBlocs[x+1][y-distance]->getTraversable()){
+                safeDestination = tabMapBlocs[x+1][y-distance];
+                break;
+            }
+        }
+        else if(!tabMapBlocs[x][y-distance]->getTraversable()){
+            top = false;
+        }
+
+        //LEFT
+        if(left && tabMapBlocs[x-distance][y]->getTraversable()){
+            if(tabMapBlocs[x-distance][y-1]->getTraversable()){
+                safeDestination = tabMapBlocs[x-distance][y-1];
+                break;
+            }
+            if(tabMapBlocs[x-distance][y+1]->getTraversable()){
+                safeDestination = tabMapBlocs[x-distance][y+1];
+                break;
+            }
+        }
+        else if(!tabMapBlocs[x][y-distance]->getTraversable()){
+            left = false;
+        }
+
+        //BOTTOM
+        if(bottom && tabMapBlocs[x][y+distance]->getTraversable()){
+            if(tabMapBlocs[x-1][y+distance]->getTraversable()){
+                safeDestination = tabMapBlocs[x-1][y+distance];
+                break;
+            }
+            if(tabMapBlocs[x+1][y+distance]->getTraversable()){
+                safeDestination = tabMapBlocs[x+1][y+distance];
+                break;
+            }
+        }
+        else if(!tabMapBlocs[x][y+distance]->getTraversable()){
+            bottom = false;
+        }
+
+        //RIGHT
+        if(right && tabMapBlocs[x+distance][y]->getTraversable()){
+            if(tabMapBlocs[x+distance][y-1]->getTraversable()){
+                safeDestination = tabMapBlocs[x+distance][y-1];
+                break;
+            }
+            if(tabMapBlocs[x+distance][y+1]->getTraversable()){
+                safeDestination = tabMapBlocs[x+distance][y+1];
+                break;
+            }
+        }
+        else if(!tabMapBlocs[x][y-distance]->getTraversable()){
+            right = false;
+        }
+
+        ++distance;
+    }while(top || left || bottom || right);
+
+    path = getShortestPath(from, safeDestination, false);
+
+    lock->unlock();
+
+    /*
+    qDebug() << "From: " << from->getPosition();
+    qDebug() << "Safe in: " << safeDestination->getPosition();
+    for(int i=0; i<path->length(); ++i)
+        qDebug() << path->value(i)->getPosition();
+    */
 
     return path;
 }

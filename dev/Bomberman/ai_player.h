@@ -19,8 +19,6 @@ public:
     void togglePlaying();
     bool isPlaying() const;
 
-    QPoint* getNextPosition() const;
-
     void setGameWidget(QWidget* gameWidget);
 
     void init();
@@ -38,9 +36,14 @@ private:
     QWidget* gameWidget;
     Player* opponent;
     QList<MapBloc*>* path;
+    QList<QPoint*>* goBackPath;
+    int index;
+    bool goingBack;
+
     QPoint* positionToReach;
     bool reached;
     bool playing;
+    int counterCenter;
 
     MapBloc* previousBlocP1;
     MapBloc* previousBlocP2;
@@ -50,6 +53,8 @@ private:
     bool isOnNextPosition();
 
     QKeyEvent* nextMovement();
+    void goToSafety();
+    void stopMoving();
 };
 
 

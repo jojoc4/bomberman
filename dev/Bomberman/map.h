@@ -26,7 +26,8 @@ public:
     MapBloc* getMapBloc(QPoint bloc) const;
     QPoint getPlayerSpawn(bool nbPlayer) const;
 
-    QList<MapBloc*>* getShortestPath(MapBloc* from, MapBloc* destination);
+    QList<MapBloc*>* getShortestPath(MapBloc* from, MapBloc* destination, bool useDestructibleBlocks=true);
+    QList<MapBloc*>* getPathToSafety(MapBloc* from);
 
 protected:
     virtual void run() override;

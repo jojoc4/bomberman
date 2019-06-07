@@ -14,15 +14,16 @@
 
 #define TEXTURE_PLAYER_X 16
 #define TEXTURE_PLAYER_Y 25
-#define PLAYER_OFFSET_X TEXTURE_BLOCS_X/2
-#define PLAYER_OFFSET_Y TEXTURE_BLOCS_Y/2
+#define PLAYER_OFFSET_X 8
+#define PLAYER_OFFSET_Y 12
 
 AI_Player::AI_Player(Game* p_game, Player* p_opponent, QPoint pos)
-    : Player(), game(p_game), gameWidget(nullptr), opponent(p_opponent),
-      reached(false), playing(false), previousBlocP1(nullptr), previousBlocP2(nullptr)
+    : Player(), game(p_game), gameWidget(nullptr), opponent(p_opponent), index(0), goingBack(false),
+      reached(false), playing(false), counterCenter(-1), previousBlocP1(nullptr), previousBlocP2(nullptr)
 {
     this->setPosition(pos);
     this->path = new QList<MapBloc*>();
+    this->goBackPath = new QList<QPoint*>();
     this->positionToReach = new QPoint();
     this->mutex = new QMutex(QMutex::NonRecursive);
     this->pathMutex = new QMutex(QMutex::NonRecursive);
@@ -43,6 +44,9 @@ AI_Player::~AI_Player()
 
     delete path;
     path = nullptr;
+
+    delete goBackPath;
+    goBackPath = nullptr;
 
     previousBlocP1 = nullptr;
     previousBlocP2 = nullptr;
@@ -83,13 +87,10 @@ void AI_Player::init()
     pathMutex->lock();
     QPoint p2 = opponent->getPosition();
     MapBloc* blocP2 = game->getMap()->getMapBloc(QPoint(p2.x()/NB_BLOCS_X, p2.y()/NB_BLOCS_Y));
-    /*
-    qDebug() << "atteindre: " << getNextPosition();
-    qDebug() << "actuel: " << blocP1->getPosition();
-    */
+
     if(blocP2 != previousBlocP2 ){
-        //qDebug() << "Le chemin a change";
         this->path = game->getMap()->getShortestPath(blocP1,blocP2);
+        goBackPath->push_front(new QPoint(blocP1->getPosition()));
         positionToReach = new QPoint(this->path->takeFirst()->getPosition());
 
         previousBlocP1 = blocP1;
@@ -100,21 +101,27 @@ void AI_Player::init()
     pathMutex->unlock();
 }
 
-QPoint* AI_Player::getNextPosition() const
-{
-    pathMutex->lock();
-    return positionToReach;
-    pathMutex->unlock();
-}
-
 bool AI_Player::isOnNextPosition()
 {
     bool condition = false;
 
     pathMutex->lock();
-    if(QPoint(this->getPosition().x()/NB_BLOCS_X, this->getPosition().y()/NB_BLOCS_Y) == *positionToReach){
+    if(QPoint(this->position.x()/NB_BLOCS_X, this->position.y()/NB_BLOCS_Y) == *positionToReach){
         condition = true;
+        //counterCenter = 0;
+        msleep(4* ACTION_INTERVAL_MS);
+
         if(!this->path->isEmpty()){
+            goBackPath->push_front(positionToReach);
+            if(goBackPath->length() > std::max(this->puissance, opponent->getPuissance()))
+                goBackPath->removeLast();
+
+            if(this->path->first() == nullptr){
+                this->path->removeFirst();
+                stopMoving();
+                msleep(3000);
+            }
+
             positionToReach = new QPoint(this->path->takeFirst()->getPosition());
         }
         else{
@@ -131,36 +138,21 @@ bool AI_Player::isOnNextPosition()
  */
 void AI_Player::act()
 {
-    QKeyEvent* key_release = nullptr;
     QKeyEvent* key_press = nullptr;
-
-    /*
-    qDebug() << "Joueur " << this->position.x() /30 << this->position.y()/30 ;
-    qDebug() << "case" << this->getNextPosition();
-    */
-
-    switch(direction)
-    {
-        case Player::UP:
-            key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Up, Qt::NoModifier);
-            break;
-        case Player::DOWN:
-            key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Down, Qt::NoModifier);
-            break;
-        case Player::LEFT:
-            key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Left, Qt::NoModifier);
-            break;
-        case Player::RIGHT:
-            key_release = new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Right, Qt::NoModifier);
-            break;
-    }
-
-    if(key_release != nullptr){
-        emit AIEvent(key_release);
-    }
 
     init();
     isOnNextPosition();
+
+    /*
+    if(counterCenter >= 0 && counterCenter < 4 && !reached){
+        ++counterCenter;
+        return;
+    }else
+        counterCenter = -1;
+    */
+
+    stopMoving();
+
     if(!reached)
         key_press = nextMovement();
 
@@ -169,24 +161,82 @@ void AI_Player::act()
     }
 }
 
+void AI_Player::stopMoving()
+{
+    switch(direction)
+    {
+        case Player::UP:
+            emit AIEvent(new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Up, Qt::NoModifier));
+            break;
+        case Player::DOWN:
+            emit AIEvent(new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Down, Qt::NoModifier));
+            break;
+        case Player::LEFT:
+            emit AIEvent(new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Left, Qt::NoModifier));
+            break;
+        case Player::RIGHT:
+            emit AIEvent(new QKeyEvent(QKeyEvent::KeyRelease, Qt::Key_Right, Qt::NoModifier));
+            break;
+    }
+}
+
 QKeyEvent* AI_Player::nextMovement()
 {
     QKeyEvent* event = nullptr;
-    QPoint actuel = this->getPosition();
 
     pathMutex->lock();
 
-    if(positionToReach->x() < actuel.x()/NB_BLOCS_X)
+    if(game->getMap()->getMapBloc(*positionToReach)->getType() == MapBloc::DESTRUCTIBLE)
+    {
+        if(!goingBack){
+            emit AIEvent(new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Return, Qt::NoModifier));
+            goingBack = true;
+
+            if(!invincible)
+            {
+                goToSafety();
+            }
+        }
+        else
+        {
+            goingBack = false;
+        }
+    }
+
+    if(positionToReach->x() < this->position.x()/NB_BLOCS_X)
         event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Left, Qt::NoModifier);
-    else if(positionToReach->x() > actuel.x()/NB_BLOCS_X)
+    else if(positionToReach->x() > this->position.x()/NB_BLOCS_X)
         event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Right, Qt::NoModifier);
-    else if(positionToReach->y() < actuel.y()/NB_BLOCS_Y)
+    else if(positionToReach->y() < this->position.y()/NB_BLOCS_Y)
         event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
-    else if(positionToReach->y() > actuel.y()/NB_BLOCS_Y)
+    else if(positionToReach->y() > this->position.y()/NB_BLOCS_Y)
         event = new QKeyEvent(QKeyEvent::KeyPress, Qt::Key_Down, Qt::NoModifier);
 
     pathMutex->unlock();
     return event;
+}
+
+void AI_Player::goToSafety()
+{
+    QPoint currentBlockPos = QPoint(this->position.x()/NB_BLOCS_X, this->position.y()/NB_BLOCS_Y);
+    MapBloc* currentBlock = game->getMap()->getMapBloc(currentBlockPos);
+
+    path->push_front(game->getMap()->getMapBloc(*positionToReach));
+    path->push_front(currentBlock);
+
+    QList<MapBloc*>* pathToSafety = game->getMap()->getPathToSafety(currentBlock);
+
+    for(int i=0; i<pathToSafety->length(); ++i){
+        path->push_front(pathToSafety->value(i));
+    }
+
+    path->push_front(nullptr);
+
+    for(int i=pathToSafety->length()-1; i>=0; --i){
+        path->push_front(pathToSafety->value(i));
+    }
+
+    positionToReach = new QPoint(path->takeFirst()->getPosition());
 }
 
 void AI_Player::run()

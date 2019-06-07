@@ -39,7 +39,7 @@ void Player::giveBonus()
 
     if(r<=INVIS)
     {
-        visible=true;
+        //visible=true;
     }else if(r<=INVIS+INVINC)
     {
         invincible=true;
@@ -48,7 +48,7 @@ void Player::giveBonus()
         superBomb=true;
     }else
     {
-        autoDrop=true;
+        //autoDrop=true;
     }
 }
 
