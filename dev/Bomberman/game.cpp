@@ -9,9 +9,9 @@
  */
 Game::Game()
 {
+    map = new Map();
     player1 = new Player();
     player2 = new AI_Player(this, player1, QPoint(13,13));
-    map = new Map();
 }
 /**
  * @brief Game::~Game

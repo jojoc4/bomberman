@@ -60,8 +60,6 @@ public:
     QGraphicsPixmapItem* getPtrItemOnScene() const;
     void setPtrItemOnScene(QGraphicsPixmapItem *item);
 
-    virtual void act(){}
-
 protected :
     QPoint position;
     bool dead;

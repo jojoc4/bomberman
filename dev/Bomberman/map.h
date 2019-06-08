@@ -37,7 +37,6 @@ private:
     QPoint p1;
     QPoint p2;
 
-    //QMutex* mutex;
     QReadWriteLock* lock;
 
     void buildGraph();

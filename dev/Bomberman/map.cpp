@@ -26,7 +26,6 @@ Map::Map()
         }
     }
 
-    //mutex = new QMutex(QMutex::NonRecursive);
     lock = new QReadWriteLock(QReadWriteLock::Recursive);
 }
 
@@ -63,7 +62,6 @@ void Map::readFromFile(QString path)
 
     if(file)
     {
-        //mutex->lock();
         lock->lockForWrite();
         for(int i = 0; i<NB_BLOCS_X; ++i)
         {
@@ -96,7 +94,6 @@ void Map::readFromFile(QString path)
             tabMapBlocs[j][i]->setPosition(QPoint(j,i));
             }
         }
-        //mutex->unlock();
         lock->unlock();
 
         file.close();
@@ -113,11 +110,9 @@ void Map::readFromFile(QString path)
  */
 MapBloc* Map::getMapBloc(QPoint bloc) const
 {
-    //mutex->lock();
     lock->lockForRead();
     MapBloc* b = tabMapBlocs[bloc.x()][bloc.y()];
     lock->unlock();
-    //mutex->unlock();
 
     return b;
 }
@@ -141,7 +136,6 @@ QPoint Map::getPlayerSpawn(bool nbPlayer) const
  */
 void Map::buildGraph()
 {
-    //mutex->lock();
     lock->lockForWrite();
     for(int i = 0; i<NB_BLOCS_X; ++i)
     {
@@ -172,10 +166,9 @@ void Map::buildGraph()
             }
         }
     }
-    //mutex->unlock();
     lock->unlock();
 
-    qDebug() << "Built!";
+    //qDebug() << "Built!";
 }
 
 /**
@@ -189,7 +182,6 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination, bool 
     QList<MapBloc*>* path = new QList<MapBloc*>();
     PriorityQueue<MapBloc>* queue = new PriorityQueue<MapBloc>();
 
-    //mutex->lock();
     lock->lockForRead();
 
     //Dijkstra's algorithm :
@@ -246,7 +238,6 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination, bool 
         //qDebug() << " apres bug3" << currentNode;
     }while(currentNode != nullptr && currentNode->getContent() != from);
 
-    //mutex->unlock();
     lock->unlock();
 
     currentNode = nullptr;
