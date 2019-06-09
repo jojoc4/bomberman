@@ -7,11 +7,17 @@
  * @brief Game::Game
  * Constructor
  */
-Game::Game()
+Game::Game(short gameMode)
 {
     map = new Map();
     player1 = new Player();
-    player2 = new AI_Player(this, player1, QPoint(13,13));
+
+    this->gameMode = gameMode;
+
+    if(gameMode == 1)
+        player2 = new Player();
+    else if(gameMode == 2)
+        player2 = new AI_Player(this, player1, QPoint(13,13));
 }
 /**
  * @brief Game::~Game
@@ -32,7 +38,7 @@ Game::~Game()
 * @param nbPlayer : which player
 * @return false if impossible move, else true
 */
-bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer)
+bool Game::move(QPoint newPos, short newDirection, QPoint bloc, short nbPlayer)
 {
     MapBloc* mb = map->getMapBloc(bloc);
     if(mb->getTraversable())
@@ -68,13 +74,21 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, bool nbPlayer)
  * @param nbPlayer (0 or false is player1 and 1 or true is player2)
  * @return pointer on the selected player
  */
-Player* Game::getPlayer(bool nbPlayer) const
+Player* Game::getPlayer(short nbPlayer) const
 {
-    if(!nbPlayer)
+    if(nbPlayer == 1)
         return this->player1;
-    else
-        return this->player2;
+    else if(nbPlayer == 2)
+    {
+        if(gameMode == 1)
+            return this->player2;
+        else
+            return static_cast<AI_Player*>(this->player2);
+    }
+
+    return nullptr;
 }
+
 /**
  * @brief Game::getMap
  * @return
@@ -83,3 +97,9 @@ Map* Game::getMap() const
 {
     return this->map;
 }
+
+short Game::getGameMode() const
+{
+    return this->gameMode;
+}
+

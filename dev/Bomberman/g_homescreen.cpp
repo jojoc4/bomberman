@@ -1,5 +1,6 @@
 #include "g_homescreen.h"
 #include "g_help.h"
+#include "game.h"
 
 /**
  * @brief G_HomeScreen::G_HomeScreen
@@ -7,22 +8,25 @@
  * @param parent : pointer of the parent who create this widget
  */
 G_HomeScreen::G_HomeScreen(QWidget *parent)
-    : QWidget(parent), helpWindow(nullptr)
+    : QWidget(parent), gameMode(1), helpWindow(nullptr)
 {
     setWindowTitle(tr("Accueil"));
 
     QGroupBox *groupBox_radio = new QGroupBox("Mode de jeu ",this);
     radio_local = new QRadioButton(tr("2 joueurs sur le même pc"),this);
     radio_local->setChecked(true);
+    radio_vs_AI = new QRadioButton(tr("Jouer contre une IA"),this);
     radio_network = new QRadioButton(tr("2 joueurs en réseau"),this);
 
     QVBoxLayout *vbox_radio = new QVBoxLayout(this);
     vbox_radio->addWidget(radio_local);
+    vbox_radio->addWidget(radio_vs_AI);
     vbox_radio->addWidget(radio_network);
     vbox_radio->addStretch(1);
     groupBox_radio->setLayout(vbox_radio);
 
     connect(radio_local, SIGNAL(clicked(bool)) , this, SLOT(validateChoice()));
+    connect(radio_vs_AI, SIGNAL(clicked(bool)) , this, SLOT(validateChoice()));
     connect(radio_network, SIGNAL(clicked(bool)) , this, SLOT(validateChoice()));
 
     QPushButton *btn_lancer = new QPushButton(tr("&Lancer le jeu"));
@@ -55,10 +59,15 @@ void G_HomeScreen::validateChoice()
 {
     if (radio_local->isChecked())
     {
-
+        this->gameMode = Game::LOCAL_1V1;
+    }
+    else if(radio_vs_AI->isChecked())
+    {
+        this->gameMode = Game::LOCAL_VS_AI;
     }
     if (radio_network->isChecked())
     {
+        this->gameMode = Game::ONLINE_MULTI;
         QMessageBox::information(this, tr("Information"), tr("Le mode réseau n'est pas encore disponible"));
         radio_network->setChecked(false);
         radio_local->setChecked(true);
@@ -82,4 +91,9 @@ void G_HomeScreen::openHelp()
 void G_HomeScreen::openMapChooser()
 {
     emit(openNextWidget(1));
+}
+
+short G_HomeScreen::getGameMode() const
+{
+    return this->gameMode;
 }

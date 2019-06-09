@@ -87,7 +87,7 @@ private:
 
     void createDisplayPlayers();
     void updateDisplayPlayers();
-    void drawPlayer(bool which);
+    void drawPlayer(short which);
     void incCounterAnim(short which);
 
     void dropBomb(const QPoint& blockPos, Player* p);

@@ -7,8 +7,6 @@
 G_MainWidget::G_MainWidget(QWidget *parent)
     : QWidget(parent), mapchooser(nullptr), game(nullptr), mapDirPath(QString(""))
 {
-    gamePtr = new Game();
-
     homescreen = new G_HomeScreen(this);
 
     layout = new QStackedLayout(this);
@@ -34,7 +32,9 @@ void G_MainWidget::changeWidget(int index){
 
 void G_MainWidget::finishGame()
 {
-    delete gamePtr;
+    if(gamePtr != nullptr)
+        delete gamePtr;
+
     gamePtr = new Game();
 
     deleteG_Game();
@@ -44,6 +44,8 @@ void G_MainWidget::finishGame()
 
 void G_MainWidget::createMapScreen()
 {
+    gamePtr = new Game(homescreen->getGameMode());
+
     if(mapchooser != nullptr)
         deleteG_MapChooser();
     mapchooser = new G_MapChooser(gamePtr, this, mapDirPath);
