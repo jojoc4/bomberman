@@ -101,6 +101,15 @@ void AI_Player::init(bool forceNewPath)
     //if opponent moved
     if(forceNewPath || blocP2 != previousBlocP2 ){
         //take new path from current position, but only if not going to safety
+        if(pathToSafety->isEmpty() == true){
+            this->path = game->getMap()->getShortestPath(blocP1,blocP2);
+            positionToReach = new QPoint(this->path->takeFirst()->getPosition());
+        }else{
+            this->path = game->getMap()->getShortestPath(resumeBloc,blocP2);
+        }
+
+        /*
+        //take new path from current position, but only if not going to safety
         if(pathToSafety->length() < 2){
             this->path = game->getMap()->getShortestPath(blocP1,blocP2);
             //Take a new destination out of path only if not waiting for the bomb to explode
@@ -111,6 +120,7 @@ void AI_Player::init(bool forceNewPath)
             //take the safe place as starting position if safePath is not empty
             this->path = game->getMap()->getShortestPath(pathToSafety->at(pathToSafety->length()-2),blocP2);
         }
+        */
         previousBlocP1 = blocP1;
         previousBlocP2 = blocP2;
 
@@ -138,14 +148,16 @@ void AI_Player::isOnNextPosition()
                 this->pathToSafety->removeFirst();
                 stopMoving();
                 msleep(3000);
+                pathToSafety->removeFirst();
                 //And get a new path to the opponent (the map may have changed, as a bomb has exploded)
                 this->goingBack = false;
-                delete this->path;
-                init(true);
-            }
+                //delete this->path;
+                //init(true);
+            }/*
             else{
                 positionToReach = new QPoint(this->pathToSafety->takeFirst()->getPosition());
-            }
+            }*/
+            positionToReach = new QPoint(this->pathToSafety->takeFirst()->getPosition());
         }
         //Take the next destination in the path to the opponent
         else if(this->path->isEmpty() == false)
@@ -225,8 +237,15 @@ void AI_Player::goToSafety()
     //for telling that it is needed to wait for the bomb to explode now that the safe place is reached
     this->pathToSafety->push_back(nullptr);
 
+    //go back to latest position
+    for(int i=pathToSafety->length()-2; i>=0; --i)
+        this->pathToSafety->push_back(this->pathToSafety->at(i));
+
+    this->pathToSafety->push_back(this->resumeBloc);
+    this->pathToSafety->push_back(game->getMap()->getMapBloc(*this->positionToReach));
+
     //use the new path right away
-    positionToReach = new QPoint(pathToSafety->takeFirst()->getPosition());
+    this->positionToReach = new QPoint(pathToSafety->takeFirst()->getPosition());
 
     pathMutex->unlock();
 }
@@ -261,10 +280,12 @@ void AI_Player::run()
         stopMoving();
 
         //If opponent reached, drop a bomb and go to safety
-        if(reached)
+        if(reached){
             actionDropBomb();
-        else
-            nextMovement();
+            reached = false;
+        }//else
+
+        nextMovement();
 
         msleep(ACTION_INTERVAL_MS);
     }

@@ -558,10 +558,10 @@ void G_Game::createDisplayPlayers()
 
     int line = ptrP1->getDirection();                                                                //Useful for knowing which line of the player's texture file to use. One line per movement direction
     QPixmap texture(p1Texture.copy(counterAnimP1/PLAYER_TEXTURE_MULTIPLE*TEXTURE_PLAYER_X,
-                                   line*TEXTURE_PLAYER_Y, TEXTURE_PLAYER_X, TEXTURE_PLAYER_Y));   //Take only the right texture
-    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);                                  //Add the texture to the scene and move it to its right place
+                                   line*TEXTURE_PLAYER_Y, TEXTURE_PLAYER_X, TEXTURE_PLAYER_Y));      //Take only the right texture
+    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);                                     //Add the texture to the scene and move it to its right place
     item->setPos(p1Pos.x()-TEXTURE_PLAYER_X/2,
-                 p1Pos.y()-(TEXTURE_PLAYER_Y-TEXTURE_PLAYER_Y_OFFSET));                           //x-8 to center horizontally and y-18 because it makes more sense to take the feet into account, rather than head
+                 p1Pos.y()-(TEXTURE_PLAYER_Y-TEXTURE_PLAYER_Y_OFFSET));                              //x-8 to center horizontally and y-18 because it makes more sense to take the feet into account, rather than head
     ptrP1->setPtrItemOnScene(item);                                                                  //keep track of the item in the player
 
     //Do the exact same for player 2
