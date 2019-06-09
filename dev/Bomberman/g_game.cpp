@@ -741,6 +741,7 @@ void G_Game::updateDisplayBombs()
                 bombExploded = dislayExplosionBomb(bomb);
                 bomb->resetCounter();
                 bomb->postStepExplosion();
+                bombExploded = true;
             } else {
                 bomb->incCounterBomb();
             }

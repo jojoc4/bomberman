@@ -115,13 +115,15 @@ int MapBloc::AIUsable()
 {
     switch(type)
     {
-        case BACKGROUND:
         case UPGRADE_NUMBER:
         case UPGRADE_POWER:
             basePriority = 1;
             break;
+        case BACKGROUND:
+            basePriority = 2;
+            break;
         case DESTRUCTIBLE:
-            basePriority = 3;
+            basePriority = 4;
             break;
         case BONUS:
             basePriority = 5;

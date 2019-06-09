@@ -21,9 +21,7 @@ public:
 
     void setGameWidget(QWidget* gameWidget);
 
-    void init();
-
-    virtual void act() override;
+    void init(bool forceNewPath = false);
 
 signals:
     void AIEvent(QKeyEvent *event);
@@ -36,25 +34,25 @@ private:
     QWidget* gameWidget;
     Player* opponent;
     QList<MapBloc*>* path;
-    QList<QPoint*>* goBackPath;
-    int index;
+    QList<MapBloc*>* pathToSafety;
+    MapBloc* resumeBloc;
     bool goingBack;
 
     QPoint* positionToReach;
     bool reached;
     bool playing;
-    int counterCenter;
 
     MapBloc* previousBlocP1;
     MapBloc* previousBlocP2;
     QMutex* mutex;
     QMutex* pathMutex;
 
-    bool isOnNextPosition();
+    void isOnNextPosition();
 
-    QKeyEvent* nextMovement();
+    void nextMovement();
     void goToSafety();
     void stopMoving();
+    void actionDropBomb();
 };
 
 
