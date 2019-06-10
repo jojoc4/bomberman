@@ -83,18 +83,22 @@ G_Game::G_Game(Game *theGame, QWidget *parent)
       p1MovingDir(-1), nbTouchesP1(0), p2Moving(false), p2MovingDir(-1), nbTouchesP2(0), gameEnd(false)
 {
     this->move(-50,-50);
-    Player *p1 = game->getPlayer(false);
+    Player *p1 = game->getPlayer(1);
     this->textPlayer1 = new QLabel(QString("Joueur 1:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2\n ").arg(p1->getNbBomb()).arg(p1->getPuissance()));
     p1->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(false).x()*TEXTURE_BLOCS_X, this->game->getMap()->getPlayerSpawn(false).y()*TEXTURE_BLOCS_Y));
 
-    Player *p2 = game->getPlayer(true);
+    Player *p2 = game->getPlayer(2);
     this->textPlayer2 = new QLabel(QString("Joueur 2:\nNombre de bombes: %1\n"
                                            "Puissance des bombes: %2\n ").arg(p2->getNbBomb()).arg(p2->getPuissance()));
     p2->setPosition(QPoint(this->game->getMap()->getPlayerSpawn(true).x()*TEXTURE_BLOCS_X, this->game->getMap()->getPlayerSpawn(true).y()*TEXTURE_BLOCS_Y));
 
-    aiPlayer = static_cast<AI_Player*>(game->getPlayer(true));
-    aiPlayer->setGameWidget(this);
+
+    if(game->getGameMode() == Game::LOCAL_VS_AI)
+    {
+        aiPlayer = static_cast<AI_Player*>(game->getPlayer(2));
+        aiPlayer->setGameWidget(this);
+    }
 
     this->vLayout = new QVBoxLayout();
     this->vLayout->setSpacing(0);
@@ -162,8 +166,12 @@ void G_Game::startGame()
     this->game->getMap()->wait();
 
     //initialize the AI player
-    aiPlayer->init();
-    aiPlayer->togglePlaying();
+    if(game->getGameMode() == Game::LOCAL_VS_AI)
+    {
+        aiPlayer->init();
+        aiPlayer->togglePlaying();
+        aiPlayer->start();
+    }
 
     //create blocks for the map and display them
     this->createDisplayMap();
@@ -172,7 +180,10 @@ void G_Game::startGame()
     //start the display timer
     this->timeKeeper = this->startTimer(MAIN_TIMER_MS, Qt::PreciseTimer);
 
-    aiPlayer->start();
+    if(game->getGameMode() == Game::LOCAL_VS_AI)
+    {
+        aiPlayer->start();
+    }
 
     gameEnd = false;
 }
@@ -213,7 +224,7 @@ void G_Game::keyPressEvent(QKeyEvent* event)
             break;
         case Qt::Key_Space :
         {
-            Player* player = game->getPlayer(false);
+            Player* player = game->getPlayer(1);
             QPoint pos = player->getPosition();
             dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
             break;
@@ -241,7 +252,7 @@ void G_Game::keyPressEvent(QKeyEvent* event)
             break;
         case Qt::Key_Return :
         {
-            Player* player = game->getPlayer(true);
+            Player* player = game->getPlayer(2);
             QPoint pos = player->getPosition();
             dropBomb(QPoint(pos.x()/NB_BLOCS_X, pos.y()/NB_BLOCS_Y), player);
             break;
@@ -297,7 +308,7 @@ void G_Game::timerEvent(QTimerEvent*)
 void G_Game::timerPlayers(){
     textSupP1 = "";
     textSupP2 = "";
-    Player* p = game->getPlayer(false);
+    Player* p = game->getPlayer(1);
     if(p->getAutoDrop())
     {
         textSupP1 = "Bonus: pose automatique";
@@ -328,7 +339,7 @@ void G_Game::timerPlayers(){
     }
 
     //same for player 2
-    p = game->getPlayer(true);
+    p = game->getPlayer(2);
     if(p->getAutoDrop())
     {
         textSupP2 = "Bonus: pose automatique";
@@ -373,8 +384,8 @@ void G_Game::refreshDisplay()
     this->updateDisplayMap();
     this->updateDisplayPlayers();
 
-    Player *p1 = game->getPlayer(false);
-    Player *p2 = game->getPlayer(true);
+    Player *p1 = game->getPlayer(1);
+    Player *p2 = game->getPlayer(2);
     this->textPlayer1->setText(QString("Joueur 1:\nNombre de bombes: %1\n"
                                        "Puissance des bombes: %2\n%3").arg(p1->getNbBomb()).arg(p1->getPuissance()).arg(textSupP1));
 
@@ -385,7 +396,7 @@ void G_Game::refreshDisplay()
     {
 
         QString msg;
-        if(game->getPlayer(false)->isDead())
+        if(game->getPlayer(1)->isDead())
         {
             msg = tr("Le joueur 1 a perdu !");
         } else {
@@ -539,25 +550,31 @@ void G_Game::updateDisplayMap()
  */
 void G_Game::createDisplayPlayers()
 {
-    QPoint p1Pos = game->getPlayer(false)->getPosition();
-    QPoint p2Pos = game->getPlayer(true)->getPosition();
+    Player* ptrP1 = this->game->getPlayer(1);
+    Player* ptrP2 = this->game->getPlayer(2);
 
-    int line = this->game->getPlayer(false)->getDirection();                                      //Useful for knowing which line of the player's texture file to use. One line per movement direction
+    QPoint p1Pos = ptrP1->getPosition();
+    QPoint p2Pos = ptrP2->getPosition();
+
+    int line = ptrP1->getDirection();                                                                //Useful for knowing which line of the player's texture file to use. One line per movement direction
     QPixmap texture(p1Texture.copy(counterAnimP1/PLAYER_TEXTURE_MULTIPLE*TEXTURE_PLAYER_X,
-                                   line*TEXTURE_PLAYER_Y, TEXTURE_PLAYER_X, TEXTURE_PLAYER_Y));   //Take only the right texture
-    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);                                  //Add the texture to the scene and move it to its right place
+                                   line*TEXTURE_PLAYER_Y, TEXTURE_PLAYER_X, TEXTURE_PLAYER_Y));      //Take only the right texture
+    QGraphicsPixmapItem *item = this->scene->addPixmap(texture);                                     //Add the texture to the scene and move it to its right place
     item->setPos(p1Pos.x()-TEXTURE_PLAYER_X/2,
-                 p1Pos.y()-(TEXTURE_PLAYER_Y-TEXTURE_PLAYER_Y_OFFSET));                           //x-8 to center horizontally and y-18 because it makes more sense to take the feet into account, rather than head
-    this->game->getPlayer(false)->setPtrItemOnScene(item);                                        //keep track of the item in the player
+                 p1Pos.y()-(TEXTURE_PLAYER_Y-TEXTURE_PLAYER_Y_OFFSET));                              //x-8 to center horizontally and y-18 because it makes more sense to take the feet into account, rather than head
+    ptrP1->setPtrItemOnScene(item);                                                                  //keep track of the item in the player
 
     //Do the exact same for player 2
-    line = this->game->getPlayer(true)->getDirection();
+    line = ptrP2->getDirection();
     texture = p2Texture.copy(counterAnimP2/PLAYER_TEXTURE_MULTIPLE*TEXTURE_PLAYER_X,
                              line*TEXTURE_PLAYER_Y, TEXTURE_PLAYER_X, TEXTURE_PLAYER_Y);
     item = this->scene->addPixmap(texture);
     item->setPos(p2Pos.x()-TEXTURE_PLAYER_X/2,
                  p2Pos.y()-(TEXTURE_PLAYER_Y-TEXTURE_PLAYER_Y_OFFSET));
-    this->game->getPlayer(true)->setPtrItemOnScene(item);
+    ptrP2->setPtrItemOnScene(item);
+
+    ptrP1 = nullptr;
+    ptrP2 = nullptr;
 }
 
 /**
@@ -567,28 +584,28 @@ void G_Game::createDisplayPlayers()
 void G_Game::updateDisplayPlayers()
 {
     //Player 1
-    Player* ptrP1 = game->getPlayer(false);
+    Player* ptrP1 = game->getPlayer(1);
     QGraphicsPixmapItem *p1 = ptrP1->getPtrItemOnScene();
     QPoint p1Pos = ptrP1->getPosition();
 
     switch(p1MovingDir)
     {
         case Player::UP :
-            this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()-2)/NB_BLOCS_Y), false);
+            this->game->move(QPoint(p1Pos.x(), p1Pos.y()-2), Player::UP, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()-2)/NB_BLOCS_Y), 1);
             break;
         case Player::LEFT :
-            this->game->move(QPoint(p1Pos.x()-2, p1Pos.y()), Player::LEFT, QPoint((p1Pos.x()-2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), false);
+            this->game->move(QPoint(p1Pos.x()-2, p1Pos.y()), Player::LEFT, QPoint((p1Pos.x()-2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), 1);
             break;
         case Player::DOWN :
-            this->game->move(QPoint(p1Pos.x(), p1Pos.y()+2), Player::DOWN, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()+2)/NB_BLOCS_Y), false);
+            this->game->move(QPoint(p1Pos.x(), p1Pos.y()+2), Player::DOWN, QPoint(p1Pos.x()/NB_BLOCS_X, (p1Pos.y()+2)/NB_BLOCS_Y), 1);
             break;
         case Player::RIGHT :
-            this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), false);
+            this->game->move(QPoint(p1Pos.x()+2, p1Pos.y()), Player::RIGHT, QPoint((p1Pos.x()+2)/NB_BLOCS_X, p1Pos.y()/NB_BLOCS_Y), 1);
     }
 
     if(!ptrP1->getVisible()) //Player is not invisible
     {
-        drawPlayer(false);
+        drawPlayer(1);
     }
     else
     {
@@ -599,34 +616,34 @@ void G_Game::updateDisplayPlayers()
         }
         else
         {
-            drawPlayer(false);
+            drawPlayer(1);
         }
     }
 
     //Player 2
-    Player* ptrP2 = game->getPlayer(true);
+    Player* ptrP2 = game->getPlayer(2);
     QGraphicsPixmapItem *p2 = ptrP2->getPtrItemOnScene();
     QPoint p2Pos = ptrP2->getPosition();
 
     switch(p2MovingDir)
     {
         case Player::UP :
-            this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()-2)/NB_BLOCS_Y), true);
+            this->game->move(QPoint(p2Pos.x(), p2Pos.y()-2), Player::UP, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()-2)/NB_BLOCS_Y), 2);
             break;
         case Player::LEFT :
-            this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), true);
+            this->game->move(QPoint(p2Pos.x()-2, p2Pos.y()), Player::LEFT, QPoint((p2Pos.x()-2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), 2);
             break;
         case Player::DOWN :
-            this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()+2)/NB_BLOCS_Y), true);
+            this->game->move(QPoint(p2Pos.x(), p2Pos.y()+2), Player::DOWN, QPoint(p2Pos.x()/NB_BLOCS_X, (p2Pos.y()+2)/NB_BLOCS_Y), 2);
             break;
         case Player::RIGHT :
-            this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), true);
+            this->game->move(QPoint(p2Pos.x()+2, p2Pos.y()), Player::RIGHT, QPoint((p2Pos.x()+2)/NB_BLOCS_X, p2Pos.y()/NB_BLOCS_Y), 2);
     }
 
 
     if(!ptrP2->getVisible()) //Player is not invisible
     {
-        drawPlayer(true);
+        drawPlayer(2);
     }
     else
     {
@@ -637,7 +654,7 @@ void G_Game::updateDisplayPlayers()
         }
         else
         {
-            drawPlayer(true);
+            drawPlayer(2);
         }
     }
 }
@@ -647,7 +664,7 @@ void G_Game::updateDisplayPlayers()
  * Draws the player's texture on the scene
  * @param which : player
  */
-void G_Game::drawPlayer(bool which)
+void G_Game::drawPlayer(short which)
 {
     Player* ptrPlayer = game->getPlayer(which);
     //Pointers to the QGraphicsItem of each player
@@ -656,13 +673,13 @@ void G_Game::drawPlayer(bool which)
     //Increment the animation counter for the player
     QPixmap texture;
     int line = ptrPlayer->getDirection();
-    if(!which)
+    if(which == 1)
     {
         if(p1Moving)
             incCounterAnim(1);
         texture = QPixmap(p1Texture.copy(counterAnimP1/PLAYER_TEXTURE_MULTIPLE*TEXTURE_PLAYER_X, line*TEXTURE_PLAYER_Y, TEXTURE_PLAYER_X, TEXTURE_PLAYER_Y));
     }
-    else
+    else if(which == 2)
     {
         if(p2Moving)
             incCounterAnim(2);
@@ -936,7 +953,7 @@ void G_Game::drawFlameExplosion(QRect location,Bomb* bomb,int x,int y)
     newItem->setPixmap(texture);
     newItem->setPos((position.x()+x)*NB_BLOCS_X,(position.y()+y)*NB_BLOCS_Y);
 
-    checkPlayerExplosion(game->getPlayer(false),game->getPlayer(true),position.x()+x,position.y()+y);
+    checkPlayerExplosion(game->getPlayer(1),game->getPlayer(2),position.x()+x,position.y()+y);
 
     scene->addItem(newItem);
 }

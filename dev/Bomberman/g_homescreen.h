@@ -19,13 +19,17 @@ class G_HomeScreen : public QWidget
 public:
     G_HomeScreen(QWidget *parent = nullptr);
 
+    short getGameMode() const;
+
     ~G_HomeScreen();
 
 signals:
     void openNextWidget(int);
 
 private :
+    short gameMode;
     QRadioButton* radio_local;
+    QRadioButton* radio_vs_AI;
     QRadioButton* radio_network;
 
     G_Help* helpWindow;
