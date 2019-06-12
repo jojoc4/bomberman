@@ -27,6 +27,7 @@ public:
     QPoint getPlayerSpawn(bool nbPlayer) const;
 
     QList<MapBloc*>* getShortestPath(MapBloc* from, MapBloc* destination, bool useDestructibleBlocks=true);
+    MapBloc* findSafePlace(MapBloc* from) const;
     QList<MapBloc*>* getPathToSafety(MapBloc* from);
 
 protected:
