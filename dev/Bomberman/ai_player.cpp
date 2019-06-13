@@ -5,7 +5,8 @@
 #include <QKeyEvent>
 #include <QMutex>
 
-#define ACTION_INTERVAL_MS 20 //Timer interval for the actions of the AI players.
+//Timer interval for the actions of the AI players.
+#define ACTION_INTERVAL_MS 20
 
 //For block's position
 #define NB_BLOCS_X 30

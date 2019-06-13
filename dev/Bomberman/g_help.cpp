@@ -9,7 +9,6 @@
 #define TEXTURE_ANUMBER 60
 #define TEXTURE_BONUS 120
 
-
 G_Help::G_Help(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle(tr("Aide"));

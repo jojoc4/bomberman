@@ -161,6 +161,7 @@ void Map::buildGraph()
             }
         }
     }
+
     lock->unlock();
 }
 
