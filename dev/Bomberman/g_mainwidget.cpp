@@ -4,6 +4,7 @@
 #include "g_game.h"
 #include "game.h"
 
+
 G_MainWidget::G_MainWidget(QWidget *parent)
     : QWidget(parent), mapchooser(nullptr), game(nullptr), mapDirPath(QString(""))
 {
