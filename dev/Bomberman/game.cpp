@@ -13,8 +13,6 @@ Game::Game(short gameMode) : gameMode(gameMode)
     map = new Map();
     player1 = new Player();
 
-    //this->gameMode = gameMode;
-
     if(gameMode == (short)1)
         player2 = new Player();
     else if(gameMode == (short)2)
