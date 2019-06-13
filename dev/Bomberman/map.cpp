@@ -151,24 +151,17 @@ void Map::buildGraph()
             {
                 if(tabMapBlocs[j+1][i]->AIUsable()){
                     bloc->addNeighbour(tabMapBlocs[j+1][i]);
-                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i-1 << ")";
                 }if(tabMapBlocs[j][i-1]->AIUsable()){
                     bloc->addNeighbour(tabMapBlocs[j][i-1]);
-                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j << ";" << i+1 << ")";
                 }if(tabMapBlocs[j-1][i]->AIUsable()){
                     bloc->addNeighbour(tabMapBlocs[j-1][i]);
-                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j-1 << ";" << i << ")";
                 }if(tabMapBlocs[j][i+1]->AIUsable()){
                     bloc->addNeighbour(tabMapBlocs[j][i+1]);
-                    //qDebug() << "(" << j << ";" << i << ") -> "  << "(" << j+1 << ";" << i << ")";
                 }
-                //qDebug() << bloc << bloc->getPosition() << *(bloc->getNeighbours());
             }
         }
     }
     lock->unlock();
-
-    //qDebug() << "Built!";
 }
 
 /**
@@ -199,7 +192,6 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination, bool 
     //Add first node (where the player currently is, his starting place)
     PriorityQueueNode<MapBloc>* currentNode = queue->at(queue->insert(from, 0));
 
-    //qDebug() << "bug";
     currentNode->getContent()->setSeen(true);
 
     //Run through the graph to build the shortest-path tree
@@ -224,18 +216,13 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination, bool 
         currentNode = queue->takeMin();
         currentNode->getContent()->setVisited(true);
 
-        //qDebug() << "noeud : " << currentNode->getContent()->getPosition();
-    }while(!destination->hasBeenVisited());// || !queue->isEmpty());
+    }while(!destination->hasBeenVisited());
 
     //create path from destination to departure
     do
     {
-        //qDebug() << currentNode->getContent()->getPosition();
-        //qDebug() << " apres bug1";
         path->push_front(currentNode->getContent());
-        //qDebug() << " apres bug2";
         currentNode = currentNode->getFatherNode();
-        //qDebug() << " apres bug3" << currentNode;
     }while(currentNode != nullptr && currentNode->getContent() != from);
 
     lock->unlock();
@@ -247,10 +234,8 @@ QList<MapBloc*>* Map::getShortestPath(MapBloc* from, MapBloc* destination, bool 
     return path;
 }
 
-QList<MapBloc*>* Map::getPathToSafety(MapBloc* from)
+MapBloc* Map::findSafePlace(MapBloc* from) const
 {
-    QList<MapBloc*>* path = new QList<MapBloc*>();
-
     MapBloc* safeDestination = from;
     int x = from->getPosition().x();
     int y = from->getPosition().y();
@@ -327,21 +312,17 @@ QList<MapBloc*>* Map::getPathToSafety(MapBloc* from)
         ++distance;
     }while(top || left || bottom || right);
 
-    path = getShortestPath(from, safeDestination, false);
-
     lock->unlock();
 
-    /*
-    qDebug() << "From: " << from->getPosition();
-    qDebug() << "Safe in: " << safeDestination->getPosition();
-    for(int i=0; i<path->length(); ++i)
-        qDebug() << path->value(i)->getPosition();
-    */
+    return safeDestination;
+}
 
-    return path;
+QList<MapBloc*>* Map::getPathToSafety(MapBloc* from)
+{
+    return getShortestPath(from, findSafePlace(from), false);
 }
 
 void Map::run()
 {
-    buildGraph();
+    this->buildGraph();
 }
