@@ -73,6 +73,7 @@
 
 #define NB_CYCLE_DISPLAY 2
 
+
 /**
  * @brief G_Game::G_Game
  * @param theGame :pointer of the game

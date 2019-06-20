@@ -22,6 +22,7 @@
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
 
+
 /**
  * @brief G_MapChooser::G_MapChooser
  * Constructor

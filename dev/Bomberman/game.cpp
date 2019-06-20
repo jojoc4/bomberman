@@ -3,20 +3,19 @@
 #include "player.h"
 #include "mapbloc.h"
 #include "ai_player.h"
+
 /**
  * @brief Game::Game
  * Constructor
  */
-Game::Game(short gameMode)
+Game::Game(short gameMode) : gameMode(gameMode)
 {
     map = new Map();
     player1 = new Player();
 
-    this->gameMode = gameMode;
-
-    if(gameMode == 1)
+    if(gameMode == (short)1)
         player2 = new Player();
-    else if(gameMode == 2)
+    else if(gameMode == (short)2)
         player2 = new AI_Player(this, player1, QPoint(13,13));
 }
 /**
@@ -76,11 +75,11 @@ bool Game::move(QPoint newPos, short newDirection, QPoint bloc, short nbPlayer)
  */
 Player* Game::getPlayer(short nbPlayer) const
 {
-    if(nbPlayer == 1)
+    if(nbPlayer == (short)1)
         return this->player1;
-    else if(nbPlayer == 2)
+    else if(nbPlayer == (short)2)
     {
-        if(gameMode == 1)
+        if(gameMode == (short)1)
             return this->player2;
         else
             return static_cast<AI_Player*>(this->player2);

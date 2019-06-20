@@ -1,4 +1,5 @@
 #include "mapbloc.h"
+
 //chance out of 10 to obtain this type of block after explosion
 #define BONUSS 2
 #define RANGEI 2

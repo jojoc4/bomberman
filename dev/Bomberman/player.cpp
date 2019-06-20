@@ -36,7 +36,6 @@ void Player::giveBonus()
 
     int r = (qrand() % ((10 + 1) - 1) + 1);
 
-
     if(r<=INVIS)
     {
         //visible=true;

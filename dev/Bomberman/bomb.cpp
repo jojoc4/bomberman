@@ -90,7 +90,7 @@ QGraphicsPixmapItem *Bomb::getPtrItemOnScene() const
  */
 void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item)
 {
-    ptrItemOnScene= item;
+    ptrItemOnScene = item;
 }
 
 /**
@@ -100,7 +100,7 @@ void Bomb::setPtrItemOnScene(QGraphicsPixmapItem *item)
 void Bomb::resetCounter()
 {
     counter = 0;
-    nbCycle++;
+    ++nbCycle;
 }
 
 /**
@@ -118,7 +118,7 @@ int Bomb::getNbCycle() const
  */
 void Bomb::postStepExplosion()
 {
-    stepExplosion++;
+    ++stepExplosion;
 }
 
 /**
