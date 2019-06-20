@@ -748,17 +748,15 @@ void G_Game::dropBomb(const QPoint& blockPos, Player* p)
  */
 void G_Game::updateDisplayBombs()
 {
-    bool bombExploded = false;
     for(Bomb* bomb:bombs)
     {
         if(bomb->getExploded())
         {
             if(bomb->getValCounterBomb() == TIME_BEFORE_EXPLOSION)
             {
-                bombExploded = dislayExplosionBomb(bomb);
+                dislayExplosionBomb(bomb);
                 bomb->resetCounter();
                 bomb->postStepExplosion();
-                bombExploded = true;
             } else {
                 bomb->incCounterBomb();
             }
@@ -766,9 +764,6 @@ void G_Game::updateDisplayBombs()
             updateBombAnimation(bomb);
         }
     }
-
-    if(bombExploded)
-        game->getMap()->start();
 }
 
 /**
@@ -886,7 +881,8 @@ bool G_Game::dislayExplosionBomb(Bomb *bomb)
         bomb->getOwner()->receiveBomb(1);
         delete bomb;
 
-        this->updateDisplayMap();
+        game->getMap()->start();
+
         return true;
     }
     QRect center(stepExplosion*TEXTURE_FIRE_SIZE_X, TEXTURE_FIRE_CENTER, TEXTURE_FIRE_SIZE_X, TEXUTRE_FIRE_SIZE_Y);

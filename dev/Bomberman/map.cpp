@@ -1,14 +1,12 @@
 #include "map.h"
 #include "mapbloc.h"
 #include <fstream>
-#include <iostream>
+#include <QDebug>
 
 #define NB_BLOCS_X 30
 #define NB_BLOCS_Y 30
 
 using namespace std;
-
-#include <QDebug>
 
 /**
  * @brief Map constructor
